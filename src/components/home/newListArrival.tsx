@@ -48,40 +48,24 @@ export default function NewArrivalList() {
 
     return (
         <div class="mt-5">
-            <span class="pl-3">New Arrival</span>
+            <div class="p-5 flex justify-between items-center">
+                <span>New Arrival</span>
+                <a href="/shop">View All</a>
+            </div>
+            {/* space-x-5  */}
             <ul
-                class="w-full flex justify-between items-start mb-8 space-x-3 overflow-x-scroll bg-transparent p-4 rounded snap-x"
+                class="w-full flex justify-between items-start overflow-x-scroll bg-transparent p-4 rounded snap-x"
             >
-                <li class="snap-start flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
-                <li class="snap-start flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
-                <li class="snap-start flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
-                <li class="snap-start flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
-                <li class="flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
-                <li class="flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
-                <li class="flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
-                <li class="flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
-                <li class="flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
-                <li class="flex flex-none flex-col items-center space-y-1">
-                    <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
-                </li>
+                {
+                    [...Array(10).keys()].map((_, __) =>
+                        <li class="flex flex-none flex-col items-center space-y-1">
+                            <div class="snap-start pl-5">
+                                <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
+                            </div>
+                        </li>
+                    )
+                }
+
             </ul>
         </div>
     )
