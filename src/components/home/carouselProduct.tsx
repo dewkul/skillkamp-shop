@@ -15,7 +15,7 @@ export default function ProductCarousel({ urls }: CarouselProps) {
 function ItemCarousel({ url }: ItemCarouselProps) {
     return (
         <div>
-            <img src={url} />
+            <img class="object-cover" src={url} />
         </div>
     )
 }
