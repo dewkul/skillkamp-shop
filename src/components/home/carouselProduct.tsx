@@ -25,7 +25,7 @@ function LastItemCarousel({ url }: ItemCarouselProps) {
         <div>
             <div class="z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <p class="uppercase">new collection</p>
-                <Button color="light" outline={true}>Shop Now</Button>
+                <button class="mt-3 outline w-full ">Add to cart</button>
             </div>
             <img src={url} />
         </div>
