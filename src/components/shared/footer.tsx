@@ -42,7 +42,7 @@ export default function FooterApp() {
     return (
         <Footer bgDark={true}>
             <div className="w-full">
-                <div className="grid w-full grid-cols-2 gap-8 py-8 px-6 md:grid-cols-2">
+                <div className="grid w-full grid-cols-2 gap-8 py-8 px-6 md:grid-cols-2 max-w-7xl mx-auto">
                     <div>
                         <Footer.Title title="Site Tree" />
                         <Footer.LinkGroup col={true}>
@@ -67,8 +67,9 @@ export default function FooterApp() {
                             }
                         </Footer.LinkGroup>
                     </div>
+                    < MailSubscribeGroup />
                 </div>
-                < MailSubscribeGroup />
+
                 <div className="w-full bg-gray-700 py-6 px-4 sm:flex sm:items-center sm:justify-between">
                     <Footer.Copyright
                         href="/"
@@ -97,7 +98,7 @@ export default function FooterApp() {
 
 function MailSubscribeGroup() {
     return (
-        <div className="w-full py-6 px-4">
+        <div className="">
             <div class="pb-3 capitalize">join our mailing list</div>
             <div>
                 <span>
