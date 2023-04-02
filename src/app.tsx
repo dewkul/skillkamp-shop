@@ -1,5 +1,5 @@
 import './app.css'
-import { Banner, Nav } from './components/shared'
+import { Banner, FooterApp, Nav } from './components/shared'
 import Routes from './router'
 
 export function App() {
@@ -9,6 +9,7 @@ export function App() {
       <Banner />
       <Nav />
       <Routes />
+      <FooterApp />
     </>
   )
 }
