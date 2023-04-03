@@ -44,7 +44,6 @@ export default function NewArrivalList() {
         }
     }
 
-    const { name, price, discountedPrice, media, isInStock, ribbon, urlPart } = resp
 
     return (
         <div class="mt-5">
@@ -57,10 +56,10 @@ export default function NewArrivalList() {
                 class="w-full flex justify-between items-start overflow-x-scroll bg-transparent p-4 rounded snap-x"
             >
                 {
-                    [...Array(10).keys()].map((_, __) =>
+                    [...Array(6).keys()].map((_, __) =>
                         <li class="flex flex-none flex-col items-center space-y-1">
                             <div class="snap-start pl-5">
-                                <BriefProductCard name={name} priceDiscountAmount={discountedPrice} medias={media} isInStock={isInStock} ribbon={ribbon} urlPath={urlPart} priceAmount={price} />
+                                <BriefProductCard product={resp} />
                             </div>
                         </li>
                     )
