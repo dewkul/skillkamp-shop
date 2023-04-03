@@ -13,12 +13,14 @@
     "@chakra-ui/icons": "^2.0.18",
     "flowbite": "^1.6.4",
     "flowbite-react": "^0.4.2",
+    "leaflet": "^1.9.3",
     "preact": "^10.13.0",
     "preact-router": "^4.1.0",
     "react-icons": "^4.8.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
+    "@types/leaflet": "^1.9.3",
     "@typescript-eslint/parser": "^5.57.0",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.37.0",
