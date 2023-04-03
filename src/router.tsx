@@ -1,5 +1,5 @@
 import Router, { Route } from "preact-router"
-import { HomePage, ContactPage } from "./pages"
+import { HomePage, ContactPage, CollectionPage } from "./pages"
 
 export default function Routes() {
     return (
@@ -7,6 +7,7 @@ export default function Routes() {
             <Router>
                 <Route path="/" component={HomePage} />
                 <Route path="/contact" component={ContactPage} />
+                <Route path="/shop" component={CollectionPage} />
             </Router>
         </div>
     )
