@@ -1,9 +1,10 @@
 import { Navbar, Button } from "flowbite-react"
-import { BsPersonCircle, BsCart3 } from "react-icons/bs"
 import { MdAccountCircle } from "react-icons/md"
 import CartButton from "./navBtnCart"
+import { Match } from "preact-router/match"
 
 export default function Nav() {
+
     return (
         <Navbar fluid={true} rounded={true}>
             <Navbar.Brand href="/">
@@ -17,10 +18,30 @@ export default function Nav() {
                 <Navbar.Toggle />
             </div>
             <Navbar.Collapse>
-                <Navbar.Link href="/" active={true}>Home</Navbar.Link>
-                <Navbar.Link href="/">Shop</Navbar.Link>
-                <Navbar.Link href="/">Our story</Navbar.Link>
-                <Navbar.Link href="/">Contact</Navbar.Link>
+                <Match path="/">
+                    {
+                        ({ matches }: MatchProps) =>
+                            <Navbar.Link href="/" active={matches}>Home</Navbar.Link>}
+                </Match>
+                <Match path="/shop">
+                    {
+                        ({ matches }: MatchProps) =>
+                            <Navbar.Link href="/shop" active={matches}>Shop</Navbar.Link>
+                    }
+                </Match>
+                <Match path="/story">
+                    {
+                        ({ matches }: MatchProps) =>
+                            <Navbar.Link href="/story" active={matches}>Our story</Navbar.Link>
+                    }
+                </Match>
+
+                <Match path="/contact">
+                    {
+                        ({ matches }: MatchProps) =>
+                            <Navbar.Link href="/contact" active={matches}>Contact</Navbar.Link>
+                    }
+                </Match>
             </Navbar.Collapse>
         </Navbar>
     )
@@ -28,8 +49,6 @@ export default function Nav() {
 
 function AccountButton() {
     return (
-        // <button class="tw-p-0" >Log in</button>
-        // leftIcon={<BsPersonCircle />}
         <Button>
             <span class="mr-2">
                 <MdAccountCircle />
@@ -37,4 +56,8 @@ function AccountButton() {
             Log in
         </Button>
     )
+}
+
+interface MatchProps {
+    matches: boolean
 }
