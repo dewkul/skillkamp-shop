@@ -1,7 +1,7 @@
 
 import { NewArrivalList, ProductCarousel } from "../components/home";
 
-export default function HomePage(_: Props) {
+export default function HomePage() {
     return (
         <div>
             <ProductCarousel urls={[
@@ -18,8 +18,4 @@ export default function HomePage(_: Props) {
             </h1> */}
         </div>
     )
-}
-
-interface Props {
-    path: string
 }

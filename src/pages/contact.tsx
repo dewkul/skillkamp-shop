@@ -1,7 +1,7 @@
 import { Card } from "flowbite-react"
 import { useState } from "preact/hooks"
 
-export default function ContactPage(_: Props) {
+export default function ContactPage() {
     const contacts = [
         {
             "title": "visit us",
@@ -157,8 +157,4 @@ function ContactForm() {
 interface ContentGroupProps {
     title: string
     lines: string[]
-}
-
-interface Props {
-    path: string
 }
