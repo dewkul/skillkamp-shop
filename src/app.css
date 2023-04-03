@@ -1,1 +1,4 @@
-
+.dark {
+  @apply bg-gray-800 text-zinc-50;
+}
+// https://dev.to/naomipham_/how-to-create-darklight-mode-with-react-and-tailwind-59e0
