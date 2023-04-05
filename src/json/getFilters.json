@@ -1,0 +1,188 @@
+{
+  "data": {
+    "catalog": {
+      "filters": [
+        {
+          "filterType": "CATEGORY",
+          "name": "categoryId",
+          "field": "categoryId",
+          "values": [
+            {
+              "key": "a9994034-788d-c2ea-ee08-b77bd36aea4e",
+              "value": "Bodysuits"
+            },
+            {
+              "key": "cec27dc9-9577-7f95-7499-0e1c41c43ce4",
+              "value": "T shirts"
+            },
+            {
+              "key": "00000000-000000-000000-000000000001",
+              "value": "All Products"
+            }
+          ]
+        },
+        {
+          "filterType": "PRICE",
+          "name": "price",
+          "field": "comparePrice",
+          "values": [
+            {
+              "key": "17.99",
+              "value": "17.99$"
+            },
+            {
+              "key": "18.09",
+              "value": "18.09$"
+            },
+            {
+              "key": "18.19",
+              "value": "18.19$"
+            },
+            {
+              "key": "18.29",
+              "value": "18.29$"
+            },
+            {
+              "key": "18.39",
+              "value": "18.39$"
+            },
+            {
+              "key": "18.49",
+              "value": "18.49$"
+            },
+            {
+              "key": "18.59",
+              "value": "18.59$"
+            },
+            {
+              "key": "18.69",
+              "value": "18.69$"
+            },
+            {
+              "key": "18.79",
+              "value": "18.79$"
+            },
+            {
+              "key": "18.89",
+              "value": "18.89$"
+            },
+            {
+              "key": "18.99",
+              "value": "18.99$"
+            },
+            {
+              "key": "19.09",
+              "value": "19.09$"
+            },
+            {
+              "key": "19.19",
+              "value": "19.19$"
+            },
+            {
+              "key": "19.29",
+              "value": "19.29$"
+            },
+            {
+              "key": "19.39",
+              "value": "19.39$"
+            },
+            {
+              "key": "19.49",
+              "value": "19.49$"
+            },
+            {
+              "key": "19.59",
+              "value": "19.59$"
+            },
+            {
+              "key": "19.69",
+              "value": "19.69$"
+            },
+            {
+              "key": "19.79",
+              "value": "19.79$"
+            },
+            {
+              "key": "19.89",
+              "value": "19.89$"
+            },
+            {
+              "key": "19.99",
+              "value": "19.99$"
+            }
+          ]
+        },
+        {
+          "filterType": "OPTION_COLOR",
+          "name": "Color",
+          "field": "options.Color",
+          "values": [
+            {
+              "key": "#45458f",
+              "value": "Blue"
+            },
+            {
+              "key": "#fafaef",
+              "value": "Cream"
+            },
+            {
+              "key": "#86ad91",
+              "value": "Green"
+            },
+            {
+              "key": "#ffe5e9",
+              "value": "Light Pink"
+            },
+            {
+              "key": "#f9bb9c",
+              "value": "Peach"
+            },
+            {
+              "key": "#cd7551",
+              "value": "Terracota"
+            },
+            {
+              "key": "rgb(255, 255, 255)",
+              "value": "White"
+            }
+          ]
+        },
+        {
+          "filterType": "OPTION_LIST",
+          "name": "Size",
+          "field": "options.Size",
+          "values": [
+            {
+              "key": "0-3 months",
+              "value": "0-3 months"
+            },
+            {
+              "key": "12-18 months",
+              "value": "12-18 months"
+            },
+            {
+              "key": "18-24 months",
+              "value": "18-24 months"
+            },
+            {
+              "key": "2 years",
+              "value": "2 years"
+            },
+            {
+              "key": "3 years",
+              "value": "3 years"
+            },
+            {
+              "key": "3-6 months",
+              "value": "3-6 months"
+            },
+            {
+              "key": "6-12 months",
+              "value": "6-12 months"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
