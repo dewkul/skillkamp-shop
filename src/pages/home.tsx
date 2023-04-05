@@ -1,10 +1,9 @@
-
-import { NewArrivalList, ProductCarousel } from "../components/home";
+import { NewArrivalList, HomeCarousel } from "../components/home";
 
 export default function HomePage() {
     return (
         <div>
-            <ProductCarousel urls={[
+            <HomeCarousel urls={[
                 // "http://fakeimg.pl/2000x800/0079D8/fff/?text=Hello",
                 // "http://fakeimg.pl/2000x800/DA5930/fff/?text=World",
                 // "http://fakeimg.pl/2000x800/F90/fff/?text=Human",
@@ -13,6 +12,7 @@ export default function HomePage() {
                 "https://skillkamp-api.com/static/54d6b9_594a0ac4e0af4753be00b5e6b236a156_mv2.png",
             ]} />
             <NewArrivalList />
+
             {/* <h1 class="text-3xl font-bold underline">
                 Hello world!
             </h1> */}

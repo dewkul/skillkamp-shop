@@ -1,6 +1,6 @@
-import { Button, Carousel } from "flowbite-react"
+import { Carousel } from "flowbite-react"
 
-export default function ProductCarousel({ urls }: CarouselProps) {
+export default function HomeCarousel({ urls }: CarouselProps) {
     return (
         <Carousel>
             {
