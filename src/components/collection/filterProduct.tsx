@@ -1,10 +1,8 @@
 import { Accordion } from "flowbite-react";
 import { FilterValue, Filter } from "../../schema/filter";
-import { StateUpdater, useEffect, useState } from "preact/hooks";
-import { hsvaToHex, getContrastingColor, HsvaColor } from '@uiw/color-convert';
-import Swatch from '@uiw/react-color-swatch';
+import { useEffect, useState } from "preact/hooks";
 import { signal } from '@preact/signals'
-import { RadioGroup } from "@headlessui/react";
+import { ColorChooser } from "../shared";
 
 const categories = signal<FilterValue[]>([])
 const prices = signal<FilterValue[]>([])
@@ -12,7 +10,7 @@ const colors = signal<FilterValue[]>([])
 const sizes = signal<FilterValue[]>([])
 
 export default function filterProduct({ filtersResp }: Props) {
-    const [hex, setHex] = useState("")
+    const [selectedColor, setSelectedColor] = useState("")
 
     useEffect(() => {
         filtersResp.map((f, _) => {
@@ -51,7 +49,7 @@ export default function filterProduct({ filtersResp }: Props) {
                         Color
                     </Accordion.Title>
                     <Accordion.Content>
-                        <ColorFilter hex={hex} setHex={setHex} colors={colors.value} />
+                        <ColorChooser selectedColor={selectedColor} setSelectedColor={setSelectedColor} colors={colors.value} />
                     </Accordion.Content>
                 </Accordion.Panel>
                 <Accordion.Panel>
@@ -91,33 +89,7 @@ function CategoryFilter({ categories }: CategoryFliterProps) {
     )
 }
 
-function ColorFilter({ hex, setHex, colors }: ColorFilterProps) {
-    const [colorHexList, setColorHexList] = useState<string[]>([])
-    useEffect(() => {
-        setColorHexList(colors.map((c) => c.key))
-    }, [colors])
-    return (
-        <Swatch
-            colors={colorHexList}
-            color={hex}
-            rectProps={{
-                children: <Point />,
-                style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                },
-            }}
-            onChange={(hsvColor: HsvaColor) => {
-                const newHex = hsvaToHex(hsvColor)
-                if (newHex == hex)
-                    setHex("")
-                else
-                    setHex(newHex)
-            }}
-        />
-    )
-}
+
 
 function SizeFilter({ sizes }: SizeFilterProps) {
     return (
@@ -131,19 +103,7 @@ function SizeFilter({ sizes }: SizeFilterProps) {
     )
 }
 
-function Point(props: { color?: string; checked?: boolean }) {
-    if (!props.checked) return null;
-    return (
-        <div
-            style={{
-                height: 5,
-                width: 5,
-                borderRadius: '50%',
-                backgroundColor: getContrastingColor(props.color!),
-            }}
-        />
-    );
-}
+
 
 // function CheckIcon(props: { class: string }) {
 //     return (
@@ -164,11 +124,7 @@ interface Props {
     filtersResp: Filter[]
 }
 
-interface ColorFilterProps {
-    hex: string
-    setHex: StateUpdater<string>
-    colors: FilterValue[]
-}
+
 
 interface CategoryFliterProps {
     categories: FilterValue[]
