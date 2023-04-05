@@ -1,59 +1,34 @@
-import { getContrastingColor, HsvaColor, hsvaToHex } from "@uiw/color-convert"
-import Swatch from "@uiw/react-color-swatch"
-import { StateUpdater, useEffect, useState } from "preact/hooks"
-import { FilterValue } from "../../schema/filter"
+import { StateUpdater } from "preact/hooks"
+import "./colorChooser.css"
 
-export default function ColorChooser({ selectedColor, setSelectedColor, colors }: Props) {
-    const [colorHexList, setColorHexList] = useState<string[]>([])
-    const [hex, setHex] = useState("")
-    useEffect(() => {
-        setColorHexList(colors.map((c) => c.key))
-    }, [colors])
 
-    useEffect(() => {
-        const color = colors.find(c => c.key == hex)
-        if (color)
-            setSelectedColor(color.value)
-    }, [hex])
+export default function ColorChooser({ selectedColor, setSelectedColor, colorKeys, colorValues }: Props) {
+    const onColorChange = (e: Event) => {
+        if (e.target instanceof HTMLInputElement)
+            setSelectedColor(e.target.value)
+    }
     return (
-        <Swatch
-            colors={colorHexList}
-            color={hex}
-            rectProps={{
-                children: <Point />,
-                style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                },
-            }}
-            onChange={(hsvColor: HsvaColor) => {
-                const newHex = hsvaToHex(hsvColor)
-                if (newHex == hex)
-                    setHex("")
-                else
-                    setHex(newHex)
-            }}
-        />
+        <div class="flex items-center gap-2">
+            {
+                colorKeys.map((key, i) =>
+                    <div class="color-selector">
+                        <input type="radio" value={colorValues[i]} name="color" id={key} class="hidden" onChange={onColorChange} />
+                        <label
+                            for={key}
+                            class="border border-gray-200 rounded-sm h-6 w-6 cursor-pointer shadow-sm block"
+                            style={"background-color: " + key}
+                        ></label>
+                    </div>
+                )
+            }
+        </div>
     )
 }
 
-function Point(props: { color?: string; checked?: boolean }) {
-    if (!props.checked) return null;
-    return (
-        <div
-            style={{
-                height: 5,
-                width: 5,
-                borderRadius: '50%',
-                backgroundColor: getContrastingColor(props.color!),
-            }}
-        />
-    );
-}
 
 interface Props {
     selectedColor: string
     setSelectedColor: StateUpdater<string>
-    colors: FilterValue[]
+    colorKeys: string[]
+    colorValues: string[]
 }
