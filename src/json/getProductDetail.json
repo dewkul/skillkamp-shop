@@ -3,18 +3,18 @@
     "data": {
       "catalog": {
         "product": {
-          "id": "9c50a7f4-7b09-4c3d-f06b-daccbe54a6d5",
+          "id": "f0796c14-3171-c76e-d013-1006ae669c01",
           "description": "I'm a product description. I’m a great place to include more information about your product. Buyers like to know what they’re getting before they purchase.",
           "type": "cec27dc9-9577-7f95-7499-0e1c41c43ce4",
           "isVisible": true,
-          "sku": "00001",
+          "sku": "00002",
           "ribbon": "",
           "brand": null,
           "price": 19.99,
           "discountedPrice": 19.99,
           "formattedPrice": "19.99$",
           "formattedDiscountedPrice": "19.99$",
-          "createVersion": 1418658861067000,
+          "createVersion": 1499004219917000,
           "name": "I'm a product",
           "inventory": {
             "status": "in_stock",
@@ -23,24 +23,28 @@
           "isInStock": true,
           "media": [
             {
-              "id": "45d10e_11ee24bab35748af871e855fa259b6ab_mv2.jpg",
-              "url": "45d10e_11ee24bab35748af871e855fa259b6ab_mv2.jpg",
-              "fullUrl": "https://skillkamp-api.com/static/45d10e_11ee24bab35748af871e855fa259b6ab_mv2.jpg",
+              "id": "45d10e_c59544c57e0943fdab8d109f81174032_mv2.jpg",
+              "url": "45d10e_c59544c57e0943fdab8d109f81174032_mv2.jpg",
+              "fullUrl": "https://skillkamp-api.com/static/45d10e_c59544c57e0943fdab8d109f81174032_mv2.jpg",
               "altText": null,
-              "thumbnailFullUrl": "https://skillkamp-api.com/static/45d10e_11ee24bab35748af871e855fa259b6ab_mv2.jpg",
+              "thumbnailFullUrl": "https://skillkamp-api.com/static/45d10e_c59544c57e0943fdab8d109f81174032_mv2.jpg",
               "mediaType": "PHOTO",
+              "videoType": null,
+              "videoFiles": [],
+              "width": 1044,
+              "height": 1081,
               "index": 0,
-              "title": "45d10e_11ee24bab35748af871e855fa259b6ab_mv2.jpg"
+              "title": "45d10e_c59544c57e0943fdab8d109f81174032_mv2.jpg"
             },
             {
-              "id": "45d10e_2ba3595c1f554721a850a3bd9133c386_mv2.jpg",
-              "url": "45d10e_2ba3595c1f554721a850a3bd9133c386_mv2.jpg",
-              "fullUrl": "https://skillkamp-api.com/static/45d10e_2ba3595c1f554721a850a3bd9133c386_mv2.jpg",
+              "id": "45d10e_6a7d2927088240d2ba884ff3a8350a06_mv2.jpg",
+              "url": "45d10e_6a7d2927088240d2ba884ff3a8350a06_mv2.jpg",
+              "fullUrl": "https://skillkamp-api.com/static/45d10e_6a7d2927088240d2ba884ff3a8350a06_mv2.jpg",
               "altText": null,
-              "thumbnailFullUrl": "https://skillkamp-api.com/static/45d10e_2ba3595c1f554721a850a3bd9133c386_mv2.jpg",
+              "thumbnailFullUrl": "https://skillkamp-api.com/static/45d10e_6a7d2927088240d2ba884ff3a8350a06_mv2.jpg",
               "mediaType": "PHOTO",
               "index": 1,
-              "title": "45d10e_2ba3595c1f554721a850a3bd9133c386_mv2.jpg"
+              "title": "45d10e_6a7d2927088240d2ba884ff3a8350a06_mv2.jpg"
             }
           ],
           "options": [
@@ -51,36 +55,36 @@
               "key": "Color",
               "selections": [
                 {
-                  "id": 2,
-                  "value": "#86ad91",
-                  "description": "Green",
-                  "key": "Green",
+                  "id": 24,
+                  "value": "#f9bb9c",
+                  "description": "Peach",
+                  "key": "Peach",
                   "linkedMediaItems": [
                     {
                       "altText": null,
-                      "url": "45d10e_11ee24bab35748af871e855fa259b6ab_mv2.jpg",
-                      "fullUrl": "https://skillkamp-api.com/static/45d10e_11ee24bab35748af871e855fa259b6ab_mv2.jpg",
-                      "thumbnailFullUrl": "https://skillkamp-api.com/static/45d10e_11ee24bab35748af871e855fa259b6ab_mv2.jpg",
+                      "url": "45d10e_c59544c57e0943fdab8d109f81174032_mv2.jpg",
+                      "fullUrl": "https://skillkamp-api.com/static/45d10e_c59544c57e0943fdab8d109f81174032_mv2.jpg",
+                      "thumbnailFullUrl": "https://skillkamp-api.com/static/45d10e_c59544c57e0943fdab8d109f81174032_mv2.jpg",
                       "mediaType": "PHOTO",
                       "index": 0,
-                      "title": "45d10e_11ee24bab35748af871e855fa259b6ab_mv2.jpg"
+                      "title": "45d10e_c59544c57e0943fdab8d109f81174032_mv2.jpg"
                     }
                   ]
                 },
                 {
-                  "id": 12,
-                  "value": "#cd7551",
-                  "description": "Terracota",
-                  "key": "Terracota",
+                  "id": 26,
+                  "value": "#45458f",
+                  "description": "Blue",
+                  "key": "Blue",
                   "linkedMediaItems": [
                     {
                       "altText": null,
-                      "url": "45d10e_2ba3595c1f554721a850a3bd9133c386_mv2.jpg",
-                      "fullUrl": "https://skillkamp-api.com/static/45d10e_2ba3595c1f554721a850a3bd9133c386_mv2.jpg",
-                      "thumbnailFullUrl": "https://skillkamp-api.com/static/45d10e_2ba3595c1f554721a850a3bd9133c386_mv2.jpg",
+                      "url": "45d10e_6a7d2927088240d2ba884ff3a8350a06_mv2.jpg",
+                      "fullUrl": "https://skillkamp-api.com/static/45d10e_6a7d2927088240d2ba884ff3a8350a06_mv2.jpg",
+                      "thumbnailFullUrl": "https://skillkamp-api.com/static/45d10e_6a7d2927088240d2ba884ff3a8350a06_mv2.jpg",
                       "mediaType": "PHOTO",
                       "index": 1,
-                      "title": "45d10e_2ba3595c1f554721a850a3bd9133c386_mv2.jpg"
+                      "title": "45d10e_6a7d2927088240d2ba884ff3a8350a06_mv2.jpg"
                     }
                   ]
                 }
@@ -97,43 +101,43 @@
                   "value": "12-18 months",
                   "description": "12-18 months",
                   "key": "12-18 months",
-                  "linkedMediaItems": null
+                  "linkedMediaItems": []
                 },
                 {
                   "id": 9,
                   "value": "18-24 months",
                   "description": "18-24 months",
                   "key": "18-24 months",
-                  "linkedMediaItems": null
+                  "linkedMediaItems": []
                 },
                 {
                   "id": 10,
                   "value": "2 years",
                   "description": "2 years",
                   "key": "2 years",
-                  "linkedMediaItems": null
+                  "linkedMediaItems": []
                 },
                 {
                   "id": 11,
                   "value": "3 years",
                   "description": "3 years",
                   "key": "3 years",
-                  "linkedMediaItems": null
+                  "linkedMediaItems": []
                 }
               ]
             }
           ],
           "productType": "physical",
-          "urlPart": "i-m-a-product-4",
+          "urlPart": "i-m-a-product-7",
           "additionalInfo": [
             {
-              "id": "2397d3ce-604e-efc9-18dc-18808dd7c31f",
+              "id": "50e839a2-25de-093f-3d7d-9c41fad803cc",
               "title": "PRODUCT INFO",
               "description": "<p>I'm a product detail. I'm a great place to add more information about your product such as sizing, material, care and cleaning instructions. This is also a great space to write what makes this product special and how your customers can benefit from this item. Buyers like to know what they’re getting before they purchase, so give them as much information as possible so they can buy with confidence and certainty.</p>",
               "index": 1
             },
             {
-              "id": "b5104dfb-55aa-6080-8e91-02dafce5492e",
+              "id": "d0852733-0348-23b9-f065-f3395aa0f3aa",
               "title": "RETURN AND REFUND POLICY",
               "description": "<p>I’m a return and refund policy. I’m a great place to let your customers know what to do in case they are dissatisfied with their purchase. Having a straightforward refund or exchange policy is a great way to build trust and reassure your customers that they can buy with confidence.</p>\n",
               "index": 2

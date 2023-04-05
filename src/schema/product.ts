@@ -27,7 +27,7 @@ interface Option {
   key: string
 }
 
-interface Inventory {
+export interface Inventory {
   status: string
   quantity: number
 }
