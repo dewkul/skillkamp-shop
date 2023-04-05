@@ -49,7 +49,12 @@ export default function filterProduct({ filtersResp }: Props) {
                         Color
                     </Accordion.Title>
                     <Accordion.Content>
-                        <ColorChooser selectedColor={selectedColor} setSelectedColor={setSelectedColor} colors={colors.value} />
+                        <ColorChooser
+                            selectedColor={selectedColor}
+                            setSelectedColor={setSelectedColor}
+                            colorKeys={colors.value.map(c => c.key)}
+                            colorValues={colors.value.map(c => c.value)}
+                        />
                     </Accordion.Content>
                 </Accordion.Panel>
                 <Accordion.Panel>
