@@ -3,7 +3,7 @@ import { ColorRect } from "../shared"
 
 
 export default function ColorChooser({ selectedColors, setSelectedColors, colorKeys, colorValues }: Props) {
-    const [checkedStates, setCheckStates] = useState<boolean[]>(new Array(colorKeys.length).fill(false))
+    const [checkedStates, setCheckStates] = useState<boolean[]>([])
 
     useEffect(() => {
         setCheckStates(new Array(colorKeys.length).fill(false))
