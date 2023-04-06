@@ -5,7 +5,7 @@ import { Button } from "flowbite-react"
 
 export default function DetailProductGroup({ setImgIndex, detail }: Props) {
     const { name, sku, price, discountedPrice, options } = detail
-    const [selectedColor, setSelectedColor] = useState("")
+    const [selectedColors, setSelectedColors] = useState<string[]>([])
     const [selectedSize, setSelectedSize] = useState("")
     const [quantity, setQuantity] = useState(1)
 
@@ -36,8 +36,8 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
                             <div>
                                 <h5 class="text-lg text-gray-800 mb-3 font-medium">{op.title}</h5>
                                 <ColorChooser
-                                    selectedColor={selectedColor}
-                                    setSelectedColor={setSelectedColor}
+                                    selectedColors={selectedColors}
+                                    setSelectedColors={setSelectedColors}
                                     colorKeys={op.selections.map(c => c.value)}
                                     colorValues={op.selections.map(c => c.key)}
                                 />

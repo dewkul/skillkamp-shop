@@ -1,29 +1,37 @@
 import { Accordion } from "flowbite-react";
-import { FilterValue, Filter } from "../../schema/filter";
+import { FilterValue } from "../../schema/filter";
 import { useEffect, useState } from "preact/hooks";
 import { signal } from '@preact/signals'
 import { ColorChooser } from "../shared";
+import { useGetFilterApi } from "../../hooks";
 
 const categories = signal<FilterValue[]>([])
 const prices = signal<FilterValue[]>([])
-const colors = signal<FilterValue[]>([])
 const sizes = signal<FilterValue[]>([])
+const colorKeys = signal<string[]>([])
+const colorValues = signal<string[]>([])
 
-export default function filterProduct({ filtersResp }: Props) {
-    const [selectedColor, setSelectedColor] = useState("")
+export default function filterProduct() {
+    const [selectedColors, setSelectedColors] = useState<string[]>([])
+
+    const { filters, loading } = useGetFilterApi()
 
     useEffect(() => {
-        filtersResp.map((f, _) => {
-            if (f.filterType == "CATEGORY")
-                categories.value = f.values
-            else if (f.filterType == "PRICE")
-                prices.value = f.values
-            else if (f.filterType == "OPTION_COLOR")
-                colors.value = f.values
-            else if (f.filterType == "OPTION_LIST")
-                sizes.value = f.values
-        })
-    }, [filtersResp])
+        if (filters)
+            filters.map((f, _) => {
+                if (f.filterType == "CATEGORY")
+                    categories.value = f.values
+                else if (f.filterType == "PRICE")
+                    prices.value = f.values
+                else if (f.filterType == "OPTION_COLOR") {
+                    colorKeys.value = f.values.map(c => c.key)
+                    colorValues.value = f.values.map(c => c.value)
+                }
+                // colors = f.values
+                else if (f.filterType == "OPTION_LIST")
+                    sizes.value = f.values
+            })
+    }, [filters])
 
     return (
         <div class="hidden lg:block">
@@ -50,10 +58,10 @@ export default function filterProduct({ filtersResp }: Props) {
                     </Accordion.Title>
                     <Accordion.Content>
                         <ColorChooser
-                            selectedColor={selectedColor}
-                            setSelectedColor={setSelectedColor}
-                            colorKeys={colors.value.map(c => c.key)}
-                            colorValues={colors.value.map(c => c.value)}
+                            selectedColors={selectedColors}
+                            setSelectedColors={setSelectedColors}
+                            colorKeys={colorKeys.value}
+                            colorValues={colorValues.value}
                         />
                     </Accordion.Content>
                 </Accordion.Panel>
@@ -124,10 +132,6 @@ function SizeFilter({ sizes }: SizeFilterProps) {
 //         </svg>
 //     )
 // }
-
-interface Props {
-    filtersResp: Filter[]
-}
 
 
 
