@@ -2,6 +2,8 @@ import { Navbar, Button } from "flowbite-react"
 import { MdAccountCircle } from "react-icons/md"
 import CartButton from "./navBtnCart"
 import { Match } from "preact-router/match"
+import { AuthDrawer } from "../drawer"
+import { useAuthCtx } from "../../hooks/useAuth"
 
 export default function Nav() {
 
@@ -48,13 +50,17 @@ export default function Nav() {
 }
 
 function AccountButton() {
+    const { setAuthDrawerOpen } = useAuthCtx()
     return (
-        <Button>
-            <span class="mr-2">
-                <MdAccountCircle />
-            </span>
-            Log in
-        </Button>
+        <div>
+            <Button onClick={() => setAuthDrawerOpen(true)}>
+                <span class="mr-2">
+                    <MdAccountCircle />
+                </span>
+                Log in
+            </Button>
+            <AuthDrawer />
+        </div>
     )
 }
 
