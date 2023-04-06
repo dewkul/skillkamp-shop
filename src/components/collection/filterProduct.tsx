@@ -2,7 +2,7 @@ import { Accordion } from "flowbite-react";
 import { FilterValue } from "../../schema/filter";
 import { useEffect, useState } from "preact/hooks";
 import { signal } from '@preact/signals'
-import { ColorChooser } from "../shared";
+import ColorsChooser from "./colorsChooser";
 import { useGetFilterApi } from "../../hooks";
 
 const categories = signal<FilterValue[]>([])
@@ -57,7 +57,7 @@ export default function filterProduct() {
                         Color
                     </Accordion.Title>
                     <Accordion.Content>
-                        <ColorChooser
+                        <ColorsChooser
                             selectedColors={selectedColors}
                             setSelectedColors={setSelectedColors}
                             colorKeys={colorKeys.value}

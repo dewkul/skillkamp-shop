@@ -1,6 +1,6 @@
 import { StateUpdater, useState } from "preact/hooks"
 import { ProductDetail, Selection } from "../../schema/productDetail"
-import { ColorChooser } from "../shared"
+import ColorsChooser from "../collection/colorsChooser"
 import { Button } from "flowbite-react"
 
 export default function DetailProductGroup({ setImgIndex, detail }: Props) {
@@ -35,7 +35,7 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
                             op.optionType == "COLOR" &&
                             <div>
                                 <h5 class="text-lg text-gray-800 mb-3 font-medium">{op.title}</h5>
-                                <ColorChooser
+                                <ColorsChooser
                                     selectedColors={selectedColors}
                                     setSelectedColors={setSelectedColors}
                                     colorKeys={op.selections.map(c => c.value)}
