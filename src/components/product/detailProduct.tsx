@@ -9,12 +9,15 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
     const [selectedSize, setSelectedSize] = useState("")
     const [quantity, setQuantity] = useState(1)
 
-    const updateQuantity = (e: Event) => {
-        if (e.target instanceof HTMLInputElement) {
-            const n = Number(e.target.value)
-            if (n > 0)
-                setQuantity(n)
-        }
+    const increaseQuantity = () => {
+        if (quantity < detail.inventory.quantity)
+            setQuantity(quantity + 1)
+
+    }
+
+    const decreaseQuantity = () => {
+        if (quantity > 1)
+            setQuantity(quantity - 1)
     }
 
     return (
@@ -50,7 +53,7 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
                     </div>
                 )
             }
-            <div class="pt-4">
+            {/* <div class="pt-4">
                 <label for="quantity" class="text-lg text-gray-800 mb-3 font-medium dark:text-white">Quantity</label>
                 <input
                     type="number"
@@ -59,36 +62,39 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
                     placeholder="1"
                     onChange={updateQuantity}
                 />
+            </div> */}
+            <div class="mt-4">
+                <h3 class="text-lg text-gray-800 mb-3 font-medium">Quantity</h3>
+                <div
+                    class="flex border border-gray-300 rounded-lg text-gray-600 divide-x divide-gray-300 w-max"
+                >
+                    <button
+                        class="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none"
+                        onClick={decreaseQuantity}
+                        disabled={quantity <= 1}
+                    >
+                        -
+                    </button>
+                    <div class="h-8 w-10 text-base flex items-center justify-center">
+                        {quantity}
+                        {/* <input
+                            type="number"
+                            id="quantity"
+                            // class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="1"
+                            onChange={updateQuantity}
+                        /> */}
+                    </div>
+                    <button
+                        class="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none"
+                        onClick={increaseQuantity}
+                    >
+                        +
+                    </button>
+                </div>
             </div>
-            <Button>Add to cart</Button>
-        </div>
-    )
-}
-
-function ColorPick() {
-    return (
-        <div class="pt-4">
-            <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Color</h3>
-            <div class="flex items-center gap-2">
-                <div class="color-selector">
-                    <input type="radio" name="color" id="red" class="hidden" />
-                    <label for="red"
-                        class="border border-gray-200 rounded-sm h-6 w-6  cursor-pointer shadow-sm block"
-                        style="background-color: #fc3d57;"></label>
-                </div>
-                <div class="color-selector">
-                    <input type="radio" name="color" id="black" class="hidden" />
-                    <label for="black"
-                        class="border border-gray-200 rounded-sm h-6 w-6  cursor-pointer shadow-sm block"
-                        style="background-color: #000;"></label>
-                </div>
-                <div class="color-selector">
-                    <input type="radio" name="color" id="white" class="hidden" />
-                    <label for="white"
-                        class="border border-gray-200 rounded-sm h-6 w-6  cursor-pointer shadow-sm block"
-                        style="background-color: #fff;"></label>
-                </div>
-
+            <div class="mt-4">
+                <Button>Add to cart</Button>
             </div>
         </div>
     )
