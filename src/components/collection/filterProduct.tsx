@@ -79,10 +79,10 @@ export default function filterProduct() {
                 <Accordion.Panel>
                     <Accordion.Title>
                         Color
+                        {selectedColors.length > 0 && <span> - {selectedColors.join(", ")}</span>}
                     </Accordion.Title>
                     <Accordion.Content>
                         <ColorsChooser
-                            selectedColors={selectedColors}
                             setSelectedColors={setSelectedColors}
                             colorKeys={colorKeys.value}
                             colorValues={colorValues.value}
@@ -92,9 +92,10 @@ export default function filterProduct() {
                 <Accordion.Panel>
                     <Accordion.Title>
                         Size
+                        {selectedSizes.value.length > 0 && <span> - {selectedSizes.value.join(", ")}</span>}
                     </Accordion.Title>
                     <Accordion.Content>
-                        <SizeFilter sizes={sizes.value} />
+                        <SizeFilter />
                     </Accordion.Content>
                 </Accordion.Panel>
             </Accordion>
@@ -132,19 +133,47 @@ function CategoryFilter() {
                     </div>
                 </li>)}
         </ul>
-        // https://flowbite.com/docs/forms/radio/
-        // https://headlessui.com/react/radio-group
     )
 }
 
 
 
-function SizeFilter({ sizes }: SizeFilterProps) {
+function SizeFilter() {
+    const [checkedStates, setCheckStates] = useState<boolean[]>([])
+
+    useEffect(() => {
+        setCheckStates(new Array(sizes.value.length).fill(false))
+    }, [sizes.value])
+
+    const onSizeChange = (pos: number) => {
+        const updatedChecked = checkedStates.map((item, idx) => idx === pos ? !item : item)
+        setCheckStates(updatedChecked)
+    }
+
+    useEffect(() => {
+        let s: string[] = []
+        checkedStates.map((c, idx) => {
+            if (c)
+                s.push(sizes.value[idx].value)
+        })
+        selectedSizes.value = s
+    }, [checkedStates])
     return (
         <div>
-            {sizes.map(s => <div class="flex items-center pb-3">
-                <input id={s.key} type="checkbox" value={s.key} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                <label for={s.key} class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{s.value}</label>
+            {sizes.value.map((s, idx) => <div class="flex items-center pb-3">
+                <input
+                    id={s.key}
+                    type="checkbox"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    checked={checkedStates[idx]}
+                    onChange={() => onSizeChange(idx)}
+                />
+                <label
+                    for={s.key}
+                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                    {s.value}
+                </label>
             </div>
             )}
         </div>
@@ -168,12 +197,3 @@ function SizeFilter({ sizes }: SizeFilterProps) {
 //     )
 // }
 
-
-
-interface CategoryFliterProps {
-    // categories: FilterValue[]
-}
-
-interface SizeFilterProps {
-    sizes: FilterValue[]
-}
