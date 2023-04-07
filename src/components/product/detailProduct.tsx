@@ -1,12 +1,16 @@
 import { StateUpdater, useState } from "preact/hooks"
 import { ProductDetail, Selection } from "../../schema/productDetail"
-import { ColorChooser } from "../shared"
+import ColorSingleChooser from "./colorSingleChooser"
 import { Button } from "flowbite-react"
+import { FilterValue } from "../../schema/filter"
+import { Signal, signal } from "@preact/signals"
+
+const selectedSize = signal("")
+// const selectedColor = signal<FilterValue | null>(null)
 
 export default function DetailProductGroup({ setImgIndex, detail }: Props) {
     const { name, sku, price, discountedPrice, options } = detail
-    const [selectedColors, setSelectedColors] = useState<string[]>([])
-    const [selectedSize, setSelectedSize] = useState("")
+    const [selectedColor, setSelectedColor] = useState<FilterValue | null>(null)
     const [quantity, setQuantity] = useState(1)
 
     const increaseQuantity = () => {
@@ -34,12 +38,20 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
                         {
                             op.optionType == "COLOR" &&
                             <div>
-                                <h5 class="text-lg text-gray-800 mb-3 font-medium">{op.title}</h5>
-                                <ColorChooser
-                                    selectedColors={selectedColors}
-                                    setSelectedColors={setSelectedColors}
+
+                                <h5 class="text-lg text-gray-800 mb-3 font-medium">
+                                    <span>
+                                        {op.title}
+                                        {selectedColor && " - " + selectedColor.value}
+                                    </span>
+
+                                </h5>
+
+                                <ColorSingleChooser
+                                    setSelectedColor={setSelectedColor}
                                     colorKeys={op.selections.map(c => c.value)}
                                     colorValues={op.selections.map(c => c.key)}
+                                    colorCount={op.selections.length}
                                 />
                             </div>
                         }
@@ -47,12 +59,15 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
                             op.optionType == "DROP_DOWN" &&
                             <div>
                                 <h5 class="text-lg text-gray-800 mb-3 font-medium">{op.title}</h5>
-                                <SizeChooser selections={op.selections} selectedSize={selectedSize} setSelectedSize={setSelectedSize} />
+                                <SizeChooser selections={op.selections} sizeSignal={selectedSize} />
                             </div>
                         }
+
                     </div>
                 )
             }
+
+
             {/* <div class="pt-4">
                 <label for="quantity" class="text-lg text-gray-800 mb-3 font-medium dark:text-white">Quantity</label>
                 <input
@@ -100,14 +115,14 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
     )
 }
 
-function SizeChooser({ selections, selectedSize, setSelectedSize }: SizeChooserProps) {
+function SizeChooser({ selections, sizeSignal }: SizeChooserProps) {
     return (
         <select
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             value={selectedSize}
             onChange={e => {
                 if (e.target instanceof HTMLSelectElement)
-                    setSelectedSize(e.target.value)
+                    sizeSignal.value = e.target.value
             }}
         >
             <option selected disabled hidden value="">Choose a size</option>
@@ -131,6 +146,7 @@ interface Props {
 
 interface SizeChooserProps {
     selections: Selection[]
-    selectedSize: string
-    setSelectedSize: StateUpdater<string>
+    sizeSignal: Signal<string>
+    // selectedSize: string
+    // setSelectedSize: StateUpdater<string>
 }

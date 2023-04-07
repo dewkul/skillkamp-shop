@@ -1,10 +1,8 @@
 import { FilterProduct, GridProducts } from "../components/collection";
-import { Card } from "flowbite-react";
-import getFilters from "../json/getFilters.json"
 import getProducts from "../json/getProduct.json"
 
 export default function CollectionPage() {
-    const response = getProducts.detail.data.catalog.category.productsWithMetaData
+    const getProductResponse = getProducts.detail.data.catalog.category.productsWithMetaData
 
     return (
         <section aria-labelledby="collection-heading" class="pb-24 pt-6">
@@ -17,8 +15,8 @@ export default function CollectionPage() {
                 </button>
             </div>
             <div class="pt-8 grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-                <FilterProduct filtersResp={getFilters.data.catalog.filters} />
-                <GridProducts products={response.list} />
+                <FilterProduct />
+                <GridProducts products={getProductResponse.list} />
             </div>
         </section>
     )
