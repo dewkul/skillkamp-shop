@@ -58,7 +58,7 @@ export default function NewArrivalList() {
                 {
                     [...Array(6).keys()].map((_, __) =>
                         <li class="flex flex-none flex-col items-center space-y-1">
-                            <div class="snap-start pl-5">
+                            <div class="snap-start pl-5 w-52 md:w-64">
                                 <BriefProductCard product={resp} />
                             </div>
                         </li>
