@@ -11,16 +11,23 @@ const sizes = signal<FilterValue[]>([])
 const colorKeys = signal<string[]>([])
 const colorValues = signal<string[]>([])
 
+const selectedCat = signal("")
+const selectedSizes = signal<string[]>([])
+
 export default function filterProduct() {
     const [selectedColors, setSelectedColors] = useState<string[]>([])
 
     const { filters, loading } = useGetFilterApi()
 
     useEffect(() => {
+        selectedCat.value = "All Products"
+    }, [])
+
+    useEffect(() => {
         if (filters)
             filters.map((f, _) => {
                 if (f.filterType == "CATEGORY")
-                    categories.value = f.values
+                    categories.value = f.values.reverse()
                 else if (f.filterType == "PRICE")
                     prices.value = f.values
                 else if (f.filterType == "OPTION_COLOR") {
@@ -38,10 +45,27 @@ export default function filterProduct() {
             <Accordion flush={true} alwaysOpen={true}>
                 <Accordion.Panel>
                     <Accordion.Title>
-                        Collection
+                        Category
                     </Accordion.Title>
                     <Accordion.Content>
-                        <CategoryFilter categories={categories.value} />
+                        {
+                            categories.value.length == 0
+                                ? <div className="animate-pulse flex-1 space-y-6 py-2 pl-2">
+                                    <span class="flex space-x-2">
+                                        <div className="rounded-full bg-gray-400 h-4 w-4"></div>
+                                        <div className="h-4 bg-gray-400 rounded w-3/4"></div>
+                                    </span>
+                                    <span class="flex space-x-2">
+                                        <div className="rounded-full bg-gray-400 h-4 w-4"></div>
+                                        <div className="h-4 bg-gray-400 rounded w-5/6"></div>
+                                    </span>
+                                    <span class="flex space-x-2">
+                                        <div className="rounded-full bg-gray-400 h-4 w-4"></div>
+                                        <div className="h-4 bg-gray-400 rounded w-4/6"></div>
+                                    </span>
+                                </div>
+                                : <CategoryFilter />
+                        }
                     </Accordion.Content>
                 </Accordion.Panel>
                 <Accordion.Panel>
@@ -78,15 +102,26 @@ export default function filterProduct() {
     )
 }
 
-function CategoryFilter({ categories }: CategoryFliterProps) {
-    const [selectedCat, setSelectedCat] = useState("")
+function CategoryFilter() {
+    const onCategoryChange = (e: Event) => {
+        if (e.target instanceof HTMLInputElement)
+            selectedCat.value = e.target.value
+    }
     return (
         <ul class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
-            {categories.map(c =>
+            {categories.value.map(c =>
                 <li>
                     <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                         <div class="flex items-center h-5">
-                            <input id={c.key} name="helper-radio" type="radio" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                            <input
+                                id={c.key}
+                                name="helper-radio"
+                                type="radio"
+                                value={c.value}
+                                onChange={onCategoryChange}
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                checked={c.value === selectedCat.value}
+                            />
                         </div>
                         <div class="ml-2 text-sm">
                             <label for={c.key} class="font-medium text-gray-900 dark:text-gray-300">
@@ -136,7 +171,7 @@ function SizeFilter({ sizes }: SizeFilterProps) {
 
 
 interface CategoryFliterProps {
-    categories: FilterValue[]
+    // categories: FilterValue[]
 }
 
 interface SizeFilterProps {
