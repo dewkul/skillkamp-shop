@@ -2,7 +2,7 @@ import Router, { Route } from "preact-router"
 import { useEffect } from "preact/hooks"
 import { useAuthCtx } from "./hooks/useAuth"
 import { IDB } from "./lib/idb"
-import { HomePage, ContactPage, CollectionPage, ProductDetailPage } from "./pages"
+import { HomePage, ContactPage, CollectionPage, ProductDetailPage, NotFoundError } from "./pages"
 
 export default function Routes() {
     const { setAuthData } = useAuthCtx()
@@ -22,6 +22,7 @@ export default function Routes() {
                 <Route path="/contact" component={ContactPage} />
                 <Route path="/shop" component={CollectionPage} />
                 <Route path="/product/:name" component={ProductDetailPage} />
+                <Route default component={NotFoundError} />
             </Router>
         </div>
     )
