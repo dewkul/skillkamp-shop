@@ -1,4 +1,4 @@
-import BriefProductCard from "../product/briefCardProduct";
+import { HorizontalProductList } from "../shared";
 
 export default function NewArrivalList() {
     const resp = {
@@ -51,21 +51,7 @@ export default function NewArrivalList() {
                 <span>New Arrival</span>
                 <a href="/shop">View All</a>
             </div>
-            {/* space-x-5  */}
-            <ul
-                class="w-full flex justify-between items-start overflow-x-scroll bg-transparent p-4 rounded snap-x"
-            >
-                {
-                    [...Array(6).keys()].map((_, __) =>
-                        <li class="flex flex-none flex-col items-center space-y-1">
-                            <div class="snap-start pl-5 w-52 md:w-64">
-                                <BriefProductCard product={resp} />
-                            </div>
-                        </li>
-                    )
-                }
-
-            </ul>
+            <HorizontalProductList products={[resp, resp, resp, resp, resp]} />
         </div>
     )
 }
