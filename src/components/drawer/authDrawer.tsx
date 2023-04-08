@@ -69,7 +69,7 @@ function Login() {
     const [password, setPassword] = useState("")
     const [isRemember, setRemember] = useState(true)
 
-    const { setAuthDrawerOpen, authData } = useAuthCtx()
+    const { setAuthDrawerOpen, setAuthData } = useAuthCtx()
 
     const onEmailInput = (e: Event) => {
         if (e.target instanceof HTMLInputElement) {
@@ -94,10 +94,10 @@ function Login() {
                 throw new Error("Got status" + status)
             const token = data.detail.Token
 
-            authData.value = {
+            setAuthData({
                 token,
                 email,
-            }
+            })
 
             if (isRemember)
                 await IDB.auth.add({

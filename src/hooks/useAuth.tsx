@@ -1,4 +1,4 @@
-import { signal } from "@preact/signals";
+import { signal, computed } from "@preact/signals";
 import { ComponentChildren, createContext } from "preact";
 import { useContext, useState } from "preact/hooks";
 
@@ -7,10 +7,22 @@ const authData = signal<AuthData>({})
 function useAuth() {
     const [isAuthDrawerOpen, setAuthDrawerOpen] = useState(false)
 
+    const setAuthData = (data: AuthData) => {
+        authData.value = data
+    }
+
+    const removeAuthData = () => {
+        authData.value = {}
+    }
+
+    const isLogIn = computed(() => Boolean(authData.value.token))
+
     return {
         isAuthDrawerOpen,
         setAuthDrawerOpen,
-        authData,
+        isLogIn,
+        setAuthData,
+        removeAuthData,
     }
 }
 
