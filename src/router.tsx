@@ -8,8 +8,7 @@ export default function Routes() {
     const { setAuthData } = useAuthCtx()
     useEffect(() => {
         const queryAuth = async () => {
-            const auth = await IDB.auth.get(1)
-            console.log(auth)
+            const auth = await IDB.auth.orderBy('id').first()
             if (auth)
                 setAuthData(auth)
         }
