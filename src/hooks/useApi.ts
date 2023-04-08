@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks'
 import API from '../lib/api'
 import { Filter } from '../schema/filter'
+import { Product } from '../schema/product'
 
 function useGetApi<T>(path: string) {
   const [loading, setLoading] = useState(true)
@@ -55,8 +56,9 @@ export function usePostApi<T>(path: string, reqBody?: any) {
 }
 
 export function useGetFilterApi() {
-  const [filters, setFilters] = useState<Filter[]>()
-  const { response, loading } = useGetApi<GetResponseFilter>('/v1/api/filters')
+  const [filters, setFilters] = useState<Filter[]>([])
+  const { response, loading, error } =
+    useGetApi<GetResponseFilter>('/v1/api/filters')
 
   useEffect(() => {
     if (response) setFilters(response.data.catalog.filters)
@@ -65,17 +67,81 @@ export function useGetFilterApi() {
   return {
     filters,
     loading,
+    error,
+  }
+}
+
+export function useGetAllProducts() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [totalProducts, setTotalProducts] = useState(0)
+
+  const { response, loading, error } =
+    useGetApi<GetResponseProducts>('/v1/api/products')
+
+  useEffect(() => {
+    if (response) {
+      setProducts(
+        response.detail.data.catalog.category.productsWithMetaData.list
+      )
+      setTotalProducts(response.detail.data.catalog.category.numOfProducts)
+    }
+  }, [response])
+
+  return {
+    products,
+    totalProducts,
+    loading,
+    error,
+  }
+}
+
+export function useGetNewArrivals() {
+  const [newArrivals, setNewArrivals] = useState<Product[]>([])
+  const [countNewArrival, setCountNewArrival] = useState(0)
+
+  const { response, loading, error } = useGetApi<GetResponseProducts>(
+    '/v1/api/products/new_arrivals'
+  )
+
+  useEffect(() => {
+    if (response) {
+      setNewArrivals(
+        response.detail.data.catalog.category.productsWithMetaData.list
+      )
+      setCountNewArrival(
+        response.detail.data.catalog.category.productsWithMetaData.totalCount
+      )
+    }
+  }, [response])
+
+  return {
+    newArrivals,
+    countNewArrival,
+    loading,
+    error,
   }
 }
 
 interface GetResponseFilter {
-  data: FilterResponseData
+  data: {
+    catalog: {
+      filters: Filter[]
+    }
+  }
 }
 
-interface FilterResponseData {
-  catalog: FilterResponseCatalog
-}
-
-interface FilterResponseCatalog {
-  filters: Filter[]
+interface GetResponseProducts {
+  detail: {
+    data: {
+      catalog: {
+        category: {
+          numOfProducts: number
+          productsWithMetaData: {
+            totalCount: number
+            list: Product[]
+          }
+        }
+      }
+    }
+  }
 }
