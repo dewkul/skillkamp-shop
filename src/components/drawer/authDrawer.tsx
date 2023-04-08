@@ -67,7 +67,8 @@ export default function AuthDrawer() {
 function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const { setAuthDrawerOpen } = useAuthCtx()
+    const [isRemember, setRemember] = useState(true)
+    const { setAuthDrawerOpen, authData } = useAuthCtx()
 
     const onEmailInput = (e: Event) => {
         if (e.target instanceof HTMLInputElement) {
@@ -91,10 +92,17 @@ function Login() {
             if (status != 200)
                 throw new Error("Got status" + status)
             const token = data.detail.Token
-            await IDB.auth.add({
-                email,
+
+            authData.value = {
                 token,
-            });
+                email,
+            }
+
+            if (isRemember)
+                await IDB.auth.add({
+                    email,
+                    token,
+                });
             setAuthDrawerOpen(false)
         } catch (err) {
             console.error("Login: ", err)
@@ -136,7 +144,11 @@ function Login() {
                     />
                 </div>
                 <div className="flex items-center gap-2">
-                    <Checkbox id="remember" />
+                    <Checkbox
+                        id="remember"
+                        checked={isRemember}
+                        onChange={() => setRemember(!isRemember)}
+                    />
                     <Label htmlFor="remember">
                         Remember me
                     </Label>
@@ -153,7 +165,7 @@ function Register() {
     return (
         <Card>
             <form className="flex flex-col gap-4">
-                <header className="font-bold text-md capitalize">Create a new account</header>
+                <header className="font-bold text-md">Create a new account</header>
                 <div>
                     <div className="mb-2 block">
                         <Label
@@ -168,7 +180,6 @@ function Register() {
                         required={true}
                     />
                 </div>
-                <div></div>
                 <div>
                     <div className="mb-2 block">
                         <Label

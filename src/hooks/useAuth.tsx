@@ -1,5 +1,8 @@
+import { signal } from "@preact/signals";
 import { ComponentChildren, createContext } from "preact";
 import { useContext, useState } from "preact/hooks";
+
+const authData = signal<AuthData>({})
 
 function useAuth() {
     const [isAuthDrawerOpen, setAuthDrawerOpen] = useState(false)
@@ -7,6 +10,7 @@ function useAuth() {
     return {
         isAuthDrawerOpen,
         setAuthDrawerOpen,
+        authData,
     }
 }
 
@@ -28,4 +32,9 @@ export function AuthProvider({
             {children}
         </AuthContext.Provider>
     )
+}
+
+interface AuthData {
+    token?: string
+    email?: string
 }
