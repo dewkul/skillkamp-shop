@@ -1,7 +1,8 @@
-import { Navbar, Button } from "flowbite-react"
+import { Navbar, Button, Dropdown } from "flowbite-react"
+import { Menu, Transition } from '@headlessui/react'
 import { MdAccountCircle } from "react-icons/md"
-import CartButton from "./navBtnCart"
 import { Match } from "preact-router/match"
+import { BsCart3 } from "react-icons/bs"
 import { AuthDrawer } from "../drawer"
 import { useAuthCtx } from "../../hooks/useAuth"
 
@@ -14,7 +15,7 @@ export default function Nav() {
                     Happy Kids
                 </span>
             </Navbar.Brand>
-            <div class="flex md:order-2">
+            <div class="flex flex-wrap gap-2 md:order-2">
                 <AccountButton />
                 <CartButton />
                 <Navbar.Toggle />
@@ -50,17 +51,37 @@ export default function Nav() {
 }
 
 function AccountButton() {
-    const { setAuthDrawerOpen } = useAuthCtx()
+    const { setAuthDrawerOpen, isLogIn, removeAuthData } = useAuthCtx()
+
     return (
         <div>
-            <Button onClick={() => setAuthDrawerOpen(true)}>
-                <span class="mr-2">
-                    <MdAccountCircle />
-                </span>
-                Log in
-            </Button>
+            {
+                isLogIn.value
+                    ? <Dropdown label={<MdAccountCircle />} icon={<MdAccountCircle />}>
+                        {/* <Dropdown.Item>
+                            My Account
+                        </Dropdown.Item> */}
+                        <Dropdown.Item onClick={removeAuthData}>
+                            Log Out
+                        </Dropdown.Item>
+                    </Dropdown>
+                    : <Button onClick={() => setAuthDrawerOpen(true)}>
+                        <span class="mr-2">
+                            <MdAccountCircle />
+                        </span>
+                        <span class="text-xs">Log in</span>
+                    </Button>
+            }
             <AuthDrawer />
         </div>
+    )
+}
+
+function CartButton() {
+    return (
+        <Button label="0">
+            <BsCart3 />
+        </Button>
     )
 }
 
