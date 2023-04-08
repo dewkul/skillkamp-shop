@@ -1,7 +1,10 @@
-import { Navbar, Button } from "flowbite-react"
+import { Navbar, Button, Dropdown } from "flowbite-react"
+import { Menu, Transition } from '@headlessui/react'
 import { MdAccountCircle } from "react-icons/md"
 import { Match } from "preact-router/match"
 import { BsCart3 } from "react-icons/bs"
+import { AuthDrawer } from "../drawer"
+import { useAuthCtx } from "../../hooks/useAuth"
 
 export default function Nav() {
 
@@ -48,26 +51,40 @@ export default function Nav() {
 }
 
 function AccountButton() {
+    const { setAuthDrawerOpen, isLogIn, removeAuthData } = useAuthCtx()
+
     return (
-        <Button>
-            <span class="mr-2">
-                <MdAccountCircle />
-            </span>
-            Log in
-        </Button>
+        <div>
+            {
+                isLogIn.value
+                    ? <Dropdown label={<MdAccountCircle />} icon={<MdAccountCircle />}>
+                        {/* <Dropdown.Item>
+                            My Account
+                        </Dropdown.Item> */}
+                        <Dropdown.Item onClick={removeAuthData}>
+                            Log Out
+                        </Dropdown.Item>
+                    </Dropdown>
+                    : <Button onClick={() => setAuthDrawerOpen(true)}>
+                        <span class="mr-2">
+                            <MdAccountCircle />
+                        </span>
+                        <span class="text-xs">Log in</span>
+                    </Button>
+            }
+            <AuthDrawer />
+        </div>
     )
 }
 
 function CartButton() {
     return (
         <Button label="0">
-            <span class="mr-2">
-                <BsCart3 />
-            </span>
-            Cart
+            <BsCart3 />
         </Button>
     )
 }
+
 
 interface MatchProps {
     matches: boolean
