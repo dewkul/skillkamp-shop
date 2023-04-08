@@ -1,7 +1,7 @@
 import { Navbar, Button } from "flowbite-react"
 import { MdAccountCircle } from "react-icons/md"
-import CartButton from "./navBtnCart"
 import { Match } from "preact-router/match"
+import { BsCart3 } from "react-icons/bs"
 
 export default function Nav() {
 
@@ -12,7 +12,7 @@ export default function Nav() {
                     Happy Kids
                 </span>
             </Navbar.Brand>
-            <div class="flex md:order-2">
+            <div class="flex flex-wrap gap-2 md:order-2">
                 <AccountButton />
                 <CartButton />
                 <Navbar.Toggle />
@@ -54,6 +54,17 @@ function AccountButton() {
                 <MdAccountCircle />
             </span>
             Log in
+        </Button>
+    )
+}
+
+function CartButton() {
+    return (
+        <Button label="0">
+            <span class="mr-2">
+                <BsCart3 />
+            </span>
+            Cart
         </Button>
     )
 }
