@@ -2,7 +2,7 @@ import { useAuthCtx } from "../../hooks/useAuth";
 import Drawer from "../shared/drawer";
 import { Tab } from "@headlessui/react";
 import { Button, Card, Label, TextInput, Checkbox } from "flowbite-react";
-import { useState } from "preact/hooks";
+import { StateUpdater, useState } from "preact/hooks";
 import API from "../../lib/api"
 import { IDB } from "../../lib/idb";
 
@@ -16,7 +16,7 @@ export default function AuthDrawer() {
     return (
         <Drawer header="Greeting!" isOpen={isAuthDrawerOpen} setOpen={setAuthDrawerOpen}>
             <Tab.Group
-                defaultIndex={1}
+                selectedIndex={selectedTab}
                 onChange={(idx) => {
                     setSelectedTab(idx)
                 }}
@@ -47,7 +47,7 @@ export default function AuthDrawer() {
                             'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400'
                         }
                     >
-                        <Register />
+                        <Register setSelectedTab={setSelectedTab} />
                     </Tab.Panel>
                     <Tab.Panel
                         key="login"
@@ -68,6 +68,7 @@ function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isRemember, setRemember] = useState(true)
+
     const { setAuthDrawerOpen, authData } = useAuthCtx()
 
     const onEmailInput = (e: Event) => {
@@ -161,7 +162,53 @@ function Login() {
     )
 }
 
-function Register() {
+function Register({ setSelectedTab }: RegisterProps) {
+    const [fullName, setFullName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [errorStr, setErrorStr] = useState("")
+
+    const onFullName = (e: Event) => {
+        if (e.target instanceof HTMLInputElement)
+            setFullName(e.target.value)
+    }
+
+    const onEmail = (e: Event) => {
+        if (e.target instanceof HTMLInputElement)
+            setEmail(e.target.value)
+    }
+
+    const onPassword = (e: Event) => {
+        if (e.target instanceof HTMLInputElement)
+            setPassword(e.target.value)
+    }
+
+    const signUp = async () => {
+        try {
+            const { data, status } = await API.post("/v1/api/auth/signup", {
+                fullname: fullName,
+                email,
+                password,
+            })
+
+            if (status == 201) {
+                setSelectedTab(1)
+                setFullName("")
+                setEmail("")
+                setPassword("")
+                return
+            }
+
+            console.error(`Status: ${status} - ${data.detail}`)
+            setErrorStr(data.detail)
+        } catch (err) {
+            if (err instanceof Error)
+                setErrorStr(err.message)
+            return
+        }
+
+    }
+
     return (
         <Card>
             <form className="flex flex-col gap-4">
@@ -178,6 +225,7 @@ function Register() {
                         type="name"
                         placeholder=""
                         required={true}
+                        onChange={onFullName}
                     />
                 </div>
                 <div>
@@ -192,6 +240,7 @@ function Register() {
                         type="email"
                         placeholder=""
                         required={true}
+                        onChange={onEmail}
                     />
                 </div>
                 <div>
@@ -205,12 +254,17 @@ function Register() {
                         id="password"
                         type="password"
                         required={true}
+                        onChange={onPassword}
                     />
                 </div>
-                <Button>
+                <Button onClick={signUp}>
                     Sign Up
                 </Button>
             </form>
         </Card>
     )
+}
+
+interface RegisterProps {
+    setSelectedTab: StateUpdater<number>
 }
