@@ -3,6 +3,8 @@ import Drawer from "../shared/drawer";
 import { Tab } from "@headlessui/react";
 import { Button, Card, Label, TextInput, Checkbox } from "flowbite-react";
 import { useState } from "preact/hooks";
+import API from "../../lib/api"
+import { IDB } from "../../lib/idb";
 
 export default function AuthDrawer() {
     const { isAuthDrawerOpen, setAuthDrawerOpen } = useAuthCtx()
@@ -22,7 +24,7 @@ export default function AuthDrawer() {
                 <Tab.List class="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
                     <Tab
                         key="register"
-                        class={
+                        className={
                             selectedTab == 0
                                 ? commonClass + 'bg-white shadow'
                                 : commonClass + 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
@@ -30,7 +32,7 @@ export default function AuthDrawer() {
                     >Register</Tab>
                     <Tab
                         key="logIn"
-                        class={
+                        className={
                             selectedTab == 1
                                 ? commonClass + 'bg-white shadow'
                                 : commonClass + 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
@@ -40,7 +42,7 @@ export default function AuthDrawer() {
                 <Tab.Panels class="mt-3">
                     <Tab.Panel
                         key="reg"
-                        class={
+                        className={
                             'rounded-xl bg-white p-3' +
                             'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400'
                         }
@@ -49,7 +51,7 @@ export default function AuthDrawer() {
                     </Tab.Panel>
                     <Tab.Panel
                         key="login"
-                        class={
+                        className={
                             'rounded-xl bg-white p-3' +
                             'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400'
                         }
@@ -63,35 +65,74 @@ export default function AuthDrawer() {
 }
 
 function Login() {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const { setAuthDrawerOpen } = useAuthCtx()
+
+    const onEmailInput = (e: Event) => {
+        if (e.target instanceof HTMLInputElement) {
+            setEmail(e.target.value)
+        }
+    }
+
+    const onPasswordInput = (e: Event) => {
+        if (e.target instanceof HTMLInputElement) {
+            setPassword(e.target.value)
+        }
+    }
+
+    const login = async () => {
+        try {
+            const { data, status } = await API.post("/v1/api/auth/login", {
+                email,
+                password,
+            })
+
+            if (status != 200)
+                throw new Error("Got status" + status)
+            const token = data.detail.Token
+            await IDB.auth.add({
+                email,
+                token,
+            });
+            setAuthDrawerOpen(false)
+        } catch (err) {
+            console.error("Login: ", err)
+        }
+
+    }
+
     return (
         <Card>
-            <div className="flex flex-col gap-4">
-                <header className="font-bold text-md uppercase">Log in</header>
+            <form className="flex flex-col gap-4">
+                <header className="font-bold text-md capitalize">Log in</header>
                 <div>
                     <div className="mb-2 block">
                         <Label
-                            htmlFor="email1"
+                            htmlFor="email"
                             value="Email"
                         />
                     </div>
                     <TextInput
-                        id="email1"
+                        id="email"
                         type="email"
                         placeholder=""
                         required={true}
+                        onChange={onEmailInput}
                     />
                 </div>
                 <div>
                     <div className="mb-2 block">
                         <Label
-                            htmlFor="password1"
+                            htmlFor="password"
                             value="Password"
                         />
                     </div>
                     <TextInput
-                        id="password1"
+                        id="password"
                         type="password"
                         required={true}
+                        onChange={onPasswordInput}
                     />
                 </div>
                 <div className="flex items-center gap-2">
@@ -100,10 +141,10 @@ function Login() {
                         Remember me
                     </Label>
                 </div>
-                <Button>
-                    Submit
+                <Button onClick={login}>
+                    Log in
                 </Button>
-            </div>
+            </form>
         </Card>
     )
 }
@@ -111,8 +152,8 @@ function Login() {
 function Register() {
     return (
         <Card>
-            <div className="flex flex-col gap-4">
-                <header className="font-bold text-md uppercase">Sign Up</header>
+            <form className="flex flex-col gap-4">
+                <header className="font-bold text-md capitalize">Create a new account</header>
                 <div>
                     <div className="mb-2 block">
                         <Label
@@ -156,9 +197,9 @@ function Register() {
                     />
                 </div>
                 <Button>
-                    Submit
+                    Sign Up
                 </Button>
-            </div>
+            </form>
         </Card>
     )
 }
