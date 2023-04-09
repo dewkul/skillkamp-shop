@@ -2,6 +2,7 @@ import { useEffect, useState } from 'preact/hooks'
 import API from '../lib/api'
 import { Filter } from '../schema/filter'
 import { Product } from '../schema/product'
+import { ProductDetail } from '../schema/productDetail'
 
 function useGetApi<T>(path: string) {
   const [loading, setLoading] = useState(true)
@@ -122,6 +123,26 @@ export function useGetNewArrivals() {
   }
 }
 
+export function useGetProductInfo(sku: string) {
+  const [productInfo, setProductInfo] = useState<ProductDetail>()
+
+  const { response, loading, error } = useGetApi<GetProductInfoResponse>(
+    `/v1/api/products/details/${sku}`
+  )
+
+  useEffect(() => {
+    if (response && !error) {
+      setProductInfo(response.detail.data.catalog.product)
+    }
+  })
+
+  return {
+    productInfo,
+    loading,
+    error,
+  }
+}
+
 interface GetResponseFilter {
   data: {
     catalog: {
@@ -141,6 +162,16 @@ interface GetResponseProducts {
             list: Product[]
           }
         }
+      }
+    }
+  }
+}
+
+interface GetProductInfoResponse {
+  detail: {
+    data: {
+      catalog: {
+        product: ProductDetail
       }
     }
   }
