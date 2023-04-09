@@ -1,4 +1,5 @@
 import { FilterProduct, GridProducts } from "../components/collection";
+import ProductModal from "../components/modal/productModal";
 import getProducts from "../json/getProduct.json"
 
 export default function CollectionPage() {
@@ -18,6 +19,7 @@ export default function CollectionPage() {
                 <FilterProduct />
                 <GridProducts products={getProductResponse.list} />
             </div>
+            <ProductModal />
         </section>
     )
 }
