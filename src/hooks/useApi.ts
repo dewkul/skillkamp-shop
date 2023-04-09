@@ -2,6 +2,7 @@ import { useEffect, useState } from 'preact/hooks'
 import API from '../lib/api'
 import { Filter } from '../schema/filter'
 import { Product } from '../schema/product'
+import { CartItem } from '../schema/cart'
 
 function useGetApi<T>(path: string) {
   const [loading, setLoading] = useState(true)
@@ -122,6 +123,34 @@ export function useGetNewArrivals() {
   }
 }
 
+export function useGetItemsInCart() {
+  const [itemsInCart, setItemsInCart] = useState<CartItem[]>([])
+  const [totalCost, setTotalCost] = useState(0)
+  const [subtotal, setSubtotal] = useState(0)
+  const [shippingCost, setShippingCost] = useState(0)
+
+  const { response, loading, error } =
+    useGetApi<GetItemsInCartResponse>('/v1/api/cart')
+
+  useEffect(() => {
+    if (response) {
+      setItemsInCart(response.detail.cart_list)
+      setTotalCost(response.detail.total)
+      setSubtotal(response.detail.sub_total)
+      setShippingCost(response.detail.shipping)
+    }
+  }, [response])
+
+  return {
+    itemsInCart,
+    totalCost,
+    subtotal,
+    shippingCost,
+    loading,
+    error,
+  }
+}
+
 interface GetResponseFilter {
   data: {
     catalog: {
@@ -143,5 +172,14 @@ interface GetResponseProducts {
         }
       }
     }
+  }
+}
+
+interface GetItemsInCartResponse {
+  detail: {
+    total: number
+    shipping: number
+    sub_total: number
+    cart_list: CartItem[]
   }
 }
