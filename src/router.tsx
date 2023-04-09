@@ -1,6 +1,7 @@
 import Router, { Route } from "preact-router"
 import { useEffect } from "preact/hooks"
 import { useAuthCtx } from "./hooks/useAuth"
+import { ProductProvider } from "./hooks/useProduct"
 import { IDB } from "./lib/idb"
 import { HomePage, ContactPage, CollectionPage, ProductDetailPage, NotFoundError } from "./pages"
 
@@ -17,13 +18,17 @@ export default function Routes() {
 
     return (
         <div class="container mx-auto max-w-7xl">
-            <Router>
-                <Route path="/" component={HomePage} />
-                <Route path="/contact" component={ContactPage} />
-                <Route path="/shop" component={CollectionPage} />
-                <Route path="/product/:name" component={ProductDetailPage} />
-                <Route default component={NotFoundError} />
-            </Router>
+            <ProductProvider>
+                <Router>
+                    <Route path="/" component={HomePage} />
+                    <Route path="/contact" component={ContactPage} />
+
+                    <Route path="/shop" component={CollectionPage} />
+                    <Route path="/product/:name" component={ProductDetailPage} />
+
+                    <Route default component={NotFoundError} />
+                </Router>
+            </ProductProvider>
         </div>
     )
 }

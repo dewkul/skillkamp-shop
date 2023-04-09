@@ -1,4 +1,5 @@
 import { NewArrivalList, HomeCarousel } from "../components/home";
+import ProductModal from "../components/modal/productModal";
 
 export default function HomePage() {
     return (
@@ -12,10 +13,7 @@ export default function HomePage() {
                 "https://skillkamp-api.com/static/54d6b9_594a0ac4e0af4753be00b5e6b236a156_mv2.png",
             ]} />
             <NewArrivalList />
-
-            {/* <h1 class="text-3xl font-bold underline">
-                Hello world!
-            </h1> */}
+            <ProductModal />
         </div>
     )
 }

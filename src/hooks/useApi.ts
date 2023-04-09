@@ -123,24 +123,11 @@ export function useGetNewArrivals() {
   }
 }
 
-export function useGetProductInfo(sku: string) {
-  const [productInfo, setProductInfo] = useState<ProductDetail>()
-
-  const { response, loading, error } = useGetApi<GetProductInfoResponse>(
-    `/v1/api/products/details/${sku}`
-  )
-
-  useEffect(() => {
-    if (response && !error) {
-      setProductInfo(response.detail.data.catalog.product)
-    }
-  })
-
-  return {
-    productInfo,
-    loading,
-    error,
-  }
+export const getProductInfoBySku = async (sku: string) => {
+  const { data, status } = await API.get(`/v1/api/products/details/${sku}`)
+  if (status != 200)
+    throw new Error(`Fail to get product info with status: ${status}`)
+  return (data as GetProductInfoResponse).detail.data.catalog.product
 }
 
 interface GetResponseFilter {
