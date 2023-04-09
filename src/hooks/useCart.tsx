@@ -18,7 +18,7 @@ function useCart() {
     }, [cartList])
 
     const updateItemInCart = (item: CartItem) => {
-        const idx = cartList.value.indexOf(item)
+        const idx = cartList.value.findIndex(c => c.sku === item.sku)
         // if item existed in cart
         if (idx) {
             // update item
@@ -30,15 +30,32 @@ function useCart() {
         }
     }
 
-    const removeItemInCart = (item: CartItem) => {
-        const idx = cartList.value.indexOf(item)
+    const removeItemInCart = (sku: string) => {
+        const idx = cartList.value.findIndex((c) => c.sku === sku)
         if (idx) {
-            const temp = cartList.value[idx]
             let updatedList = cartList.value
-            updatedList[idx] = updatedList[-1]
-            updatedList[-1] = temp
-            updatedList.pop()
+            if (cartList.value[idx].qty == 1) {
+                // Remove item from cart
+                const temp = cartList.value[idx]
+                updatedList[idx] = updatedList[-1]
+                updatedList[-1] = temp
+                updatedList.pop()
+            } else {
+                // Reduct qty by 1
+                updatedList.map((c, i) => i == idx ? c.qty -= 1 : c)
+            }
             cartList.value = updatedList
+        }
+    }
+
+    const addItemInCart = (item: CartItem) => {
+        const idx = cartList.value.findIndex(c => c.sku === item.sku)
+
+        if (idx) {
+            const itemInList = cartList.value[idx]
+            itemInList.qty += 1
+        } else {
+            cartList.value = [...cartList.value, item]
         }
     }
 
@@ -48,6 +65,7 @@ function useCart() {
     return {
         isCartDrawerOpen,
         setCartDrawerOpen,
+        addItemInCart,
         updateItemInCart,
         removeItemInCart,
         items,
