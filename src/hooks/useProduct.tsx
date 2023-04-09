@@ -39,6 +39,7 @@ function useProduct() {
         openProductInfoModal,
         closeProductInfoModal,
         productInfo,
+        setSelectedSku,
     }
 }
 

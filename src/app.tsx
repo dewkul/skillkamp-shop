@@ -1,6 +1,7 @@
 import './app.css'
 import { Banner, FooterApp, Nav } from './components/shared'
 import { AuthProvider } from './hooks/useAuth'
+import { ProductProvider } from './hooks/useProduct'
 import Routes from './router'
 
 export function App() {
@@ -10,7 +11,9 @@ export function App() {
       <Banner />
       <AuthProvider>
         <Nav />
-        <Routes />
+        <ProductProvider>
+          <Routes />
+        </ProductProvider>
       </AuthProvider>
       <FooterApp />
     </>
