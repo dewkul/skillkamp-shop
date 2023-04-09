@@ -5,6 +5,8 @@ import { Match } from "preact-router/match"
 import { BsCart3 } from "react-icons/bs"
 import { AuthDrawer } from "../drawer"
 import { useAuthCtx } from "../../hooks/useAuth"
+import { useCartCtx } from "../../hooks/useCart"
+import CartDrawer from "../drawer/cartDrawer"
 
 export default function Nav() {
 
@@ -17,7 +19,7 @@ export default function Nav() {
             </Navbar.Brand>
             <div class="flex flex-wrap gap-2 md:order-2">
                 <AccountButton />
-                <CartButton />
+                <CartOpenButton />
                 <Navbar.Toggle />
             </div>
             <Navbar.Collapse>
@@ -77,11 +79,16 @@ function AccountButton() {
     )
 }
 
-function CartButton() {
+function CartOpenButton() {
+    const { setCartDrawerOpen } = useCartCtx()
+
     return (
-        <Button label="0">
-            <BsCart3 />
-        </Button>
+        <div>
+            <Button label="0" onClick={() => setCartDrawerOpen(true)}>
+                <BsCart3 />
+            </Button>
+            <CartDrawer />
+        </div>
     )
 }
 
