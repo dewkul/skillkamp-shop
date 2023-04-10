@@ -7,13 +7,13 @@ const cartList = signal<CartItem[]>([])
 
 function useCart() {
     const [isCartDrawerOpen, setCartDrawerOpen] = useState(false)
-    const [subtotalInCart, setSubTotalInCart] = useState(0)
+    const [subtotalInCart, setSubTotalInCart] = useState("")
 
     useEffect(() => {
         const subtotal = cartList.value.reduce((accumulator, item) => {
             return accumulator + (item.discountedPrice * item.qty)
         }, 0)
-        setSubTotalInCart(subtotal)
+        setSubTotalInCart(subtotal.toFixed(2))
     }, [cartList.value])
 
     const updateItemInCart = (item: CartItem) => {
