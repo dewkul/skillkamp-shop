@@ -3,8 +3,6 @@ import { Product } from "../../schema/product"
 import BriefProductCard from "../product/briefCardProduct"
 import { useRouter } from "preact-router"
 import { useProductCtx } from "../../hooks/useProduct"
-import { FilterQueryParams } from "../../schema/filter"
-import api from "../../lib/api"
 import { queryProductByFilters } from "../../hooks/useApi"
 
 export default function GridProducts() {
@@ -22,9 +20,6 @@ export default function GridProducts() {
                     setProductList(p)
                 }).catch(err => console.warn("Query product: ", err))
                 // setProductList(allProducts.value)
-            } else {
-                console.log('Get all')
-                setProductList(allProducts.value)
             }
         }
     }, [matches])
@@ -33,9 +28,15 @@ export default function GridProducts() {
         <div class="lg:col-span-3">
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {
-                    productList.map(
-                        (p, _) => <BriefProductCard product={p} />
-                    )
+                    matches &&
+                        (Object.keys(matches).length > 0)
+
+                        ? productList.map(
+                            (p, _) => <BriefProductCard product={p} />
+                        )
+                        : allProducts.map(
+                            (p, _) => <BriefProductCard product={p} />
+                        )
                 }
             </div>
         </div>

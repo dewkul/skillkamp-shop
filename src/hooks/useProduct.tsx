@@ -1,22 +1,16 @@
-import { computed, signal } from "@preact/signals";
+import { signal } from "@preact/signals";
 import { ComponentChildren, createContext } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import { Product } from "../schema/product";
 import { ProductDetail } from "../schema/productDetail";
 import { getProductInfoBySku } from "./useApi";
 
-const products = signal<Product[]>([])
 const productInfo = signal<ProductDetail | null>(null)
-// const currentSku = signal<string | null>(null)
-// const isInfoModalOpen = signal(false)
 
 function useProduct() {
+    const [allProducts, setAllProducts] = useState<Product[]>([])
     const [selectedSku, setSelectedSku] = useState<string | null>(null)
     const [isProductInfoModalOpen, setProductInfoModalOpen] = useState(false)
-
-    const allProducts = computed(() => products.value)
-    const setAllProducts = (p: Product[]) => products.value = p
-    // const selectedSku = computed(() => currentSku.value ? currentSku.value : "")
 
     const openProductInfoModal = (sku: string) => {
         setSelectedSku(sku)
