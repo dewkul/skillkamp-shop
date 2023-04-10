@@ -1,10 +1,8 @@
 import { Button } from "flowbite-react";
 import { FilterProduct, GridProducts } from "../components/collection";
 import ProductModal from "../components/modal/productModal";
-import getProducts from "../json/getProduct.json"
 
 export default function CollectionPage() {
-    const getProductResponse = getProducts.detail.data.catalog.category.productsWithMetaData
 
     return (
         <section aria-labelledby="collection-heading" class="pb-24 pt-6">
@@ -18,13 +16,13 @@ export default function CollectionPage() {
                 </button> */}
                 <span class="lg:hidden">
                     <Button color="gray">
-                        Filter
+                        <span class="text-sm">Filter</span>
                     </Button>
                 </span>
             </div>
             <div class="pt-8 grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                 <FilterProduct />
-                <GridProducts products={getProductResponse.list} />
+                <GridProducts />
             </div>
             <ProductModal />
         </section>

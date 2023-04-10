@@ -9,3 +9,11 @@ export interface FilterValue {
   key: string
   value: string
 }
+
+export interface FilterQueryParams {
+  cat?: string
+  f?: string
+  t?: string
+  c?: string
+  s?: string
+}

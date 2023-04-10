@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks'
 import API from '../lib/api'
-import { Filter } from '../schema/filter'
+import { Filter, FilterQueryParams } from '../schema/filter'
 import { Product } from '../schema/product'
 import { ProductDetail } from '../schema/productDetail'
 import { CartItem } from '../schema/cart'
@@ -127,8 +127,24 @@ export function useGetNewArrivals() {
 export const getProductInfoBySku = async (sku: string) => {
   const { data, status } = await API.get(`/v1/api/products/details/${sku}`)
   if (status != 200)
-    throw new Error(`Fail to get product info with status: ${status}`)
+    throw new Error(`Fail to get product info with status: ${status} - ${data}`)
   return (data as GetProductInfoResponse).detail.data.catalog.product
+}
+
+export const queryProductByFilters = async ({ cat, s }: FilterQueryParams) => {
+  const params: string[] = []
+  if (cat) {
+    params.push(`CATEGORY=${cat}`)
+  }
+  if (s) {
+    params.push(`OPTION_LIST=${s}`)
+  }
+  const { data, status } = await API.get(`/v1/api/products?${params.join('&')}`)
+
+  if (status != 200)
+    throw new Error(`Fail to query products with status: ${status} - ${data}`)
+  return (data as GetResponseProducts).detail.data.catalog.category
+    .productsWithMetaData.list
 }
 
 export function useGetItemsInCart() {

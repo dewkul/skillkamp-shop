@@ -1,18 +1,19 @@
 import { Accordion } from "flowbite-react";
-import { FilterValue } from "../../schema/filter";
+import { FilterQueryParams, FilterValue } from "../../schema/filter";
 import { useEffect, useState } from "preact/hooks";
 import { signal } from '@preact/signals'
 import ColorsChooser from "./colorsChooser";
 import { useGetFilterApi } from "../../hooks";
+import { route, useRouter } from "preact-router";
 
-const categories = signal<FilterValue[]>([])
-const prices = signal<FilterValue[]>([])
-const sizes = signal<FilterValue[]>([])
-const colorKeys = signal<string[]>([])
-const colorValues = signal<string[]>([])
+const categoriesData = signal<FilterValue[]>([])
+const pricesData = signal<FilterValue[]>([])
+const sizesData = signal<FilterValue[]>([])
+const colorKeysData = signal<string[]>([])
+const colorValuesData = signal<string[]>([])
 
-const selectedCat = signal("")
-const selectedSizes = signal<string[]>([])
+// const selectedCat = signal("")
+// const selectedSizes = signal<string[]>([])
 
 export default function filterProduct() {
     const [selectedColors, setSelectedColors] = useState<string[]>([])
@@ -20,23 +21,19 @@ export default function filterProduct() {
     const { filters, loading } = useGetFilterApi()
 
     useEffect(() => {
-        selectedCat.value = "All Products"
-    }, [])
-
-    useEffect(() => {
         if (filters)
             filters.map((f, _) => {
                 if (f.filterType == "CATEGORY")
-                    categories.value = f.values.reverse()
+                    categoriesData.value = f.values.reverse()
                 else if (f.filterType == "PRICE")
-                    prices.value = f.values
+                    pricesData.value = f.values
                 else if (f.filterType == "OPTION_COLOR") {
-                    colorKeys.value = f.values.map(c => c.key)
-                    colorValues.value = f.values.map(c => c.value)
+                    colorKeysData.value = f.values.map(c => c.key)
+                    colorValuesData.value = f.values.map(c => c.value)
                 }
                 // colors = f.values
                 else if (f.filterType == "OPTION_LIST")
-                    sizes.value = f.values
+                    sizesData.value = f.values
             })
     }, [filters])
 
@@ -49,7 +46,7 @@ export default function filterProduct() {
                     </Accordion.Title>
                     <Accordion.Content>
                         {
-                            categories.value.length == 0
+                            categoriesData.value.length == 0
                                 ? <div className="animate-pulse flex-1 space-y-6 py-2 pl-2">
                                     <span class="flex space-x-2">
                                         <div className="rounded-full bg-gray-400 h-4 w-4"></div>
@@ -84,15 +81,15 @@ export default function filterProduct() {
                     <Accordion.Content>
                         <ColorsChooser
                             setSelectedColors={setSelectedColors}
-                            colorKeys={colorKeys.value}
-                            colorValues={colorValues.value}
+                            colorKeys={colorKeysData.value}
+                            colorValues={colorValuesData.value}
                         />
                     </Accordion.Content>
                 </Accordion.Panel>
                 <Accordion.Panel>
                     <Accordion.Title>
                         Size
-                        {selectedSizes.value.length > 0 && <span> - {selectedSizes.value.join(", ")}</span>}
+                        {/* {selectedSizes.value.length > 0 && <span> - {selectedSizes.value.join(", ")}</span>} */}
                     </Accordion.Title>
                     <Accordion.Content>
                         <SizeFilter />
@@ -104,24 +101,44 @@ export default function filterProduct() {
 }
 
 function CategoryFilter() {
+    const [{ matches }] = useRouter()
+    const [selectedCat, setSelectedCat] = useState("All Products")
     const onCategoryChange = (e: Event) => {
-        if (e.target instanceof HTMLInputElement)
-            selectedCat.value = e.target.value
+        if (e.target instanceof HTMLInputElement) {
+            const updatedCat = e.target.value
+            setSelectedCat(updatedCat)
+            route(`/shop${getQueryString({
+                ...matches,
+                cat: updatedCat === "All Products" ? "" : updatedCat,
+            })}`)
+        }
     }
+
+    useEffect(() => {
+        if (matches) {
+            const { cat } = matches
+            if (cat) {
+                setSelectedCat(cat)
+            } else {
+                setSelectedCat("All Products")
+            }
+        }
+    }, [])
+
     return (
         <ul class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
-            {categories.value.map(c =>
+            {categoriesData.value.map(c =>
                 <li>
                     <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                         <div class="flex items-center h-5">
                             <input
                                 id={c.key}
-                                name="helper-radio"
+                                name="category-radio"
                                 type="radio"
                                 value={c.value}
                                 onChange={onCategoryChange}
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                                checked={c.value === selectedCat.value}
+                                checked={c.value === selectedCat}
                             />
                         </div>
                         <div class="ml-2 text-sm">
@@ -140,27 +157,58 @@ function CategoryFilter() {
 
 function SizeFilter() {
     const [checkedStates, setCheckStates] = useState<boolean[]>([])
+    const [{ matches }] = useRouter()
 
     useEffect(() => {
-        setCheckStates(new Array(sizes.value.length).fill(false))
-    }, [sizes.value])
+        console.log("size useEffect ", sizesData.value.length)
+        const initStates = new Array(sizesData.value.length).fill(false)
+        if (matches) {
+            const { s } = matches
+            if (s) {
+                s.split(",").forEach(size => {
+                    const i = sizesData.value.findIndex(data => data.value === size)
+                    if (i > -1) {
+                        initStates[i] = true
+                    }
+                })
+            }
+        }
+        setCheckStates(initStates)
+    }, [sizesData.value])
+
+    // useEffect(() => {
+    //     setCheckStates(new Array(sizesData.value.length).fill(false))
+    // }, [sizesData.value])
 
     const onSizeChange = (pos: number) => {
+        let sizeStr: string[] = []
         const updatedChecked = checkedStates.map((item, idx) => idx === pos ? !item : item)
+
         setCheckStates(updatedChecked)
+
+        updatedChecked.map((isChecked, idx) => {
+            if (isChecked)
+                sizeStr.push(sizesData.value[idx].value)
+        })
+        route(`/shop${getQueryString({
+            ...matches,
+            s: sizeStr.join(","),
+        })}`)
     }
 
-    useEffect(() => {
-        let s: string[] = []
-        checkedStates.map((c, idx) => {
-            if (c)
-                s.push(sizes.value[idx].value)
-        })
-        selectedSizes.value = s
-    }, [checkedStates])
+
+    // useEffect(() => {
+    //     let s: string[] = []
+
+    //     checkedStates.map((c, idx) => {
+    //         if (c)
+    //             s.push(sizesData.value[idx].value)
+    //     })
+
+    // }, [checkedStates])
     return (
         <div>
-            {sizes.value.map((s, idx) => <div class="flex items-center pb-3">
+            {sizesData.value.map((s, idx) => <div class="flex items-center pb-3">
                 <input
                     id={s.key}
                     type="checkbox"
@@ -178,6 +226,19 @@ function SizeFilter() {
             )}
         </div>
     )
+}
+
+function getQueryString({ cat, f, t, c, s }: FilterQueryParams) {
+    const params: string[] = []
+    if (cat) {
+        params.push(`cat=${cat}`)
+    }
+    if (s) {
+        if (s.length > 0) {
+            params.push(`s=${s}`)
+        }
+    }
+    return params.length > 0 ? `?${params.join("&")}` : ""
 }
 
 
