@@ -14,7 +14,7 @@ function useCart() {
             return accumulator + item.discountedPrice
         }, 0)
         setSubTotalInCart(subtotal)
-    }, [cartList])
+    }, [cartList.value])
 
     const updateItemInCart = (item: CartItem) => {
         const idx = cartList.value.findIndex(c => c.sku === item.sku)
