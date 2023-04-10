@@ -1,7 +1,7 @@
-import { ComponentChildren } from "preact";
+import { ComponentChild, ComponentChildren } from "preact";
 import { StateUpdater } from "preact/hooks";
 
-export default function Drawer({ children, header, isOpen, closeDrawer }: Props) {
+export default function Drawer({ children, header, isOpen, closeDrawer, footer }: Props) {
     return (
         <div
             class={
@@ -16,7 +16,7 @@ export default function Drawer({ children, header, isOpen, closeDrawer }: Props)
                 (isOpen ? " translate-x-0 " : " translate-x-full ")
             }>
 
-                <div class="relative w-screen max-w-md pb-10 flex flex-col space-y-3 overflow-y-scroll h-full">
+                <div class="relative w-screen max-w-md flex flex-col space-y-3 overflow-y-scroll h-screen">
                     <div class="flex border-b border-gray-200">
                         <header className="p-4 font-bold text-lg">{header}</header>
                         <button
@@ -40,9 +40,10 @@ export default function Drawer({ children, header, isOpen, closeDrawer }: Props)
                             </svg>
                         </button>
                     </div>
-                    <div class="px-4">
+                    <div class="px-4 flex-grow">
                         {children}
                     </div>
+                    {footer}
                 </div>
             </div>
             <section
@@ -58,4 +59,5 @@ interface Props {
     header: string
     isOpen: boolean
     closeDrawer: () => void
+    footer?: ComponentChild
 }

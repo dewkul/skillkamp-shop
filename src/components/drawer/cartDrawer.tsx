@@ -10,7 +10,8 @@ export default function CartDrawer() {
         <Drawer
             header="Shopping Cart"
             isOpen={isCartDrawerOpen}
-            closeDrawer={closeCartDrawer}>
+            closeDrawer={closeCartDrawer}
+            footer={<SubtotalCart />}>
             <div>
                 {
                     itemsCount.value > 0
@@ -18,7 +19,6 @@ export default function CartDrawer() {
                         : <EmptyCart />
                 }
             </div>
-            <SubtotalCart />
         </Drawer>
     )
 }
