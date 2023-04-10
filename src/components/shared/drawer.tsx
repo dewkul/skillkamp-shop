@@ -1,7 +1,7 @@
 import { ComponentChildren } from "preact";
 import { StateUpdater } from "preact/hooks";
 
-export default function Drawer({ children, header, isOpen, setOpen }: Props) {
+export default function Drawer({ children, header, isOpen, closeDrawer }: Props) {
     return (
         <div
             class={
@@ -20,7 +20,7 @@ export default function Drawer({ children, header, isOpen, setOpen }: Props) {
                     <div class="flex border-b border-gray-200">
                         <header className="p-4 font-bold text-lg">{header}</header>
                         <button
-                            onClick={() => { setOpen(false) }}
+                            onClick={closeDrawer}
                             data-drawer-hide="drawer"
                             aria-controls="drawer"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-4 right-4 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -47,9 +47,7 @@ export default function Drawer({ children, header, isOpen, setOpen }: Props) {
             </div>
             <section
                 className=" w-screen h-full cursor-pointer"
-                onClick={() => {
-                    setOpen(false);
-                }}
+                onClick={closeDrawer}
             />
         </div>
     )
@@ -59,5 +57,5 @@ interface Props {
     children: ComponentChildren
     header: string
     isOpen: boolean
-    setOpen: StateUpdater<boolean>
+    closeDrawer: () => void
 }

@@ -61,9 +61,14 @@ function useCart() {
     const items = computed(() => cartList.value)
     const itemsCount = computed(() => cartList.value.length)
 
+    const openCartDrawer = () => setCartDrawerOpen(true)
+    const closeCartDrawer = () => setCartDrawerOpen(false)
+
     return {
         isCartDrawerOpen,
         setCartDrawerOpen,
+        openCartDrawer,
+        closeCartDrawer,
         addItemInCart,
         updateItemInCart,
         removeItemInCart,

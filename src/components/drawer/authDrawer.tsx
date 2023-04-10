@@ -7,14 +7,14 @@ import API from "../../lib/api"
 import { IDB } from "../../lib/idb";
 
 export default function AuthDrawer() {
-    const { isAuthDrawerOpen, setAuthDrawerOpen } = useAuthCtx()
+    const { isAuthDrawerOpen, closeAuthDrawer } = useAuthCtx()
     const [selectedTab, setSelectedTab] = useState(1)
 
     const commonClass = 'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700 ' +
         'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 '
 
     return (
-        <Drawer header="Greeting!" isOpen={isAuthDrawerOpen} setOpen={setAuthDrawerOpen}>
+        <Drawer header="Greeting!" isOpen={isAuthDrawerOpen} closeDrawer={closeAuthDrawer}>
             <Tab.Group
                 selectedIndex={selectedTab}
                 onChange={(idx) => {
@@ -69,7 +69,7 @@ function Login() {
     const [password, setPassword] = useState("")
     const [isRemember, setRemember] = useState(true)
 
-    const { setAuthDrawerOpen, setAuthData } = useAuthCtx()
+    const { closeAuthDrawer, setAuthData } = useAuthCtx()
 
     const onEmailInput = (e: Event) => {
         if (e.target instanceof HTMLInputElement) {
@@ -104,7 +104,7 @@ function Login() {
                     email,
                     token,
                 });
-            setAuthDrawerOpen(false)
+            closeAuthDrawer()
         } catch (err) {
             console.error("Login: ", err)
         }

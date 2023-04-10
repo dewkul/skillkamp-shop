@@ -53,7 +53,7 @@ export default function Nav() {
 }
 
 function AccountButton() {
-    const { setAuthDrawerOpen, isLogIn, removeAuthData } = useAuthCtx()
+    const { openAuthDrawer, isLogIn, removeAuthData } = useAuthCtx()
 
     return (
         <div>
@@ -67,7 +67,7 @@ function AccountButton() {
                             Log Out
                         </Dropdown.Item>
                     </Dropdown>
-                    : <Button onClick={() => setAuthDrawerOpen(true)}>
+                    : <Button onClick={openAuthDrawer}>
                         <span class="mr-2">
                             <MdAccountCircle />
                         </span>
@@ -80,11 +80,11 @@ function AccountButton() {
 }
 
 function CartOpenButton() {
-    const { setCartDrawerOpen, itemsCount } = useCartCtx()
+    const { openCartDrawer, itemsCount } = useCartCtx()
 
     return (
         <div>
-            <Button label={itemsCount} onClick={() => setCartDrawerOpen(true)}>
+            <Button label={itemsCount} onClick={openCartDrawer}>
                 <BsCart3 />
             </Button>
             <CartDrawer />

@@ -4,10 +4,13 @@ import SubtotalCart from "../cart/subtotalCart";
 import Drawer from "../shared/drawer";
 
 export default function CartDrawer() {
-    const { isCartDrawerOpen, setCartDrawerOpen, itemsCount } = useCartCtx()
+    const { isCartDrawerOpen, closeCartDrawer, itemsCount } = useCartCtx()
 
     return (
-        <Drawer header="Shopping Cart" isOpen={isCartDrawerOpen} setOpen={setCartDrawerOpen}>
+        <Drawer
+            header="Shopping Cart"
+            isOpen={isCartDrawerOpen}
+            closeDrawer={closeCartDrawer}>
             <div>
                 {
                     itemsCount.value > 0
