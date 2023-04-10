@@ -1,4 +1,5 @@
 import { Footer } from "flowbite-react"
+import { Link } from "preact-router"
 import { BsPinterest, BsFacebook, BsInstagram } from "react-icons/bs"
 
 export default function FooterApp() {
@@ -41,8 +42,15 @@ export default function FooterApp() {
     ]
     return (
         <Footer bgDark={true}>
-            <div className="w-full">
-                <div className="grid w-full grid-cols-2 gap-8 py-8 px-6 md:grid-cols-2 max-w-7xl mx-auto">
+            <div class="w-full">
+                <div class="grid w-full grid-cols-2 gap-8 py-8 px-6 md:grid-cols-3 max-w-7xl mx-auto">
+                    <div class="col-span-2 md:col-span-1">
+                        <Link href="/" class="flex items-center">
+                            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Happy Kids</span>
+                        </Link>
+
+                        < MailSubscribeGroup />
+                    </div>
                     <div>
                         <Footer.Title title="Site Tree" />
                         <Footer.LinkGroup col={true}>
@@ -67,16 +75,16 @@ export default function FooterApp() {
                             }
                         </Footer.LinkGroup>
                     </div>
-                    < MailSubscribeGroup />
+
                 </div>
 
-                <div className="w-full bg-gray-700 py-6 px-4 sm:flex sm:items-center sm:justify-between">
+                <div class="w-full bg-gray-700 py-6 px-4 sm:flex sm:items-center sm:justify-between">
                     <Footer.Copyright
                         href="/"
                         by="Happy Kids"
                         year={2023}
                     />
-                    <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
+                    <div class="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
                         <Footer.Icon
                             href="/"
                             icon={BsFacebook}
@@ -98,7 +106,7 @@ export default function FooterApp() {
 
 function MailSubscribeGroup() {
     return (
-        <div className="">
+        <div class="mt-8">
             <div class="pb-3 capitalize">join our mailing list</div>
             <div>
                 <span>
