@@ -19,7 +19,6 @@ export default function GridProducts() {
                 queryProductByFilters(matches).then((p) => {
                     setProductList(p)
                 }).catch(err => console.warn("Query product: ", err))
-                // setProductList(allProducts.value)
             }
         }
     }, [matches])

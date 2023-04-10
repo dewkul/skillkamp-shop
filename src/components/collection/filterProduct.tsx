@@ -65,7 +65,7 @@ export default function filterProduct() {
                         Price
                     </Accordion.Title>
                     <Accordion.Content>
-                        { }
+                        <PricesFilter />
                     </Accordion.Content>
                 </Accordion.Panel>
                 <Accordion.Panel>
@@ -257,21 +257,125 @@ function ColorsFilter() {
     )
 }
 
+function PricesFilter() {
+    const [selectedFromPrice, setSelectedFromPrice] = useState("")
+    const [selectedToPrice, setSelectedToPrice] = useState("")
+    const [fromPriceList, setFromPriceList] = useState<string[]>([])
+    const [toPriceList, setToPriceList] = useState<string[]>([])
+    const [{ matches }] = useRouter()
+
+    const priceListCount = pricesData.value.length
+
+    const onFromPriceChange = (e: Event) => {
+        if (e.target instanceof HTMLSelectElement) {
+            const newFromPrice = e.target.value
+            setSelectedFromPrice(newFromPrice)
+            route(`/shop${getQueryString({
+                ...matches,
+                // f: newFromPrice === pricesData.value[0].key ? "" : newFromPrice,
+                f: newFromPrice,
+                t: selectedToPrice,
+            })}`)
+        }
+    }
+
+    const onToPriceChange = (e: Event) => {
+        if (e.target instanceof HTMLSelectElement) {
+            const newToPrice = e.target.value
+            setSelectedToPrice(newToPrice)
+            route(`/shop${getQueryString({
+                ...matches,
+                t: newToPrice === pricesData.value[priceListCount - 1].key ? "" : newToPrice,
+                f: selectedFromPrice,
+            })}`)
+        }
+    }
+
+    // useEffect(() => {
+    //     if (matches) {
+
+    //     }
+    // }, [])
+
+    useEffect(() => {
+        if (pricesData.value.length > 0) {
+            const initPrices = {
+                from: "",
+                to: ""
+            }
+            if (matches) {
+                const { f, t } = matches
+                if (f) {
+                    initPrices.from = f //setSelectedFromPrice(f)
+                } else {
+                    initPrices.from = pricesData.value[0].key //setSelectedFromPrice(pricesData.value[0].key)
+                }
+
+                if (t) {
+                    initPrices.to = t //setSelectedToPrice(t)
+                } else {
+                    initPrices.to = pricesData.value[priceListCount - 1].key //setSelectedToPrice(pricesData.value[priceListCount - 1].key)
+                }
+            }
+            setSelectedFromPrice(initPrices.from)
+            setSelectedToPrice(initPrices.to)
+            setFromPriceList(pricesData.value.map(p => p.key))
+            setToPriceList(pricesData.value.map(p => p.key))
+        }
+    }, [pricesData.value])
+
+    return (
+        <div class="flex">
+            <select
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={selectedFromPrice}
+                id="from-price"
+                onChange={onFromPriceChange}
+            >
+                {
+                    fromPriceList.map(price =>
+                        <option value={price}>$ {price}</option>
+                    )
+                }
+            </select>
+            <span class="p-2">-</span>
+            <select
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={selectedToPrice}
+                id="to-price"
+                onChange={onToPriceChange}
+            >
+                {
+                    toPriceList.map(price =>
+                        <option value={price}>$ {price}</option>
+                    )
+                }
+            </select>
+        </div>
+    )
+}
+
+
 function getQueryString({ cat, f, t, c, s }: FilterQueryParams) {
     const params: string[] = []
-    if (cat) {
+    if (cat)
         params.push(`cat=${cat}`)
-    }
-    if (s) {
+
+    if (s)
         if (s.length > 0) {
             params.push(`s=${s}`)
         }
-    }
-    if (c) {
+
+    if (c)
         if (c.length > 0) {
             params.push(`c=${c}`)
         }
-    }
+
+    if (f)
+        params.push(`f=${f}`)
+
+    if (t)
+        params.push(`t=${t}`)
     return params.length > 0 ? `?${params.join("&")}` : ""
 }
 

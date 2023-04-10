@@ -135,6 +135,8 @@ export const queryProductByFilters = async ({
   cat,
   s,
   c,
+  f,
+  t,
 }: FilterQueryParams) => {
   const params: string[] = []
   if (cat) {
@@ -145,6 +147,9 @@ export const queryProductByFilters = async ({
   }
   if (c) {
     params.push(`OPTION_COLOR=${c}`)
+  }
+  if (f && t) {
+    params.push(`PRICE=${f}-${t}`)
   }
   const { data, status } = await API.get(`/v1/api/products?${params.join('&')}`)
 
