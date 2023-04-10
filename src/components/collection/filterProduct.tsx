@@ -232,7 +232,7 @@ function ColorsFilter() {
                 selColors.push(colorValuesData.value[idx])
             }
         })
-        console.log("multi colors change!", selColors)
+
         route(`/shop${getQueryString({
             ...matches,
             c: selColors.join(",")

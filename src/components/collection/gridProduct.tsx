@@ -12,10 +12,8 @@ export default function GridProducts() {
     const [isLoading, setLoading] = useState(true)
 
     useEffect(() => {
-        console.log('products useEffect: ', matches)
         if (matches) {
             if (Object.keys(matches).length > 0) {
-                console.log("Get filters")
                 queryProductByFilters(matches).then((p) => {
                     setProductList(p)
                 }).catch(err => console.warn("Query product: ", err))
