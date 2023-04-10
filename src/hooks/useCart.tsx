@@ -11,7 +11,7 @@ function useCart() {
 
     useEffect(() => {
         const subtotal = cartList.value.reduce((accumulator, item) => {
-            return accumulator + item.discountedPrice
+            return accumulator + (item.discountedPrice * item.qty)
         }, 0)
         setSubTotalInCart(subtotal)
     }, [cartList.value])
@@ -19,7 +19,7 @@ function useCart() {
     const updateItemInCart = (item: CartItem) => {
         const idx = cartList.value.findIndex(c => c.sku === item.sku)
         // if item existed in cart
-        if (idx) {
+        if (idx > -1) {
             // update item
             const updatedList = cartList.value.map((c, i) => i == idx ? item : c)
             cartList.value = updatedList
@@ -31,7 +31,7 @@ function useCart() {
 
     const removeItemInCart = (sku: string) => {
         const idx = cartList.value.findIndex((c) => c.sku === sku)
-        if (idx) {
+        if (idx > -1) {
             let updatedList = cartList.value
             if (cartList.value[idx].qty == 1) {
                 // Remove item from cart
@@ -50,7 +50,7 @@ function useCart() {
     const addItemInCart = (item: CartItem) => {
         const idx = cartList.value.findIndex(c => c.sku === item.sku)
 
-        if (idx >= 0) {
+        if (idx > -1) {
             const itemInList = cartList.value[idx]
             itemInList.qty += item.qty
         } else {
