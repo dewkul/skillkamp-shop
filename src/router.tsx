@@ -4,7 +4,7 @@ import { useGetAllProducts } from "./hooks/useApi"
 import { useAuthCtx } from "./hooks/useAuth"
 import { useProductCtx } from "./hooks/useProduct"
 import { IDB } from "./lib/idb"
-import { HomePage, ContactPage, CollectionPage, ProductDetailPage, NotFoundError } from "./pages"
+import { HomePage, ContactPage, CollectionPage, ProductDetailPage, NotFoundError, CheckoutPage } from "./pages"
 
 export default function Routes() {
     const { setAuthData } = useAuthCtx()
@@ -29,9 +29,10 @@ export default function Routes() {
             <Router>
                 <Route path="/" component={HomePage} />
                 <Route path="/contact" component={ContactPage} />
-
                 <Route path="/shop" component={CollectionPage} />
                 <Route path="/product/:urlPath" component={ProductDetailPage} />
+
+                <Route path="/checkout" component={CheckoutPage} />
 
                 <Route default component={NotFoundError} />
             </Router>
