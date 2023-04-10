@@ -1,4 +1,4 @@
-import Router, { Route } from "preact-router"
+import { Router, Route, route, RouterOnChangeArgs, RouteProps } from "preact-router"
 import { useEffect } from "preact/hooks"
 import { useGetAllProducts } from "./hooks/useApi"
 import { useAuthCtx } from "./hooks/useAuth"
@@ -32,10 +32,22 @@ export default function Routes() {
                 <Route path="/shop" component={CollectionPage} />
                 <Route path="/product/:urlPath" component={ProductDetailPage} />
 
-                <Route path="/checkout" component={CheckoutPage} />
+                <AuthRoute path="/checkout" component={CheckoutPage} />
 
                 <Route default component={NotFoundError} />
             </Router>
         </div>
     )
+}
+
+function AuthRoute(props: any) {
+    const { isLogIn } = useAuthCtx()
+
+    useEffect(() => {
+        if (!isLogIn.value)
+            route("/", true)
+    }, [isLogIn.value])
+
+    if (!isLogIn.value) return null
+    return <Route {...props} />
 }
