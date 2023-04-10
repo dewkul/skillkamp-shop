@@ -2,9 +2,9 @@ import { Accordion } from "flowbite-react";
 import { FilterQueryParams, FilterValue } from "../../schema/filter";
 import { useEffect, useState } from "preact/hooks";
 import { signal } from '@preact/signals'
-import ColorsChooser from "./colorsChooser";
 import { useGetFilterApi } from "../../hooks";
 import { route, useRouter } from "preact-router";
+import { ColorRect } from "../shared";
 
 const categoriesData = signal<FilterValue[]>([])
 const pricesData = signal<FilterValue[]>([])
@@ -12,12 +12,8 @@ const sizesData = signal<FilterValue[]>([])
 const colorKeysData = signal<string[]>([])
 const colorValuesData = signal<string[]>([])
 
-// const selectedCat = signal("")
-// const selectedSizes = signal<string[]>([])
 
 export default function filterProduct() {
-    const [selectedColors, setSelectedColors] = useState<string[]>([])
-
     const { filters, loading } = useGetFilterApi()
 
     useEffect(() => {
@@ -31,7 +27,6 @@ export default function filterProduct() {
                     colorKeysData.value = f.values.map(c => c.key)
                     colorValuesData.value = f.values.map(c => c.value)
                 }
-                // colors = f.values
                 else if (f.filterType == "OPTION_LIST")
                     sizesData.value = f.values
             })
@@ -76,14 +71,9 @@ export default function filterProduct() {
                 <Accordion.Panel>
                     <Accordion.Title>
                         Color
-                        {selectedColors.length > 0 && <span> - {selectedColors.join(", ")}</span>}
                     </Accordion.Title>
                     <Accordion.Content>
-                        <ColorsChooser
-                            setSelectedColors={setSelectedColors}
-                            colorKeys={colorKeysData.value}
-                            colorValues={colorValuesData.value}
-                        />
+                        <ColorsFilter />
                     </Accordion.Content>
                 </Accordion.Panel>
                 <Accordion.Panel>
@@ -160,7 +150,6 @@ function SizeFilter() {
     const [{ matches }] = useRouter()
 
     useEffect(() => {
-        console.log("size useEffect ", sizesData.value.length)
         const initStates = new Array(sizesData.value.length).fill(false)
         if (matches) {
             const { s } = matches
@@ -175,10 +164,6 @@ function SizeFilter() {
         }
         setCheckStates(initStates)
     }, [sizesData.value])
-
-    // useEffect(() => {
-    //     setCheckStates(new Array(sizesData.value.length).fill(false))
-    // }, [sizesData.value])
 
     const onSizeChange = (pos: number) => {
         let sizeStr: string[] = []
@@ -196,16 +181,6 @@ function SizeFilter() {
         })}`)
     }
 
-
-    // useEffect(() => {
-    //     let s: string[] = []
-
-    //     checkedStates.map((c, idx) => {
-    //         if (c)
-    //             s.push(sizesData.value[idx].value)
-    //     })
-
-    // }, [checkedStates])
     return (
         <div>
             {sizesData.value.map((s, idx) => <div class="flex items-center pb-3">
@@ -228,6 +203,60 @@ function SizeFilter() {
     )
 }
 
+function ColorsFilter() {
+    const [isColorSelectedStates, setColorSelectedStates] = useState<boolean[]>([])
+    const [{ matches }] = useRouter()
+
+    useEffect(() => {
+        const initStates = new Array(colorKeysData.value.length).fill(false)
+        if (matches) {
+            const { c } = matches
+            if (c) {
+                c.split(",").forEach(c => {
+                    const i = colorValuesData.value.findIndex(data => data === c)
+                    if (i > -1) {
+                        initStates[i] = true
+                    }
+                })
+            }
+        }
+        setColorSelectedStates(initStates)
+    }, [colorKeysData.value])
+
+    const onMultiColorChange = (pos: number) => {
+        const updatedChecked = isColorSelectedStates.map((item, idx) => idx === pos ? !item : item)
+        setColorSelectedStates(updatedChecked)
+        let selColors: string[] = []
+        updatedChecked.forEach((c, idx) => {
+            if (c) {
+                selColors.push(colorValuesData.value[idx])
+            }
+        })
+        console.log("multi colors change!", selColors)
+        route(`/shop${getQueryString({
+            ...matches,
+            c: selColors.join(",")
+        })}`)
+        // setSelectedColors(selColors)
+    }
+
+    return (
+        <div class="flex items-center gap-2">
+            {
+                colorKeysData.value.map((key, i) =>
+                    <ColorRect
+                        hex={key}
+                        value={colorValuesData.value[i]}
+                        isChecked={isColorSelectedStates[i]}
+                        onColorChange={() => onMultiColorChange(i)}
+                        id="multi-"
+                    />
+                )
+            }
+        </div>
+    )
+}
+
 function getQueryString({ cat, f, t, c, s }: FilterQueryParams) {
     const params: string[] = []
     if (cat) {
@@ -236,6 +265,11 @@ function getQueryString({ cat, f, t, c, s }: FilterQueryParams) {
     if (s) {
         if (s.length > 0) {
             params.push(`s=${s}`)
+        }
+    }
+    if (c) {
+        if (c.length > 0) {
+            params.push(`c=${c}`)
         }
     }
     return params.length > 0 ? `?${params.join("&")}` : ""

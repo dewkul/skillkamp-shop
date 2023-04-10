@@ -11,10 +11,10 @@ export default function ColorSingleChooser({ setSelectedColor, colorKeys, colorV
     //     console.log('use effect ' + colorKeys.length)
     // }, [colorKeys])
 
-    const onColorChange = (pos: number) => {
+    const onColorSingleChange = (pos: number) => {
         const updatedChecked = checkedStates.map((item, idx) => idx === pos ? !item : false)
         setCheckStates(updatedChecked)
-
+        console.log("color changed")
         for (let idx = 0; idx < updatedChecked.length; idx++) {
             if (updatedChecked[idx]) {
                 setSelectedColor({
@@ -35,7 +35,8 @@ export default function ColorSingleChooser({ setSelectedColor, colorKeys, colorV
                         hex={key}
                         value={colorValues[i]}
                         isChecked={checkedStates[i]}
-                        onColorChange={() => onColorChange(i)}
+                        onColorChange={() => onColorSingleChange(i)}
+                        id="single-"
                     />
                 )
             }

@@ -131,13 +131,20 @@ export const getProductInfoBySku = async (sku: string) => {
   return (data as GetProductInfoResponse).detail.data.catalog.product
 }
 
-export const queryProductByFilters = async ({ cat, s }: FilterQueryParams) => {
+export const queryProductByFilters = async ({
+  cat,
+  s,
+  c,
+}: FilterQueryParams) => {
   const params: string[] = []
   if (cat) {
     params.push(`CATEGORY=${cat}`)
   }
   if (s) {
     params.push(`OPTION_LIST=${s}`)
+  }
+  if (c) {
+    params.push(`OPTION_COLOR=${c}`)
   }
   const { data, status } = await API.get(`/v1/api/products?${params.join('&')}`)
 
