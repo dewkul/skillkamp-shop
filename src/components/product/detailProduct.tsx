@@ -4,14 +4,34 @@ import ColorSingleChooser from "./colorSingleChooser"
 import { Button } from "flowbite-react"
 import { FilterValue } from "../../schema/filter"
 import { Signal, signal } from "@preact/signals"
+import { useCartCtx } from "../../hooks/useCart"
 
 const selectedSize = signal("")
 // const selectedColor = signal<FilterValue | null>(null)
 
 export default function DetailProductGroup({ setImgIndex, detail }: Props) {
-    const { name, sku, price, discountedPrice, options } = detail
+    const { name, sku, price, discountedPrice, options, media } = detail
     const [selectedColor, setSelectedColor] = useState<FilterValue | null>(null)
     const [quantity, setQuantity] = useState(1)
+    const { addItemInCart } = useCartCtx()
+
+    const addToCart = () => {
+        if (!selectedColor || !selectedSize) {
+            console.warn("Not select color or size")
+            return
+        }
+        const itemToBeAdded = {
+            name,
+            sku,
+            price,
+            discountedPrice,
+            color: selectedColor.value,
+            size: selectedSize.value,
+            qty: quantity,
+            fullUrl: media[0].fullUrl
+        }
+        addItemInCart(itemToBeAdded)
+    }
 
     const increaseQuantity = () => {
         if (quantity < detail.inventory.quantity)
@@ -108,7 +128,7 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
                     </button>
                 </div>
             </div>
-            <div class="mt-4">
+            <div class="mt-4" onClick={addToCart}>
                 <Button>Add to cart</Button>
             </div>
         </div>

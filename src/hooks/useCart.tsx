@@ -13,7 +13,6 @@ function useCart() {
         const subtotal = cartList.value.reduce((accumulator, item) => {
             return accumulator + item.discountedPrice
         }, 0)
-        console.log(subtotal)
         setSubTotalInCart(subtotal)
     }, [cartList])
 
@@ -51,9 +50,9 @@ function useCart() {
     const addItemInCart = (item: CartItem) => {
         const idx = cartList.value.findIndex(c => c.sku === item.sku)
 
-        if (idx) {
+        if (idx >= 0) {
             const itemInList = cartList.value[idx]
-            itemInList.qty += 1
+            itemInList.qty += item.qty
         } else {
             cartList.value = [...cartList.value, item]
         }
