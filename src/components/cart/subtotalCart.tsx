@@ -19,16 +19,19 @@ export default function SubtotalCart() {
                         <p>${subtotalInCart}</p>
                     </div>
                     <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                    <div class="mt-6">
-                        <button
-                            class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                            onClick={onCheckout}
-                        >
-                            Checkout
-                        </button>
-                    </div>
                 </>
             }
+            <div class="mt-6">
+                <button
+                    class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 disabled:bg-gray-300"
+                    onClick={onCheckout}
+                    disabled={totalQtyCart <= 0}
+                >
+                    Checkout
+                </button>
+            </div>
+
+
             <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
                 <p>
                     or
