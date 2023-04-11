@@ -19,6 +19,7 @@ jobs:
           envVariableKeys: VITE_API_BASE_URL
         env:
           VITE_API_BASE_URL: ${{ vars.API_BASE_URL }}
+          TARGET_VITE_API_BASE_URL: preview,development,production
 
       - name: Deploy app
         uses: amondnet/vercel-action@v20
@@ -28,7 +29,7 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           github-comment: false
-          # working-directory: dist
+          working-directory: dist
 
       - name: Update Deployment Status
         uses: bobheadxi/deployments@v0.4.3
