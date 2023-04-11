@@ -84,7 +84,10 @@ function CartOpenButton() {
 
     return (
         <div>
-            <Button label={itemsCount} onClick={openCartDrawer}>
+            <Button
+                color="gray"
+                label={itemsCount}
+                onClick={openCartDrawer}>
                 <BsCart3 />
             </Button>
             <CartDrawer />
