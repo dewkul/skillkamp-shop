@@ -1,20 +1,21 @@
 import Dexie, { Table } from 'dexie'
 
-export class HappyKidsDb extends Dexie {
+class HappyKidsDb extends Dexie {
   auth!: Table<AuthTable>
 
   constructor() {
     super('happyKidsApp')
     this.version(1).stores({
-      auth: '++id, token, email',
+      auth: '++id, token, email, name',
     })
   }
 }
 
 export const IDB = new HappyKidsDb()
 
-export interface AuthTable {
+interface AuthTable {
   id?: number
   token: string
   email: string
+  name: string
 }

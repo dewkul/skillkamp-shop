@@ -59,10 +59,11 @@ function AccountButton() {
         <div>
             {
                 isLogIn.value
-                    ? <Dropdown label={<MdAccountCircle />} icon={<MdAccountCircle />}>
+                    ? <Dropdown label={<MdAccountCircle />}>
                         {/* <Dropdown.Item>
                             My Account
                         </Dropdown.Item> */}
+
                         <Dropdown.Item onClick={removeAuthData}>
                             Log Out
                         </Dropdown.Item>

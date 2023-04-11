@@ -57,4 +57,5 @@ export function AuthProvider({
 interface AuthData {
     token?: string
     email?: string
+    name?: string
 }

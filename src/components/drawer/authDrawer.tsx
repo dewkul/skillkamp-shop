@@ -93,16 +93,19 @@ function Login() {
             if (status != 200)
                 throw new Error("Got status" + status)
             const token = data.detail.Token
+            const name = data.detail.Name
 
             setAuthData({
                 token,
                 email,
+                name
             })
 
             if (isRemember)
                 await IDB.auth.add({
                     email,
                     token,
+                    name,
                 });
             closeAuthDrawer()
         } catch (err) {
