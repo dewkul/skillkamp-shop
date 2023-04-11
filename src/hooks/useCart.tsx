@@ -2,6 +2,7 @@ import { computed, signal } from "@preact/signals";
 import { ComponentChildren, createContext } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import { CartItem } from "../schema/cart";
+import { useProductCtx } from "./useProduct";
 
 const cartList = signal<CartItem[]>([])
 
@@ -9,6 +10,7 @@ function useCart() {
     const [isCartDrawerOpen, setCartDrawerOpen] = useState(false)
     const [subtotalInCart, setSubTotalInCart] = useState("")
     const [totalQtyCart, setTotalQtyCart] = useState(0)
+    const { closeProductInfoModal } = useProductCtx()
 
     useEffect(() => {
         const subtotal = cartList.value.reduce((accumulator, item) => {
@@ -61,6 +63,8 @@ function useCart() {
         } else {
             cartList.value = [...cartList.value, item]
         }
+
+        closeProductInfoModal()
     }
 
     const items = computed(() => cartList.value)

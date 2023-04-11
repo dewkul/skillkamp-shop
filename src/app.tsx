@@ -10,14 +10,14 @@ export function App() {
   return (
     <>
       <Banner />
-      <CartProvider>
-        <AuthProvider>
-          <Nav />
-          <ProductProvider>
+      <ProductProvider>
+        <CartProvider>
+          <AuthProvider>
+            <Nav />
             <Routes />
-          </ProductProvider>
-        </AuthProvider>
-      </CartProvider>
+          </AuthProvider>
+        </CartProvider>
+      </ProductProvider>
       <FooterApp />
     </>
   )
