@@ -9,7 +9,7 @@ class HappyKidsDb extends Dexie {
     super('happyKidsApp')
     this.version(1).stores({
       auth: '++id, token, email, name',
-      cart: '++id, product, isSync',
+      cart: '++id, sku, name, price, discountedPrice, color, size, qty, fullUrl, isSync',
     })
   }
 }
@@ -23,8 +23,7 @@ interface AuthTable {
   name: string
 }
 
-interface CartTable {
+interface CartTable extends CartItem {
   id?: number
-  product: CartItem
   isSync: boolean
 }
