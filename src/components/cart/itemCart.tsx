@@ -1,11 +1,15 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { CartItem } from "../../schema/cart";
 import { useCartCtx } from "../../hooks/useCart";
 
 export default function ItemCart({ item }: Props) {
-    const { name, qty, discountedPrice, price, color, size, fullUrl } = item
+    const { name, qty, discountedPrice, price, color, size, fullUrl, sku } = item
     const [quantity, setQuantity] = useState(qty)
-    const { updateItemInCart } = useCartCtx()
+    const { updateItemInCart, removeItemInCart } = useCartCtx()
+
+    useEffect(() => {
+        setQuantity(item.qty)
+    }, [item])
 
     const incrementQty = () => {
         const newQty = quantity + 1
@@ -14,7 +18,7 @@ export default function ItemCart({ item }: Props) {
     }
 
     const decrementQty = () => {
-        if (quantity > 0) {
+        if (quantity > 1) {
             const newQty = quantity - 1
             setQuantity(newQty)
             updateQty(newQty)
@@ -27,6 +31,11 @@ export default function ItemCart({ item }: Props) {
             qty,
         })
     }
+
+    const removeItem = () => {
+        removeItemInCart(item)
+    }
+
     return (
         <li class="flex py-6">
             <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
@@ -54,8 +63,13 @@ export default function ItemCart({ item }: Props) {
                         <button
                             class="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50"
                             onClick={decrementQty}
+                            disabled={qty <= 1}
                         > - </button>
-                        <input class="h-7 w-9 bg-white text-center text-xs" type="number" value={quantity} min="1" />
+                        <input
+                            class="h-7 w-9 bg-white text-center text-xs"
+                            type="number"
+                            value={quantity}
+                            min="1" />
                         <button
                             class="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50"
                             onClick={incrementQty}
@@ -63,7 +77,12 @@ export default function ItemCart({ item }: Props) {
                     </div>
 
                     <div class="flex">
-                        <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                        <button
+                            class="font-medium text-indigo-600 hover:text-indigo-500"
+                            onClick={removeItem}
+                        >
+                            Remove
+                        </button>
                     </div>
                 </div>
             </div>

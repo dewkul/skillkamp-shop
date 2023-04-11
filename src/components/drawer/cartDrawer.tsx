@@ -1,4 +1,7 @@
+import { useEffect } from "preact/hooks";
 import { useCartCtx } from "../../hooks/useCart";
+import { useLiveQuery } from "../../hooks/useLiveQuery";
+import { IDB } from "../../lib/idb";
 import ItemCart from "../cart/itemCart";
 import SubtotalCart from "../cart/subtotalCart";
 import Drawer from "../shared/drawer";
@@ -24,12 +27,14 @@ export default function CartDrawer() {
 }
 
 function ItemListCart() {
-    const { items } = useCartCtx()
+    const { cartList } = useCartCtx()
+
     return (
         <div class="m-8">
             <ul role="list" class="-my-6 divide-y divide-gray-200">
                 {
-                    items.value.map(item => (
+                    cartList.value &&
+                    cartList.value.map(item => (
                         <ItemCart item={item} />
                     ))
                 }

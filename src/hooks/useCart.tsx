@@ -1,10 +1,11 @@
-import { computed, signal } from "@preact/signals";
 import { ComponentChildren, createContext } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import { CartItem } from "../schema/cart";
 import { useProductCtx } from "./useProduct";
+import { useLiveQuery } from "./useLiveQuery";
+import { IDB } from "../lib/idb";
+import { computed, signal } from "@preact/signals";
 
-const cartList = signal<CartItem[]>([])
 
 function useCart() {
     const [isCartDrawerOpen, setCartDrawerOpen] = useState(false)
@@ -12,62 +13,77 @@ function useCart() {
     const [totalQtyCart, setTotalQtyCart] = useState(0)
     const { closeProductInfoModal } = useProductCtx()
 
+    const cartFromIdb = useLiveQuery(async () => {
+        return await IDB.cart
+            .toArray()
+    })
+
     useEffect(() => {
-        const subtotal = cartList.value.reduce((accumulator, item) => {
+        if (!cartFromIdb)
+            return
+
+        const subtotal = cartFromIdb.reduce((accumulator, item) => {
             return accumulator + (item.discountedPrice * item.qty)
         }, 0)
-        const qty = cartList.value.reduce((accumulator, item) => {
+        const qty = cartFromIdb.reduce((accumulator, item) => {
             return accumulator + item.qty
         }, 0)
         setSubTotalInCart(subtotal.toFixed(2))
         setTotalQtyCart(qty)
-    }, [cartList.value])
+    }, [cartFromIdb])
 
-    const updateItemInCart = (item: CartItem) => {
-        const idx = cartList.value.findIndex(c => c.sku === item.sku)
-        // if item existed in cart
-        if (idx > -1) {
-            // update item
-            const updatedList = cartList.value.map((c, i) => i == idx ? item : c)
-            cartList.value = updatedList
+    const cartList = computed(() => cartFromIdb)
+
+    const findItem = async (item: CartItem) => {
+        const { sku, color, size } = item
+        return await IDB.cart.where({
+            sku,
+            color,
+            size,
+        }).first()
+    }
+
+    const updateItemInCart = async (newItem: CartItem) => {
+        const { qty } = newItem
+        const item = await findItem(newItem)
+
+        if (item) {
+            IDB.cart.update(item.id!, { qty })
         } else {
-            // add item
-            cartList.value = [...cartList.value, item]
+            IDB.cart.add({
+                ...newItem,
+                isSync: false,
+            })
         }
     }
 
-    const removeItemInCart = (sku: string) => {
-        const idx = cartList.value.findIndex((c) => c.sku === sku)
-        if (idx > -1) {
-            let updatedList = cartList.value
-            if (cartList.value[idx].qty == 1) {
-                // Remove item from cart
-                const temp = cartList.value[idx]
-                updatedList[idx] = updatedList[-1]
-                updatedList[-1] = temp
-                updatedList.pop()
-            } else {
-                // Reduct qty by 1
-                updatedList.map((c, i) => i == idx ? c.qty -= 1 : c)
-            }
-            cartList.value = updatedList
+    const removeItemInCart = async (toBeRemoved: CartItem) => {
+
+        const item = await findItem(toBeRemoved)
+
+        if (item) {
+            IDB.cart.delete(item.id!)
         }
     }
 
-    const addItemInCart = (item: CartItem) => {
-        const idx = cartList.value.findIndex(c => c.sku === item.sku)
+    const addItemInCart = async (newItem: CartItem) => {
+        const { qty } = newItem
+        const item = await findItem(newItem)
 
-        if (idx > -1) {
-            const itemInList = cartList.value[idx]
-            itemInList.qty += item.qty
+        if (item) {
+            IDB.cart.update(item.id!, {
+                ...item,
+                qty: item.qty + qty,
+                isSync: false
+            })
         } else {
-            cartList.value = [...cartList.value, item]
+            IDB.cart.add({
+                ...newItem,
+                isSync: false,
+            })
         }
-
         closeProductInfoModal()
     }
-
-    const items = computed(() => cartList.value)
 
     const openCartDrawer = () => setCartDrawerOpen(true)
     const closeCartDrawer = () => setCartDrawerOpen(false)
@@ -80,7 +96,7 @@ function useCart() {
         addItemInCart,
         updateItemInCart,
         removeItemInCart,
-        items,
+        cartList,
         totalQtyCart,
         subtotalInCart,
     }
