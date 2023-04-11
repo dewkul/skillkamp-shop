@@ -11,12 +11,12 @@ export function App() {
     <>
       <Banner />
       <ProductProvider>
-        <CartProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <CartProvider>
             <Nav />
             <Routes />
-          </AuthProvider>
-        </CartProvider>
+          </CartProvider>
+        </AuthProvider>
       </ProductProvider>
       <FooterApp />
     </>
