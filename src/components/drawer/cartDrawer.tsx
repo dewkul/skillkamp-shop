@@ -4,7 +4,7 @@ import SubtotalCart from "../cart/subtotalCart";
 import Drawer from "../shared/drawer";
 
 export default function CartDrawer() {
-    const { isCartDrawerOpen, closeCartDrawer, itemsCount } = useCartCtx()
+    const { isCartDrawerOpen, closeCartDrawer, totalQtyCart } = useCartCtx()
 
     return (
         <Drawer
@@ -14,7 +14,7 @@ export default function CartDrawer() {
             footer={<SubtotalCart />}>
             <div>
                 {
-                    itemsCount.value > 0
+                    totalQtyCart > 0
                         ? <ItemListCart />
                         : <EmptyCart />
                 }
