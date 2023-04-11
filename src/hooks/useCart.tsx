@@ -1,65 +1,123 @@
-import { computed, signal } from "@preact/signals";
 import { ComponentChildren, createContext } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import { CartItem } from "../schema/cart";
+import { useProductCtx } from "./useProduct";
+import { useLiveQuery } from "./useLiveQuery";
+import { IDB } from "../lib/idb";
+import { computed } from "@preact/signals";
+import { useAuthCtx } from "./useAuth";
+import { deleteAuthData, postAuthData, putAuthData } from "./useApi";
 
-const cartList = signal<CartItem[]>([])
 
 function useCart() {
     const [isCartDrawerOpen, setCartDrawerOpen] = useState(false)
     const [subtotalInCart, setSubTotalInCart] = useState("")
+    const [totalQtyCart, setTotalQtyCart] = useState(0)
+    const { closeProductInfoModal } = useProductCtx()
+    const { token } = useAuthCtx()
+
+    const cartFromIdb = useLiveQuery(async () => {
+        return await IDB.cart
+            .toArray()
+    })
+
+    const path = "/v1/api/cart"
 
     useEffect(() => {
-        const subtotal = cartList.value.reduce((accumulator, item) => {
+        if (!cartFromIdb)
+            return
+
+        const subtotal = cartFromIdb.reduce((accumulator, item) => {
             return accumulator + (item.discountedPrice * item.qty)
         }, 0)
+        const qty = cartFromIdb.reduce((accumulator, item) => {
+            return accumulator + item.qty
+        }, 0)
         setSubTotalInCart(subtotal.toFixed(2))
-    }, [cartList.value])
+        setTotalQtyCart(qty)
+    }, [cartFromIdb])
 
-    const updateItemInCart = (item: CartItem) => {
-        const idx = cartList.value.findIndex(c => c.sku === item.sku)
-        // if item existed in cart
-        if (idx > -1) {
-            // update item
-            const updatedList = cartList.value.map((c, i) => i == idx ? item : c)
-            cartList.value = updatedList
+    const cartList = computed(() => cartFromIdb)
+
+    const findItem = async (item: CartItem) => {
+        const { sku, color, size } = item
+        return await IDB.cart.where({
+            sku,
+            color,
+            size,
+        }).first()
+    }
+
+    const updateItemInCart = async (newItem: CartItem) => {
+        const { qty } = newItem
+        const item = await findItem(newItem)
+
+        if (item) {
+            const err = await putAuthData({
+                path,
+                body: newItem,
+                token: token.value,
+            })
+            IDB.cart.update(item.id!, { qty, isSync: !err })
         } else {
-            // add item
-            cartList.value = [...cartList.value, item]
+            const err = await postAuthData({
+                path,
+                body: { ...newItem },
+                token: token.value,
+            })
+            IDB.cart.add({
+                ...newItem,
+                isSync: !err,
+            })
         }
     }
 
-    const removeItemInCart = (sku: string) => {
-        const idx = cartList.value.findIndex((c) => c.sku === sku)
-        if (idx > -1) {
-            let updatedList = cartList.value
-            if (cartList.value[idx].qty == 1) {
-                // Remove item from cart
-                const temp = cartList.value[idx]
-                updatedList[idx] = updatedList[-1]
-                updatedList[-1] = temp
-                updatedList.pop()
-            } else {
-                // Reduct qty by 1
-                updatedList.map((c, i) => i == idx ? c.qty -= 1 : c)
+    const removeItemInCart = async (toBeRemoved: CartItem) => {
+        const item = await findItem(toBeRemoved)
+
+        if (item) {
+            if (item.isSync) {
+                deleteAuthData({
+                    path,
+                    body: toBeRemoved,
+                    token: token.value,
+                })
             }
-            cartList.value = updatedList
+            IDB.cart.delete(item.id!)
         }
     }
 
-    const addItemInCart = (item: CartItem) => {
-        const idx = cartList.value.findIndex(c => c.sku === item.sku)
+    const addItemInCart = async (newItem: CartItem) => {
+        const { qty } = newItem
+        const item = await findItem(newItem)
 
-        if (idx > -1) {
-            const itemInList = cartList.value[idx]
-            itemInList.qty += item.qty
+        if (item) {
+            const updatedItem = {
+                ...item,
+                qty: item.qty + qty,
+            }
+            const err = await putAuthData({
+                path,
+                body: updatedItem,
+                token: token.value,
+            })
+            IDB.cart.update(item.id!, {
+                ...updatedItem,
+                isSync: !err
+            })
         } else {
-            cartList.value = [...cartList.value, item]
+            const err = await postAuthData({
+                path,
+                body: { ...newItem },
+                token: token.value,
+            })
+            IDB.cart.add({
+                ...newItem,
+                isSync: !err,
+            })
         }
+        closeProductInfoModal()
     }
-
-    const items = computed(() => cartList.value)
-    const itemsCount = computed(() => cartList.value.length)
 
     const openCartDrawer = () => setCartDrawerOpen(true)
     const closeCartDrawer = () => setCartDrawerOpen(false)
@@ -72,8 +130,8 @@ function useCart() {
         addItemInCart,
         updateItemInCart,
         removeItemInCart,
-        items,
-        itemsCount,
+        cartList,
+        totalQtyCart,
         subtotalInCart,
     }
 }

@@ -24,6 +24,8 @@ function useAuth() {
     const openAuthDrawer = () => setAuthDrawerOpen(true)
     const closeAuthDrawer = () => setAuthDrawerOpen(false)
 
+    const token = computed(() => authData.value.token)
+
     return {
         isAuthDrawerOpen,
         openAuthDrawer,
@@ -31,6 +33,7 @@ function useAuth() {
         isLogIn,
         setAuthData,
         removeAuthData,
+        token,
     }
 }
 

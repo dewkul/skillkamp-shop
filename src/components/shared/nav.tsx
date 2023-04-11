@@ -81,13 +81,13 @@ function AccountButton() {
 }
 
 function CartOpenButton() {
-    const { openCartDrawer, itemsCount } = useCartCtx()
+    const { openCartDrawer, totalQtyCart } = useCartCtx()
 
     return (
         <div>
             <Button
                 color="gray"
-                label={itemsCount}
+                label={totalQtyCart}
                 onClick={openCartDrawer}>
                 <BsCart3 />
             </Button>
