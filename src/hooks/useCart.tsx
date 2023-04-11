@@ -4,7 +4,9 @@ import { CartItem } from "../schema/cart";
 import { useProductCtx } from "./useProduct";
 import { useLiveQuery } from "./useLiveQuery";
 import { IDB } from "../lib/idb";
-import { computed, signal } from "@preact/signals";
+import { computed } from "@preact/signals";
+import { useAuthCtx } from "./useAuth";
+import { deleteAuthData, postAuthData, putAuthData } from "./useApi";
 
 
 function useCart() {
@@ -12,11 +14,14 @@ function useCart() {
     const [subtotalInCart, setSubTotalInCart] = useState("")
     const [totalQtyCart, setTotalQtyCart] = useState(0)
     const { closeProductInfoModal } = useProductCtx()
+    const { token } = useAuthCtx()
 
     const cartFromIdb = useLiveQuery(async () => {
         return await IDB.cart
             .toArray()
     })
+
+    const path = "/v1/api/cart"
 
     useEffect(() => {
         if (!cartFromIdb)
@@ -48,20 +53,36 @@ function useCart() {
         const item = await findItem(newItem)
 
         if (item) {
-            IDB.cart.update(item.id!, { qty })
+            const err = await putAuthData({
+                path,
+                body: newItem,
+                token: token.value,
+            })
+            IDB.cart.update(item.id!, { qty, isSync: !err })
         } else {
+            const err = await postAuthData({
+                path,
+                body: { ...newItem },
+                token: token.value,
+            })
             IDB.cart.add({
                 ...newItem,
-                isSync: false,
+                isSync: !err,
             })
         }
     }
 
     const removeItemInCart = async (toBeRemoved: CartItem) => {
-
         const item = await findItem(toBeRemoved)
 
         if (item) {
+            if (item.isSync) {
+                deleteAuthData({
+                    path,
+                    body: toBeRemoved,
+                    token: token.value,
+                })
+            }
             IDB.cart.delete(item.id!)
         }
     }
@@ -71,15 +92,28 @@ function useCart() {
         const item = await findItem(newItem)
 
         if (item) {
-            IDB.cart.update(item.id!, {
+            const updatedItem = {
                 ...item,
                 qty: item.qty + qty,
-                isSync: false
+            }
+            const err = await putAuthData({
+                path,
+                body: updatedItem,
+                token: token.value,
+            })
+            IDB.cart.update(item.id!, {
+                ...updatedItem,
+                isSync: !err
             })
         } else {
+            const err = await postAuthData({
+                path,
+                body: { ...newItem },
+                token: token.value,
+            })
             IDB.cart.add({
                 ...newItem,
-                isSync: false,
+                isSync: !err,
             })
         }
         closeProductInfoModal()

@@ -10,7 +10,7 @@ export const fetchData = async <T>({
   path,
   setError,
   setLoading,
-}: DataParams<T>) => {
+}: DataParams) => {
   try {
     const { data } = await API.get(path)
     return data as T
@@ -26,7 +26,7 @@ export const fetchAuthData = async <T>({
   setError,
   setLoading,
   token,
-}: AuthDataParams<T>) => {
+}: AuthDataParams) => {
   const headers = {
     Authorization: `Bearer ${token}`,
   }
@@ -52,7 +52,7 @@ export const postData = async <T>({
   body,
   setError,
   setLoading,
-}: DataParamsWithBody<T>) => {
+}: DataParamsWithBody) => {
   try {
     const { data } = await API.post(path, body)
     return data as T
@@ -62,6 +62,130 @@ export const postData = async <T>({
     setLoading(false)
   }
 }
+
+export const postAuthData = async ({
+  path,
+  body,
+  token,
+}: AuthDataParamsWithBody) => {
+  if (!token) return
+  try {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    }
+
+    await API.post(
+      path,
+      body,
+      token
+        ? {
+            headers,
+          }
+        : undefined
+    )
+  } catch (err) {
+    if (err instanceof Error) return err
+  }
+}
+
+export const putAuthData = async <T>({
+  path,
+  body,
+  token,
+}: AuthDataParamsWithBody) => {
+  if (!token) return
+  try {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    }
+    API.put(
+      path,
+      body,
+      token
+        ? {
+            headers,
+          }
+        : undefined
+    )
+  } catch (err) {
+    if (err instanceof Error) return err
+  }
+}
+
+export const deleteAuthData = async <T>({
+  path,
+  body,
+  token,
+}: AuthDataParamsWithBody) => {
+  if (!token) return
+  try {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    }
+    await API.delete(path, {
+      data: body,
+      headers,
+    })
+  } catch (err) {
+    if (err instanceof Error) return err
+  }
+}
+
+// export const putData = async <T>({
+//   path,
+//   body,
+//   token,
+//   setError,
+//   setLoading,
+// }: AuthDataParamsWithBody<T>) => {
+//   const headers = {
+//     Authorization: `Bearer ${token}`,
+//   }
+//   try {
+//     const { data } = await API.post(
+//       path,
+//       body,
+//       token
+//         ? {
+//             headers,
+//           }
+//         : undefined
+//     )
+//     return data as T
+//   } catch (err) {
+//     if (err instanceof Error) setError(err)
+//   } finally {
+//     setLoading(false)
+//   }
+// }
+
+// export const deleteData = async <T>({
+//   path,
+//   body,
+//   token,
+//   setError,
+//   setLoading,
+// }: AuthDataParamsWithBody<T>) => {
+//   const headers = {
+//     Authorization: `Bearer ${token}`,
+//   }
+//   try {
+//     const { data } = await API.post(
+//       path,
+//       body,
+//       token
+//         ? {
+//             headers,
+//           }
+//         : undefined
+//     )
+//     return data as T
+//   } catch (err) {
+//     if (err instanceof Error) setError(err)
+//   } finally {
+//     setLoading(false)
+//   }
+// }
 
 function useGetApi<T>(path: string) {
   const [loading, setLoading] = useState(true)
@@ -107,31 +231,31 @@ function useGetAuthApi<T>(path: string) {
   }
 }
 
-export function usePostApi<T>(path: string, reqBody?: any) {
-  const [response, setResponse] = useState<T>()
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error>()
+// export function usePostApi<T>(path: string, reqBody?: any) {
+//   const [response, setResponse] = useState<T>()
+//   const [loading, setLoading] = useState(true)
+//   const [error, setError] = useState<Error>()
 
-  useEffect(() => {
-    const postData = async () => {
-      try {
-        const { data } = await API.post(path, reqBody)
-        setResponse(data)
-      } catch (err) {
-        if (err instanceof Error) setError(err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    postData()
-  }, [])
+//   useEffect(() => {
+//     const postData = async () => {
+//       try {
+//         const { data } = await API.post(path, reqBody)
+//         setResponse(data)
+//       } catch (err) {
+//         if (err instanceof Error) setError(err)
+//       } finally {
+//         setLoading(false)
+//       }
+//     }
+//     postData()
+//   }, [])
 
-  return {
-    response,
-    loading,
-    error,
-  }
-}
+//   return {
+//     response,
+//     loading,
+//     error,
+//   }
+// }
 
 export function useGetFilterApi() {
   const [filters, setFilters] = useState<Filter[]>([])
@@ -306,20 +430,22 @@ interface GetItemsInCartResponse {
   }
 }
 
-interface DataParams<T> {
+interface DataParams {
   path: string
   setError: StateUpdater<Error | undefined>
   setLoading: StateUpdater<boolean>
 }
 
-interface AuthDataParams<T> extends DataParams<T> {
+interface AuthDataParams extends DataParams {
   token: string
 }
 
-interface DataParamsWithBody<T> extends DataParams<T> {
+interface DataParamsWithBody extends DataParams {
   body?: any
 }
 
-interface AuthDataParamsWithBody<T> extends AuthDataParams<T> {
+interface AuthDataParamsWithBody {
+  path: string
+  token?: string
   body?: any
 }
