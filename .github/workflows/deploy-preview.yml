@@ -1,0 +1,41 @@
+name: deploy vercel preview
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  vercel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set Env Vars on Vercel Project
+        uses: dkershner6/vercel-set-env-action@v1
+        with:
+          token: ${{ secrets.VERCEL_TOKEN }}
+          projectName: skillkamp-shop
+          envVariableKeys: VITE_API_BASE_URL
+        env:
+          VITE_API_BASE_URL: ${{ vars.API_BASE_URL }}
+
+      - name: Deploy app
+        uses: amondnet/vercel-action@v20
+        id: vercel-action
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          github-comment: false
+          # working-directory: dist
+
+      - name: Update Deployment Status
+        uses: bobheadxi/deployments@v0.4.3
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          env_url: ${{ steps.vercel-action.outputs.preview-url }}
