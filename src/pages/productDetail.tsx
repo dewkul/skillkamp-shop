@@ -7,19 +7,15 @@ import { useProductCtx } from "../hooks/useProduct"
 export default function ProductDetailPage({ urlPath }: Props) {
     const [imgIndex, setImgIndex] = useState<number | null>(null)
     const { allProducts, productInfo, setSelectedSku } = useProductCtx()
-    // const [ isProductExisted, setProductExisted ] = useState(false)
-    // const detail = getProductDetail.detail.data.catalog.product
 
     useEffect(() => {
-        if (allProducts.value) {
-            const p = allProducts.value.find(product => product.urlPart == urlPath)
+        if (allProducts) {
+            const p = allProducts.find(product => product.urlPart == urlPath)
             if (p) {
                 setSelectedSku(p.sku)
             }
         }
-
-
-    }, [urlPath, allProducts.value])
+    }, [urlPath, allProducts])
 
     return (
         <div class="mx-2">
