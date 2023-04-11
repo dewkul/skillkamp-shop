@@ -12,11 +12,13 @@ function useProduct() {
     const [selectedSku, setSelectedSku] = useState<string | null>(null)
     const [isProductInfoModalOpen, setProductInfoModalOpen] = useState(false)
 
+
     const openProductInfoModal = (sku: string) => {
         setSelectedSku(sku)
         setProductInfoModalOpen(true)
     }
     const closeProductInfoModal = () => setProductInfoModalOpen(false)
+
 
     useEffect(() => {
         if (selectedSku)

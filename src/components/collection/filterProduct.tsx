@@ -2,97 +2,72 @@ import { Accordion } from "flowbite-react";
 import { FilterQueryParams, FilterValue } from "../../schema/filter";
 import { useEffect, useState } from "preact/hooks";
 import { signal } from '@preact/signals'
-import { useGetFilterApi } from "../../hooks";
 import { route, useRouter } from "preact-router";
 import { ColorRect } from "../shared";
+import { useFilterCtx } from "../../hooks/useFilter";
 
-const categoriesData = signal<FilterValue[]>([])
-const pricesData = signal<FilterValue[]>([])
-const sizesData = signal<FilterValue[]>([])
-const colorKeysData = signal<string[]>([])
-const colorValuesData = signal<string[]>([])
-
-
-export default function filterProduct() {
-    const { filters, loading } = useGetFilterApi()
-
-    useEffect(() => {
-        if (filters)
-            filters.map((f, _) => {
-                if (f.filterType == "CATEGORY")
-                    categoriesData.value = f.values.reverse()
-                else if (f.filterType == "PRICE")
-                    pricesData.value = f.values
-                else if (f.filterType == "OPTION_COLOR") {
-                    colorKeysData.value = f.values.map(c => c.key)
-                    colorValuesData.value = f.values.map(c => c.value)
-                }
-                else if (f.filterType == "OPTION_LIST")
-                    sizesData.value = f.values
-            })
-    }, [filters])
-
+export default function FilterProduct({ id }: Props) {
+    const { categoriesData } = useFilterCtx()
     return (
-        <div class="hidden lg:block">
-            <Accordion flush={true} alwaysOpen={true}>
-                <Accordion.Panel>
-                    <Accordion.Title>
-                        Category
-                    </Accordion.Title>
-                    <Accordion.Content>
-                        {
-                            categoriesData.value.length == 0
-                                ? <div className="animate-pulse flex-1 space-y-6 py-2 pl-2">
-                                    <span class="flex space-x-2">
-                                        <div className="rounded-full bg-gray-400 h-4 w-4"></div>
-                                        <div className="h-4 bg-gray-400 rounded w-3/4"></div>
-                                    </span>
-                                    <span class="flex space-x-2">
-                                        <div className="rounded-full bg-gray-400 h-4 w-4"></div>
-                                        <div className="h-4 bg-gray-400 rounded w-5/6"></div>
-                                    </span>
-                                    <span class="flex space-x-2">
-                                        <div className="rounded-full bg-gray-400 h-4 w-4"></div>
-                                        <div className="h-4 bg-gray-400 rounded w-4/6"></div>
-                                    </span>
-                                </div>
-                                : <CategoryFilter />
-                        }
-                    </Accordion.Content>
-                </Accordion.Panel>
-                <Accordion.Panel>
-                    <Accordion.Title>
-                        Price
-                    </Accordion.Title>
-                    <Accordion.Content>
-                        <PricesFilter />
-                    </Accordion.Content>
-                </Accordion.Panel>
-                <Accordion.Panel>
-                    <Accordion.Title>
-                        Color
-                    </Accordion.Title>
-                    <Accordion.Content>
-                        <ColorsFilter />
-                    </Accordion.Content>
-                </Accordion.Panel>
-                <Accordion.Panel>
-                    <Accordion.Title>
-                        Size
-                        {/* {selectedSizes.value.length > 0 && <span> - {selectedSizes.value.join(", ")}</span>} */}
-                    </Accordion.Title>
-                    <Accordion.Content>
-                        <SizeFilter />
-                    </Accordion.Content>
-                </Accordion.Panel>
-            </Accordion>
-        </div>
+        <Accordion id={id} flush={true} alwaysOpen={true}>
+            <Accordion.Panel>
+                <Accordion.Title>
+                    Category
+                </Accordion.Title>
+                <Accordion.Content>
+                    {
+                        categoriesData.value.length == 0
+                            ? <div className="animate-pulse flex-1 space-y-6 py-2 pl-2">
+                                <span class="flex space-x-2">
+                                    <div className="rounded-full bg-gray-400 h-4 w-4"></div>
+                                    <div className="h-4 bg-gray-400 rounded w-3/4"></div>
+                                </span>
+                                <span class="flex space-x-2">
+                                    <div className="rounded-full bg-gray-400 h-4 w-4"></div>
+                                    <div className="h-4 bg-gray-400 rounded w-5/6"></div>
+                                </span>
+                                <span class="flex space-x-2">
+                                    <div className="rounded-full bg-gray-400 h-4 w-4"></div>
+                                    <div className="h-4 bg-gray-400 rounded w-4/6"></div>
+                                </span>
+                            </div>
+                            : <CategoryFilter id={id} />
+                    }
+                </Accordion.Content>
+            </Accordion.Panel>
+            <Accordion.Panel>
+                <Accordion.Title>
+                    Price
+                </Accordion.Title>
+                <Accordion.Content>
+                    <PricesFilter id={id} />
+                </Accordion.Content>
+            </Accordion.Panel>
+            <Accordion.Panel>
+                <Accordion.Title>
+                    Color
+                </Accordion.Title>
+                <Accordion.Content>
+                    <ColorsFilter id={id} />
+                </Accordion.Content>
+            </Accordion.Panel>
+            <Accordion.Panel>
+                <Accordion.Title>
+                    Size
+                    {/* {selectedSizes.value.length > 0 && <span> - {selectedSizes.value.join(", ")}</span>} */}
+                </Accordion.Title>
+                <Accordion.Content>
+                    <SizeFilter id={id} />
+                </Accordion.Content>
+            </Accordion.Panel>
+        </Accordion>
     )
 }
 
-function CategoryFilter() {
+function CategoryFilter({ id }: Props) {
     const [{ matches }] = useRouter()
-    const [selectedCat, setSelectedCat] = useState("All Products")
+    const { categoriesData, selectedCat, setSelectedCat } = useFilterCtx()
+
     const onCategoryChange = (e: Event) => {
         if (e.target instanceof HTMLInputElement) {
             const updatedCat = e.target.value
@@ -116,14 +91,15 @@ function CategoryFilter() {
     }, [])
 
     return (
-        <ul class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
+        <ul id={id + "ul"} class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
+            <p>{selectedCat}</p>
             {categoriesData.value.map(c =>
                 <li>
                     <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                         <div class="flex items-center h-5">
                             <input
-                                id={c.key}
-                                name="category-radio"
+                                id={id + c.key}
+                                name={id + "category-radio"}
                                 type="radio"
                                 value={c.value}
                                 onChange={onCategoryChange}
@@ -132,7 +108,7 @@ function CategoryFilter() {
                             />
                         </div>
                         <div class="ml-2 text-sm">
-                            <label for={c.key} class="font-medium text-gray-900 dark:text-gray-300">
+                            <label for={id + c.key} class="font-medium text-gray-900 dark:text-gray-300">
                                 <div>{c.value}</div>
                                 {/* <p id="helper-radio-text-4" class="text-xs font-normal text-gray-500 dark:text-gray-300"></p> */}
                             </label>
@@ -145,9 +121,9 @@ function CategoryFilter() {
 
 
 
-function SizeFilter() {
-    const [checkedStates, setCheckStates] = useState<boolean[]>([])
+function SizeFilter({ id }: Props) {
     const [{ matches }] = useRouter()
+    const { sizesData, sizeCheckStates, setSizeCheckStates } = useFilterCtx()
 
     useEffect(() => {
         const initStates = new Array(sizesData.value.length).fill(false)
@@ -162,14 +138,14 @@ function SizeFilter() {
                 })
             }
         }
-        setCheckStates(initStates)
+        setSizeCheckStates(initStates)
     }, [sizesData.value])
 
     const onSizeChange = (pos: number) => {
         let sizeStr: string[] = []
-        const updatedChecked = checkedStates.map((item, idx) => idx === pos ? !item : item)
+        const updatedChecked = sizeCheckStates.map((item, idx) => idx === pos ? !item : item)
 
-        setCheckStates(updatedChecked)
+        setSizeCheckStates(updatedChecked)
 
         updatedChecked.map((isChecked, idx) => {
             if (isChecked)
@@ -185,14 +161,14 @@ function SizeFilter() {
         <div>
             {sizesData.value.map((s, idx) => <div class="flex items-center pb-3">
                 <input
-                    id={s.key}
+                    id={id + s.key}
                     type="checkbox"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    checked={checkedStates[idx]}
+                    checked={sizeCheckStates[idx]}
                     onChange={() => onSizeChange(idx)}
                 />
                 <label
-                    for={s.key}
+                    for={id + s.key}
                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                     {s.value}
@@ -203,9 +179,9 @@ function SizeFilter() {
     )
 }
 
-function ColorsFilter() {
-    const [isColorSelectedStates, setColorSelectedStates] = useState<boolean[]>([])
+function ColorsFilter({ id }: Props) {
     const [{ matches }] = useRouter()
+    const { colorPickStates, setColorPickState, colorKeysData, colorValuesData } = useFilterCtx()
 
     useEffect(() => {
         const initStates = new Array(colorKeysData.value.length).fill(false)
@@ -220,12 +196,12 @@ function ColorsFilter() {
                 })
             }
         }
-        setColorSelectedStates(initStates)
+        setColorPickState(initStates)
     }, [colorKeysData.value])
 
     const onMultiColorChange = (pos: number) => {
-        const updatedChecked = isColorSelectedStates.map((item, idx) => idx === pos ? !item : item)
-        setColorSelectedStates(updatedChecked)
+        const updatedChecked = colorPickStates.map((item, idx) => idx === pos ? !item : item)
+        setColorPickState(updatedChecked)
         let selColors: string[] = []
         updatedChecked.forEach((c, idx) => {
             if (c) {
@@ -247,9 +223,9 @@ function ColorsFilter() {
                     <ColorRect
                         hex={key}
                         value={colorValuesData.value[i]}
-                        isChecked={isColorSelectedStates[i]}
+                        isChecked={colorPickStates[i]}
                         onColorChange={() => onMultiColorChange(i)}
-                        id="multi-"
+                        id={`multi-${id}`}
                     />
                 )
             }
@@ -257,12 +233,19 @@ function ColorsFilter() {
     )
 }
 
-function PricesFilter() {
-    const [selectedFromPrice, setSelectedFromPrice] = useState("")
-    const [selectedToPrice, setSelectedToPrice] = useState("")
-    const [fromPriceList, setFromPriceList] = useState<string[]>([])
-    const [toPriceList, setToPriceList] = useState<string[]>([])
+function PricesFilter({ id }: Props) {
     const [{ matches }] = useRouter()
+    const {
+        pricesData,
+        selectedFromPrice,
+        setSelectedFromPrice,
+        selectedToPrice,
+        setSelectedToPrice,
+        fromPriceList,
+        setFromPriceList,
+        toPriceList,
+        setToPriceList,
+    } = useFilterCtx()
 
     const priceListCount = pricesData.value.length
 
@@ -290,12 +273,6 @@ function PricesFilter() {
             })}`)
         }
     }
-
-    // useEffect(() => {
-    //     if (matches) {
-
-    //     }
-    // }, [])
 
     useEffect(() => {
         if (pricesData.value.length > 0) {
@@ -329,7 +306,7 @@ function PricesFilter() {
             <select
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 value={selectedFromPrice}
-                id="from-price"
+                id={`${id}from-price`}
                 onChange={onFromPriceChange}
             >
                 {
@@ -342,7 +319,7 @@ function PricesFilter() {
             <select
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 value={selectedToPrice}
-                id="to-price"
+                id={`${id}to-price`}
                 onChange={onToPriceChange}
             >
                 {
@@ -379,7 +356,9 @@ function getQueryString({ cat, f, t, c, s }: FilterQueryParams) {
     return params.length > 0 ? `?${params.join("&")}` : ""
 }
 
-
+interface Props {
+    id: string
+}
 
 // function CheckIcon(props: { class: string }) {
 //     return (
