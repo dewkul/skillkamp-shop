@@ -92,7 +92,6 @@ function CategoryFilter({ id }: Props) {
 
     return (
         <ul id={id + "ul"} class="space-y-1 text-sm text-gray-700 dark:text-gray-200">
-            <p>{selectedCat}</p>
             {categoriesData.value.map(c =>
                 <li>
                     <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
