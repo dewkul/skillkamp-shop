@@ -19,18 +19,20 @@ export default function ProductDetailPage({ urlPath }: Props) {
     }, [urlPath, allProducts])
 
     return (
-        <div class="mx-2">
-            <Breadcrumb aria-label="breadcrumb">
-                <Breadcrumb.Item href="/" icon={MdHome}>
-                    Home
-                </Breadcrumb.Item>
-                <Breadcrumb.Item href="/shop">
-                    Shop
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>
-                    {productInfo.value?.name}
-                </Breadcrumb.Item>
-            </Breadcrumb>
+        <div class="mx-3">
+            <div class="my-8">
+                <Breadcrumb aria-label="breadcrumb">
+                    <Breadcrumb.Item href="/" icon={MdHome}>
+                        Home
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item href="/shop">
+                        Shop
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>
+                        {productInfo.value?.name}
+                    </Breadcrumb.Item>
+                </Breadcrumb>
+            </div>
             <div class="container grid grid-cols-2 gap-6">
 
                 {productInfo.value && <ImageProduct isShowSelector={true} />}

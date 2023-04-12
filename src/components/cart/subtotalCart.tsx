@@ -34,7 +34,7 @@ export default function SubtotalCart() {
                     isLogIn.value
                         ?
                         <button
-                            class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 disabled:bg-gray-300"
+                            class="flex w-full items-center justify-center rounded-md border border-transparent bg-primary-800 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-primary-700 disabled:bg-primary-200"
                             onClick={onCheckout}
                             disabled={totalQtyCart <= 0}
                         >
@@ -42,7 +42,7 @@ export default function SubtotalCart() {
 
                         </button>
                         : <button
-                            class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 disabled:bg-gray-300"
+                            class="flex w-full items-center justify-center rounded-md border border-transparent bg-primary-800 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-primary-700 disabled:bg-primary-200"
                             onClick={login}>
                             <span>Log in to Checkout</span>
                         </button>
@@ -54,7 +54,7 @@ export default function SubtotalCart() {
                 <p>
                     or
                     <button
-                        class="font-medium text-indigo-600 hover:text-indigo-500 ml-2"
+                        class="font-medium text-secondary-600 hover:text-secondary-500 ml-2"
                         onClick={closeCartDrawer}
                     >
                         <span aria-hidden="true">&larr; </span>
