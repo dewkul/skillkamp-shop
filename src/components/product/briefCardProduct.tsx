@@ -20,7 +20,7 @@ export default function BriefProductCard({ product }: Props) {
                     {price != discountedPrice && <p class="text-base text-gray-400 line-through">${price}</p>}
                 </div>
             </Link>
-            <Button class=" w-full" onClick={onClick}>Add to cart</Button>
+            <Button class="w-full" onClick={onClick}>Add to cart</Button>
         </Card>
 
     )
