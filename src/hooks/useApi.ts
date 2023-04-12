@@ -211,6 +211,44 @@ export function useGetItemsInCart() {
   }
 }
 
+export function useGetLandingImage() {
+  const [imgUrls, setImgUrl] = useState<string[]>()
+  const { response, loading, error } = useGetApi<GetImageResponse>(
+    '/v1/api/images/landing'
+  )
+
+  useEffect(() => {
+    if (response) {
+      setImgUrl(response.detail)
+    }
+  }, [response])
+
+  return {
+    imgUrls,
+    loading,
+    error,
+  }
+}
+
+export function useGetStoryImage() {
+  const [imgUrls, setImgUrl] = useState<string[]>()
+  const { response, loading, error } = useGetApi<GetImageResponse>(
+    '/v1/api/images/story'
+  )
+
+  useEffect(() => {
+    if (response) {
+      setImgUrl(response.detail)
+    }
+  }, [response])
+
+  return {
+    imgUrls,
+    loading,
+    error,
+  }
+}
+
 interface GetResponseFilter {
   data: {
     catalog: {
@@ -252,4 +290,8 @@ interface GetItemsInCartResponse {
     sub_total: number
     cart_list: CartItem[]
   }
+}
+
+interface GetImageResponse {
+  detail: string[]
 }
