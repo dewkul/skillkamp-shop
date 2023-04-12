@@ -1,4 +1,4 @@
-import { StateUpdater, useEffect, useState } from "preact/hooks"
+import { useState } from "preact/hooks"
 import { ProductDetail, Selection } from "../../schema/productDetail"
 import ColorSingleChooser from "./colorSingleChooser"
 import { Button } from "flowbite-react"
@@ -10,7 +10,7 @@ import { toast } from "react-hot-toast"
 const selectedSize = signal("")
 // const selectedColor = signal<FilterValue | null>(null)
 
-export default function DetailProductGroup({ setImgIndex, detail }: Props) {
+export default function DetailProduct({ detail }: Props) {
     const { name, sku, price, discountedPrice, options, media } = detail
     const [selectedColor, setSelectedColor] = useState<FilterValue | null>(null)
     const [quantity, setQuantity] = useState(1)
@@ -168,7 +168,7 @@ function SizeChooser({ selections, sizeSignal }: SizeChooserProps) {
 
 
 interface Props {
-    setImgIndex: StateUpdater<number | null>
+    // setImgIndex: StateUpdater<number | null>
     detail: ProductDetail
 }
 

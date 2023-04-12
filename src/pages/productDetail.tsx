@@ -1,11 +1,12 @@
 import { Breadcrumb } from "flowbite-react"
-import { useEffect, useState } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 import { MdHome } from "react-icons/md"
 import DetailProductGroup from "../components/product/detailProduct"
 import { useProductCtx } from "../hooks/useProduct"
+import { ImageProduct } from "../components/product/imgProduct"
 
 export default function ProductDetailPage({ urlPath }: Props) {
-    const [imgIndex, setImgIndex] = useState<number | null>(null)
+
     const { allProducts, productInfo, setSelectedSku } = useProductCtx()
 
     useEffect(() => {
@@ -32,29 +33,14 @@ export default function ProductDetailPage({ urlPath }: Props) {
             </Breadcrumb>
             <div class="container grid grid-cols-2 gap-6">
 
-                {productInfo.value && <div>
-                    <img
-                        src={productInfo.value.media[0].fullUrl}
-                        class="w-full"
-                    />
-                    <div class="grid grid-cols-5 gap-4 mt-4">
-                        {
-                            productInfo.value.media.map(
-                                m => <img
-                                    src={m.fullUrl}
-                                    alt={m.title}
-                                    class="w-full cursor-pointer border border-primary"
-                                />
-                            )
-                        }
-
-                    </div>
-                </div>}
-                {productInfo.value && <DetailProductGroup setImgIndex={setImgIndex} detail={productInfo.value} />}
+                {productInfo.value && <ImageProduct isShowSelector={true} />}
+                {productInfo.value && <DetailProductGroup detail={productInfo.value} />}
             </div>
         </div>
     )
 }
+
+
 
 interface Props {
     urlPath: string

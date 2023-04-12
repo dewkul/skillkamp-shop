@@ -11,7 +11,7 @@ function useProduct() {
     const [allProducts, setAllProducts] = useState<Product[]>([])
     const [selectedSku, setSelectedSku] = useState<string | null>(null)
     const [isProductInfoModalOpen, setProductInfoModalOpen] = useState(false)
-
+    const [imgIndex, setImgIndex] = useState<number>(0)
 
     const openProductInfoModal = (sku: string) => {
         setSelectedSku(sku)
@@ -36,6 +36,8 @@ function useProduct() {
         closeProductInfoModal,
         productInfo,
         setSelectedSku,
+        imgIndex,
+        setImgIndex,
     }
 }
 

@@ -1,11 +1,14 @@
 import { StateUpdater, useState } from "preact/hooks"
 import { FilterValue } from "../../schema/filter"
 import { ColorRect } from "../shared"
+import { useProductCtx } from "../../hooks/useProduct"
 
 export default function ColorSingleChooser({ setSelectedColor, colorKeys, colorValues, colorCount }: Props) {
     const [checkedStates, setCheckStates] = useState<boolean[]>(new Array(colorCount).fill(false))
+    const { setImgIndex } = useProductCtx()
 
     const onColorSingleChange = (pos: number) => {
+        setImgIndex(pos)
         const updatedChecked = checkedStates.map((item, idx) => idx === pos ? !item : false)
         setCheckStates(updatedChecked)
         for (let idx = 0; idx < updatedChecked.length; idx++) {
