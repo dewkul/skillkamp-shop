@@ -31,14 +31,10 @@ export default function ContactPage() {
     return (
         <div>
             <ContactForm />
-            <div class="py-5">
-                <Card>
-                    <div class="grid grid-cols-3">
-                        {
-                            contacts.map((c, _) => <ContentGroup title={c.title} lines={c.lines} />)
-                        }
-                    </div>
-                </Card>
+            <div class="grid grid-cols-3 my-10">
+                {
+                    contacts.map((c, _) => <ContentGroup title={c.title} lines={c.lines} />)
+                }
             </div>
         </div>
     )
@@ -47,10 +43,10 @@ export default function ContactPage() {
 function ContentGroup({ title, lines }: ContentGroupProps) {
     return (
         <div>
-            <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white capitalize">{title}</h5>
+            <h5 class="text-center text-xl font-bold tracking-tight text-gray-900 dark:text-white capitalize">{title}</h5>
             <div>
                 {
-                    lines.map((c, _) => <div>{c}</div>)
+                    lines.map((c, _) => <div class="text-center">{c}</div>)
                 }
             </div>
         </div>
