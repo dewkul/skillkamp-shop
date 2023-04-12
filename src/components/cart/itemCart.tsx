@@ -50,7 +50,7 @@ export default function ItemCart({ item }: Props) {
                 <div>
                     <div class="flex justify-between text-base font-medium text-gray-900">
                         <h3>
-                            <a href="#">Throwback Hip Bag</a>
+                            <span>{name}</span>
                         </h3>
                         <p class="ml-4">${discountedPrice}</p>
                     </div>
