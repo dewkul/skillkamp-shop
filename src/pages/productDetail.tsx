@@ -4,6 +4,7 @@ import { MdHome } from "react-icons/md"
 import DetailProductGroup from "../components/product/detailProduct"
 import { useProductCtx } from "../hooks/useProduct"
 import { ImageProduct } from "../components/product/imgProduct"
+import { HorizontalProductList } from "../components/shared"
 
 export default function ProductDetailPage({ urlPath }: Props) {
 
@@ -33,11 +34,14 @@ export default function ProductDetailPage({ urlPath }: Props) {
                     </Breadcrumb.Item>
                 </Breadcrumb>
             </div>
-            <div class="container grid grid-cols-2 gap-6">
-
+            <div class="container grid grid-cols-1 md:grid-cols-2 gap-6">
                 {productInfo.value && <ImageProduct isShowSelector={true} />}
                 {productInfo.value && <DetailProductGroup detail={productInfo.value} />}
             </div>
+            <div class="pl-3 pt-9 flex justify-between items-center">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900">Related products</h2>
+            </div>
+            <HorizontalProductList products={allProducts} />
         </div>
     )
 }
