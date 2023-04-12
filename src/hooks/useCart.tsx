@@ -13,6 +13,8 @@ function useCart() {
     const [isCartDrawerOpen, setCartDrawerOpen] = useState(false)
     const [subtotalInCart, setSubTotalInCart] = useState("")
     const [totalQtyCart, setTotalQtyCart] = useState(0)
+    const [isCartPending, setCartPending] = useState(false)
+
     const { closeProductInfoModal } = useProductCtx()
     const { token } = useAuthCtx()
 
@@ -133,6 +135,8 @@ function useCart() {
         cartList,
         totalQtyCart,
         subtotalInCart,
+        isCartPending,
+        setCartPending,
     }
 }
 

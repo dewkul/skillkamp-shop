@@ -5,6 +5,7 @@ import { Button, Card, Label, TextInput, Checkbox } from "flowbite-react";
 import { StateUpdater, useState } from "preact/hooks";
 import { IDB } from "../../lib/idb";
 import { postData } from "../../hooks/useApi";
+import { useCartCtx } from "../../hooks/useCart";
 
 export default function AuthDrawer() {
     const { isAuthDrawerOpen, closeAuthDrawer } = useAuthCtx()
@@ -72,6 +73,7 @@ function Login() {
     const [isLoading, setLoading] = useState(false)
 
     const { closeAuthDrawer, setAuthData } = useAuthCtx()
+    const { openCartDrawer, isCartPending, setCartPending } = useCartCtx()
 
     const onEmailInput = (e: Event) => {
         if (e.target instanceof HTMLInputElement) {
@@ -118,6 +120,10 @@ function Login() {
                     name,
                 });
             closeAuthDrawer()
+            if (isCartPending) {
+                setCartPending(false)
+                openCartDrawer()
+            }
         } catch (err) {
             console.error("Login: ", err)
         }

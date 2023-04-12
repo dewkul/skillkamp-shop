@@ -1,12 +1,20 @@
 import { route } from "preact-router"
 import { useCartCtx } from "../../hooks/useCart"
+import { useAuthCtx } from "../../hooks/useAuth"
 
 export default function SubtotalCart() {
-    const { subtotalInCart, closeCartDrawer, totalQtyCart } = useCartCtx()
+    const { subtotalInCart, closeCartDrawer, totalQtyCart, setCartPending } = useCartCtx()
+    const { isLogIn, openAuthDrawer } = useAuthCtx()
 
     const onCheckout = () => {
         route('/checkout')
         closeCartDrawer()
+    }
+
+    const login = () => {
+        setCartPending(true)
+        closeCartDrawer()
+        openAuthDrawer()
     }
 
     return (
@@ -22,13 +30,23 @@ export default function SubtotalCart() {
                 </>
             }
             <div class="mt-6">
-                <button
-                    class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 disabled:bg-gray-300"
-                    onClick={onCheckout}
-                    disabled={totalQtyCart <= 0}
-                >
-                    Checkout
-                </button>
+                {
+                    isLogIn.value
+                        ?
+                        <button
+                            class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 disabled:bg-gray-300"
+                            onClick={onCheckout}
+                            disabled={totalQtyCart <= 0}
+                        >
+                            <span>Checkout</span>
+
+                        </button>
+                        : <button
+                            class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 disabled:bg-gray-300"
+                            onClick={login}>
+                            <span>Log in to Checkout</span>
+                        </button>
+                }
             </div>
 
 
