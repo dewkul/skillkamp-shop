@@ -6,6 +6,7 @@ import { StateUpdater, useState } from "preact/hooks";
 import { IDB } from "../../lib/idb";
 import { postData } from "../../lib/api";
 import { useCartCtx } from "../../hooks/useCart";
+import { toast } from "react-hot-toast";
 
 export default function AuthDrawer() {
     const { isAuthDrawerOpen, closeAuthDrawer } = useAuthCtx()
@@ -69,7 +70,7 @@ function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isRemember, setRemember] = useState(true)
-    const [error, setError] = useState<Error | undefined>()
+    const [error, setError] = useState("")
     const [isLoading, setLoading] = useState(false)
 
     const { closeAuthDrawer, setAuthData } = useAuthCtx()
@@ -117,13 +118,15 @@ function Login() {
                     token,
                     name,
                 });
+            toast.success(`Welcome back, ${name}!`)
             closeAuthDrawer()
             if (isCartPending) {
                 setCartPending(false)
                 openCartDrawer()
             }
         } catch (err) {
-            setError(err as Error)
+            toast.error((err as Error).message)
+            setError("Check your password and try agiain")
             console.error("Login: ", err)
         }
 
@@ -180,7 +183,7 @@ function Login() {
             </Card>
             {
                 error
-                && <ErrorToast title="Error while logging in" />
+                && <ErrorToast title={error} />
             }
         </div>
     )
@@ -190,7 +193,7 @@ function Register({ setSelectedTab }: RegisterProps) {
     const [fullName, setFullName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [error, setError] = useState<Error | undefined>()
+    const [error, setError] = useState("")
     const [isLoading, setLoading] = useState(false)
 
     const onFullName = (e: Event) => {
@@ -225,7 +228,9 @@ function Register({ setSelectedTab }: RegisterProps) {
             setPassword("")
             setSelectedTab(1)
         } catch (err) {
-            setError(err as Error)
+            toast.error((err as Error).message)
+            setError("Unable to create an account.")
+            console.error("Register: ", err)
         }
     }
 
