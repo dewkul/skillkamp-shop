@@ -1,7 +1,13 @@
+import { route } from "preact-router"
 import { useCartCtx } from "../../hooks/useCart"
 
 export default function SummaryCheckout() {
-    const { subtotalInCart, shippingCost, totalPrice } = useCartCtx()
+    const { subtotalInCart, shippingCost, totalPrice, openPaidModal, clearCart } = useCartCtx()
+    const makePayment = () => {
+        openPaidModal()
+        route("/shop")
+        clearCart()
+    }
     return (
         <div>
             <h1 class="font-semibold text-2xl border-b pb-8">Order Summary</h1>
@@ -33,6 +39,7 @@ export default function SummaryCheckout() {
                 </div>
                 <button
                     class="bg-secondary-700 font-semibold hover:bg-secondary-600 py-3 text-sm text-white uppercase w-full round-lg"
+                    onClick={() => makePayment()}
                 >
                     Place Order
                 </button>

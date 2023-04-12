@@ -14,6 +14,7 @@ function useCart() {
     const [totalQtyCart, setTotalQtyCart] = useState(0)
     const [isCartPending, setCartPending] = useState(false)
     const [shippingCost, setShippingCost] = useState(0)
+    const [isPaidModalShow, setPaidModalShow] = useState(false)
 
     const { closeProductInfoModal } = useProductCtx()
     const { token } = useAuthCtx()
@@ -134,10 +135,21 @@ function useCart() {
         closeProductInfoModal()
     }
 
+    const clearCart = async () => {
+        const allItems = await IDB.cart
+            .toArray()
+
+        allItems.forEach(i => {
+            IDB.cart.delete(i.id!)
+        })
+    }
+
     const totalPrice = computed(() => Number(subtotalInCart) + shippingCost)
 
     const openCartDrawer = () => setCartDrawerOpen(true)
     const closeCartDrawer = () => setCartDrawerOpen(false)
+    const openPaidModal = () => setPaidModalShow(true)
+    const closePaidModal = () => setPaidModalShow(false)
 
     return {
         isCartDrawerOpen,
@@ -155,6 +167,10 @@ function useCart() {
         totalPrice,
         shippingCost,
         setShippingCost,
+        isPaidModalShow,
+        openPaidModal,
+        closePaidModal,
+        clearCart,
     }
 }
 
