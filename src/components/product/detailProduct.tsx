@@ -1,10 +1,11 @@
-import { StateUpdater, useState } from "preact/hooks"
+import { StateUpdater, useEffect, useState } from "preact/hooks"
 import { ProductDetail, Selection } from "../../schema/productDetail"
 import ColorSingleChooser from "./colorSingleChooser"
 import { Button } from "flowbite-react"
 import { FilterValue } from "../../schema/filter"
 import { Signal, signal } from "@preact/signals"
 import { useCartCtx } from "../../hooks/useCart"
+import { toast } from "react-hot-toast"
 
 const selectedSize = signal("")
 // const selectedColor = signal<FilterValue | null>(null)
@@ -16,8 +17,14 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
     const { addItemInCart } = useCartCtx()
 
     const addToCart = () => {
-        if (!selectedColor || !selectedSize) {
-            console.warn("Not select color or size")
+        if (!selectedColor) {
+            console.warn("Color is not selected")
+            toast.error("Color is not selected")
+            return
+        }
+        if (selectedSize.value == "") {
+            console.warn("Size is not selected")
+            toast.error("Size is not selected")
             return
         }
         const itemToBeAdded = {
@@ -31,6 +38,7 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
             fullUrl: media[0].fullUrl
         }
         addItemInCart(itemToBeAdded)
+        toast.success(`${name} is added to cart`)
     }
 
     const increaseQuantity = () => {
