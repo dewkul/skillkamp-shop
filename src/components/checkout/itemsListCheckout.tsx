@@ -3,12 +3,12 @@ import { useCartCtx } from "../../hooks/useCart";
 import ProductCheckout from "./productCheckout";
 
 export default function ItemsListCheckout() {
-    const { items, itemsCount } = useCartCtx()
+    const { cartList, totalQtyCart } = useCartCtx()
     return (
         <div>
             <div class="flex justify-between pb-8 border-b">
                 <h1 class="font-semibold text-2xl">Checkout</h1>
-                <h2 class="font-semibold text-2xl">{itemsCount} Items</h2>
+                <h2 class="font-semibold text-2xl">{totalQtyCart} Items</h2>
             </div>
             <div class="flex mt-10 mb-5">
                 <h3 class="font-semibold text-gray-600 text-xs uppercase w-2/5"></h3>
@@ -17,7 +17,11 @@ export default function ItemsListCheckout() {
                 <h3 class="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">Price</h3>
             </div>
             {
-                items.value.map(item => <ProductCheckout item={item} />)
+                cartList.value
+                    ? cartList.value.map(item => <ProductCheckout item={item} />)
+                    : <div>
+                        <h3>Cart is empty</h3>
+                    </div>
             }
 
 
