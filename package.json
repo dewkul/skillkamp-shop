@@ -19,6 +19,7 @@
     "flowbite-react": "^0.4.2",
     "preact": "^10.13.0",
     "preact-router": "^4.1.0",
+    "react-hot-toast": "^2.4.0",
     "react-icons": "^4.8.0"
   },
   "devDependencies": {
