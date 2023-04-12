@@ -18,18 +18,21 @@ export default function SummaryCheckout() {
                 }
 
             </div>
-            <div class="py-4 border-t ">
+            <div class="py-4 border-t">
                 <label for="promo" class="font-semibold inline-block mb-3 text-sm uppercase">Promo Code</label>
-                <input type="text" id="promo" placeholder="Enter your code" class="p-2 text-sm w-full" />
+                <div class="flex">
+                    <input type="text" id="promo" placeholder="Enter your code" class="p-2 text-sm w-full" />
+                    <button class="bg-blue-500 hover:bg-blue-600 px-5 py-2 text-sm text-white uppercase">Apply</button>
+                </div>
             </div>
-            <button class="bg-red-500 hover:bg-red-600 px-5 py-2 text-sm text-white uppercase">Apply</button>
+
             <div class="border-t mt-8">
                 <div class="flex font-semibold justify-between py-6 text-sm uppercase">
                     <span>Total</span>
                     <span>${totalPrice}</span>
                 </div>
                 <button
-                    class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full"
+                    class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full round-lg"
                 >
                     Place Order
                 </button>
