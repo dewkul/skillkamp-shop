@@ -95,7 +95,6 @@ function Login() {
                     email,
                     password,
                 },
-                expectedStatus: 201,
             })
 
             if (!data) {
@@ -174,7 +173,7 @@ function Login() {
                             Remember me
                         </Label>
                     </div>
-                    <Button onClick={login}>
+                    <Button onClick={() => login()}>
                         Log in
                     </Button>
                 </form>
@@ -219,6 +218,7 @@ function Register({ setSelectedTab }: RegisterProps) {
                     email,
                     password,
                 },
+                expectedStatus: 201,
             })
             setFullName("")
             setEmail("")
@@ -278,7 +278,7 @@ function Register({ setSelectedTab }: RegisterProps) {
                             onChange={onPassword}
                         />
                     </div>
-                    <Button onClick={signUp}>
+                    <Button onClick={() => signUp()}>
                         Sign Up
                     </Button>
                 </form>
