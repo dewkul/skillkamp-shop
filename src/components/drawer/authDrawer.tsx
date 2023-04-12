@@ -88,7 +88,8 @@ function Login() {
         }
     }
 
-    const login = async () => {
+    const login = async (e: Event) => {
+        e.preventDefault()
         try {
             const data = await postData<LogInResponse>({
                 path: "/v1/api/auth/login",
@@ -135,7 +136,7 @@ function Login() {
     return (
         <div>
             <Card>
-                <form className="flex flex-col gap-4">
+                <form className="flex flex-col gap-4" onSubmit={e => login(e)}>
                     <header className="font-bold text-md capitalize">Log in</header>
                     <div>
                         <div className="mb-2 block">
@@ -148,21 +149,21 @@ function Login() {
                             id="email"
                             type="email"
                             placeholder=""
-                            required={true}
+                            required
                             onChange={onEmailInput}
                         />
                     </div>
                     <div>
                         <div className="mb-2 block">
                             <Label
-                                htmlFor="password"
+                                htmlFor="current-password"
                                 value="Password"
                             />
                         </div>
                         <TextInput
-                            id="password"
+                            id="current-password"
                             type="password"
-                            required={true}
+                            required
                             onChange={onPasswordInput}
                         />
                     </div>
@@ -176,7 +177,7 @@ function Login() {
                             Remember me
                         </Label>
                     </div>
-                    <Button onClick={() => login()}>
+                    <Button type="submit">
                         Log in
                     </Button>
                 </form>
@@ -211,7 +212,8 @@ function Register({ setSelectedTab }: RegisterProps) {
             setPassword(e.target.value)
     }
 
-    const signUp = async () => {
+    const signUp = async (e: Event) => {
+        e.preventDefault()
         setLoading(true)
         try {
             await postData({
@@ -237,7 +239,7 @@ function Register({ setSelectedTab }: RegisterProps) {
     return (
         <div>
             <Card>
-                <form className="flex flex-col gap-4">
+                <form className="flex flex-col gap-4" onSubmit={e => signUp(e)}>
                     <header className="font-bold text-md">Create a new account</header>
                     <div>
                         <div className="mb-2 block">
@@ -250,7 +252,7 @@ function Register({ setSelectedTab }: RegisterProps) {
                             id="name"
                             type="name"
                             placeholder=""
-                            required={true}
+                            required
                             onChange={onFullName}
                         />
                     </div>
@@ -265,25 +267,25 @@ function Register({ setSelectedTab }: RegisterProps) {
                             id="email"
                             type="email"
                             placeholder=""
-                            required={true}
+                            required
                             onChange={onEmail}
                         />
                     </div>
                     <div>
                         <div className="mb-2 block">
                             <Label
-                                htmlFor="password"
+                                htmlFor="current-password"
                                 value="Password"
                             />
                         </div>
                         <TextInput
-                            id="password"
+                            id="current-password"
                             type="password"
-                            required={true}
+                            required
                             onChange={onPassword}
                         />
                     </div>
-                    <Button onClick={() => signUp()}>
+                    <Button type="submit">
                         Sign Up
                     </Button>
                 </form>
