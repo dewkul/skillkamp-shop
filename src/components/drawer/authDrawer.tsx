@@ -4,7 +4,7 @@ import { Tab } from "@headlessui/react";
 import { Button, Card, Label, TextInput, Checkbox } from "flowbite-react";
 import { StateUpdater, useState } from "preact/hooks";
 import { IDB } from "../../lib/idb";
-import { postData } from "../../hooks/useApi";
+import { postData } from "../../lib/api";
 import { useCartCtx } from "../../hooks/useCart";
 
 export default function AuthDrawer() {
@@ -95,8 +95,7 @@ function Login() {
                     email,
                     password,
                 },
-                setError,
-                setLoading,
+                expectedStatus: 201,
             })
 
             if (!data) {
@@ -125,6 +124,7 @@ function Login() {
                 openCartDrawer()
             }
         } catch (err) {
+            setError(err as Error)
             console.error("Login: ", err)
         }
 
@@ -210,21 +210,22 @@ function Register({ setSelectedTab }: RegisterProps) {
     }
 
     const signUp = async () => {
-        const resp = await postData<any>({
-            path: "/v1/api/auth/signup",
-            body: {
-                fullname: fullName,
-                email,
-                password,
-            },
-            setError,
-            setLoading,
-        })
-        if (resp === "Sign up complete") {
-            setSelectedTab(1)
+        setLoading(true)
+        try {
+            await postData({
+                path: "/v1/api/auth/signup",
+                body: {
+                    fullname: fullName,
+                    email,
+                    password,
+                },
+            })
             setFullName("")
             setEmail("")
             setPassword("")
+            setSelectedTab(1)
+        } catch (err) {
+            setError(err as Error)
         }
     }
 

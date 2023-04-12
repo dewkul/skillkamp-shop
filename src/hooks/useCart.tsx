@@ -6,8 +6,7 @@ import { useLiveQuery } from "./useLiveQuery";
 import { IDB } from "../lib/idb";
 import { computed } from "@preact/signals";
 import { useAuthCtx } from "./useAuth";
-import { deleteAuthData, postAuthData, putAuthData } from "./useApi";
-
+import { deleteAuthData, postAuthData, putAuthData } from "../lib/api";
 
 function useCart() {
     const [isCartDrawerOpen, setCartDrawerOpen] = useState(false)
@@ -56,18 +55,24 @@ function useCart() {
         const item = await findItem(newItem)
 
         if (item) {
-            const err = await putAuthData({
-                path,
-                body: newItem,
-                token: token.value,
-            })
+            let err = undefined
+            if (token.value) {
+                err = await putAuthData({
+                    path,
+                    body: newItem,
+                    token: token.value,
+                })
+            }
             IDB.cart.update(item.id!, { qty, isSync: !err })
         } else {
-            const err = await postAuthData({
-                path,
-                body: { ...newItem },
-                token: token.value,
-            })
+            let err = undefined
+            if (token.value) {
+                err = await postAuthData({
+                    path,
+                    body: { ...newItem },
+                    token: token.value,
+                })
+            }
             IDB.cart.add({
                 ...newItem,
                 isSync: !err,
@@ -80,11 +85,12 @@ function useCart() {
 
         if (item) {
             if (item.isSync) {
-                deleteAuthData({
-                    path,
-                    body: toBeRemoved,
-                    token: token.value,
-                })
+                if (token.value)
+                    deleteAuthData({
+                        path,
+                        body: toBeRemoved,
+                        token: token.value,
+                    })
             }
             IDB.cart.delete(item.id!)
         }
@@ -99,21 +105,27 @@ function useCart() {
                 ...item,
                 qty: item.qty + qty,
             }
-            const err = await putAuthData({
-                path,
-                body: updatedItem,
-                token: token.value,
-            })
+            let err = undefined
+            if (token.value) {
+                err = await putAuthData({
+                    path,
+                    body: updatedItem,
+                    token: token.value,
+                })
+            }
             IDB.cart.update(item.id!, {
                 ...updatedItem,
                 isSync: !err
             })
         } else {
-            const err = await postAuthData({
-                path,
-                body: { ...newItem },
-                token: token.value,
-            })
+            let err = undefined
+            if (token.value) {
+                err = await postAuthData({
+                    path,
+                    body: { ...newItem },
+                    token: token.value,
+                })
+            }
             IDB.cart.add({
                 ...newItem,
                 isSync: !err,
