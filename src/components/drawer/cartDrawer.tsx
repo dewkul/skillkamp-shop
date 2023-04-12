@@ -45,6 +45,10 @@ function ItemListCart() {
 
 function EmptyCart() {
     return (
-        <p>Empty</p>
+        <div class="flex">
+            <div class="m-auto">
+                <p>No product in the cart</p>
+            </div>
+        </div>
     )
 }
