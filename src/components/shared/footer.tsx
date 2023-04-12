@@ -10,15 +10,15 @@ export default function FooterApp() {
         },
         {
             "title": "shop collection",
-            "link": "/"
+            "link": "/shop"
         },
         {
             "title": "our story",
-            "link": "/"
+            "link": "/story"
         },
         {
             "title": "contact",
-            "link": "/"
+            "link": "/contact"
         },
     ]
 
@@ -56,9 +56,10 @@ export default function FooterApp() {
                         <Footer.LinkGroup col={true}>
                             {
                                 siteTree.map(
-                                    (site, _) => <Footer.Link href={site.link}>
-                                        <span class="capitalize">{site.title}</span>
-                                    </Footer.Link>
+                                    (site, _) =>
+                                        <Footer.Link href={site.link}>
+                                            <span class="capitalize">{site.title}</span>
+                                        </Footer.Link>
                                 )
                             }
                         </Footer.LinkGroup>
