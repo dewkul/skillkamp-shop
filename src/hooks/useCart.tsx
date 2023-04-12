@@ -14,6 +14,7 @@ function useCart() {
     const [subtotalInCart, setSubTotalInCart] = useState("")
     const [totalQtyCart, setTotalQtyCart] = useState(0)
     const [isCartPending, setCartPending] = useState(false)
+    const [shippingCost, setShippingCost] = useState(0)
 
     const { closeProductInfoModal } = useProductCtx()
     const { token } = useAuthCtx()
@@ -121,6 +122,8 @@ function useCart() {
         closeProductInfoModal()
     }
 
+    const totalPrice = computed(() => Number(subtotalInCart) + shippingCost)
+
     const openCartDrawer = () => setCartDrawerOpen(true)
     const closeCartDrawer = () => setCartDrawerOpen(false)
 
@@ -137,6 +140,9 @@ function useCart() {
         subtotalInCart,
         isCartPending,
         setCartPending,
+        totalPrice,
+        shippingCost,
+        setShippingCost,
     }
 }
 
