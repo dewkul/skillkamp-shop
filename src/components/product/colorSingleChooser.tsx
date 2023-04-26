@@ -1,26 +1,20 @@
-import { StateUpdater, useState } from "preact/hooks"
+import { StateUpdater } from "preact/hooks"
 import { FilterValue } from "../../schema/filter"
 import { ColorRect } from "../shared"
 import { useProductCtx } from "../../hooks/useProduct"
 
-export default function ColorSingleChooser({ setSelectedColor, colorKeys, colorValues, colorCount }: Props) {
-    const [checkedStates, setCheckStates] = useState<boolean[]>(new Array(colorCount).fill(false))
-    const { setImgIndex } = useProductCtx()
+export default function ColorSingleChooser({ colorKeys, colorValues }: Props) {
+    const { setImgIndex, selectedColor, setSelectedColor } = useProductCtx()
 
     const onColorSingleChange = (pos: number) => {
         setImgIndex(pos)
-        const updatedChecked = checkedStates.map((item, idx) => idx === pos ? !item : false)
-        setCheckStates(updatedChecked)
-        for (let idx = 0; idx < updatedChecked.length; idx++) {
-            if (updatedChecked[idx]) {
-                setSelectedColor({
-                    key: colorKeys[idx],
-                    value: colorValues[idx],
-                })
-                return
-            }
-        }
-        setSelectedColor(null)
+        if (selectedColor?.value === colorValues[pos])
+            setSelectedColor(null)
+        else
+            setSelectedColor({
+                key: colorKeys[pos],
+                value: colorValues[pos],
+            })
     }
 
     return (
@@ -30,7 +24,7 @@ export default function ColorSingleChooser({ setSelectedColor, colorKeys, colorV
                     <ColorRect
                         hex={key}
                         value={colorValues[i]}
-                        isChecked={checkedStates[i]}
+                        isChecked={colorValues[i] === selectedColor?.value}
                         onColorChange={() => onColorSingleChange(i)}
                         id="single-"
                     />
@@ -42,8 +36,6 @@ export default function ColorSingleChooser({ setSelectedColor, colorKeys, colorV
 
 
 interface Props {
-    setSelectedColor: StateUpdater<FilterValue | null>
     colorKeys: string[]
     colorValues: string[]
-    colorCount: number
 }
