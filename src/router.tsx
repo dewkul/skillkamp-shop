@@ -1,17 +1,21 @@
-import { Router, Route, route, RouterOnChangeArgs, RouteProps } from "preact-router"
+import { Router, Route, route } from "preact-router"
 import { useEffect } from "preact/hooks"
-import { useGetAllProducts } from "./hooks/useApi"
+import { useGetAllProducts, useGetItemsInCart } from "./hooks/useApi"
 import { useAuthCtx } from "./hooks/useAuth"
 import { FilterProvider } from "./hooks/useFilter"
 import { useProductCtx } from "./hooks/useProduct"
 import { IDB } from "./lib/idb"
 import { HomePage, ContactPage, CollectionPage, ProductDetailPage, NotFoundError, CheckoutPage, StoryPage } from "./pages"
 import PaidModal from "./components/modal/paidModal"
+import { useCartCtx } from "./hooks/useCart"
 
 export default function Routes() {
     const { setAuthData } = useAuthCtx()
     const { products } = useGetAllProducts()
     const { setAllProducts } = useProductCtx()
+    const { syncItems } = useCartCtx()
+
+    const { itemsInCart } = useGetItemsInCart()
 
     useEffect(() => {
         const queryAuth = async () => {
@@ -25,6 +29,10 @@ export default function Routes() {
     useEffect(() => {
         setAllProducts(products)
     }, [products])
+
+    useEffect(() => {
+        syncItems(itemsInCart)
+    }, [])
 
     return (<FilterProvider>
         <div class="container mx-auto max-w-7xl">

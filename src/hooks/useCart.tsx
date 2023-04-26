@@ -144,6 +144,33 @@ function useCart() {
         })
     }
 
+    const syncItems = (itemsInCloud: CartItem[]) => {
+        syncItemsFromCloud(itemsInCloud)
+        // .then(() => syncItemsToCloud(itemsInCloud))
+    }
+
+    const syncItemsFromCloud = async (itemsInCloud: CartItem[]) => {
+        for (const item of itemsInCloud) {
+            const itemInDb = await findItem(item)
+            if (!itemInDb) {
+                IDB.cart.add({
+                    ...item,
+                    isSync: true,
+                })
+                return
+            }
+
+            if (!itemInDb.isSync) {
+                IDB.cart.update(itemInDb.id!, { ...item, isSync: true })
+            }
+        }
+    }
+
+    // const syncItemsToCloud = async (itemsInCloud: CartItem[]) => {
+    // TODO: remapping boolean -> 0, 1 - as bool is non-indexable
+    //     IDB.cart.where("isSync").equals
+    // }
+
     const totalPrice = computed(() => Number(subtotalInCart) + shippingCost)
 
     const openCartDrawer = () => setCartDrawerOpen(true)
@@ -171,6 +198,7 @@ function useCart() {
         openPaidModal,
         closePaidModal,
         clearCart,
+        syncItems,
     }
 }
 

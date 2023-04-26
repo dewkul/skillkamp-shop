@@ -1,8 +1,18 @@
 import { Card } from "flowbite-react"
 import ItemsListCheckout from "../components/checkout/itemsListCheckout"
 import SummaryCheckout from "../components/checkout/summaryCheckout"
+import { useEffect } from "preact/hooks"
+import { useGetItemsInCart } from "../hooks/useApi"
+import { useCartCtx } from "../hooks/useCart"
 
 export default function CheckoutPage() {
+    const { itemsInCart } = useGetItemsInCart()
+    const { syncItems } = useCartCtx()
+
+    useEffect(() => {
+        syncItems(itemsInCart)
+    }, [itemsInCart])
+
     return (
         <div class="container mx-auto mt-10">
             <Card>
