@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "preact/hooks";
 import { Product } from "../schema/product";
 import { ProductDetail } from "../schema/productDetail";
 import { getProductInfoBySku } from "./useApi";
+import { FilterValue } from "../schema/filter";
 
 const productInfo = signal<ProductDetail | null>(null)
 
@@ -11,7 +12,10 @@ function useProduct() {
     const [allProducts, setAllProducts] = useState<Product[]>([])
     const [selectedSku, setSelectedSku] = useState<string | null>(null)
     const [isProductInfoModalOpen, setProductInfoModalOpen] = useState(false)
-
+    const [imgIndex, setImgIndex] = useState<number>(0)
+    const [selectedColor, setSelectedColor] = useState<FilterValue | null>(null)
+    const [quantity, setQuantity] = useState(1)
+    const [selectedSize, setSelectedSize] = useState("")
 
     const openProductInfoModal = (sku: string) => {
         setSelectedSku(sku)
@@ -36,6 +40,14 @@ function useProduct() {
         closeProductInfoModal,
         productInfo,
         setSelectedSku,
+        imgIndex,
+        setImgIndex,
+        selectedColor,
+        setSelectedColor,
+        quantity,
+        setQuantity,
+        selectedSize,
+        setSelectedSize,
     }
 }
 

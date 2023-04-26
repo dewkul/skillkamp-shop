@@ -6,8 +6,7 @@ import { useLiveQuery } from "./useLiveQuery";
 import { IDB } from "../lib/idb";
 import { computed } from "@preact/signals";
 import { useAuthCtx } from "./useAuth";
-import { deleteAuthData, postAuthData, putAuthData } from "./useApi";
-
+import { deleteAuthData, postAuthData, putAuthData } from "../lib/api";
 
 function useCart() {
     const [isCartDrawerOpen, setCartDrawerOpen] = useState(false)
@@ -15,6 +14,7 @@ function useCart() {
     const [totalQtyCart, setTotalQtyCart] = useState(0)
     const [isCartPending, setCartPending] = useState(false)
     const [shippingCost, setShippingCost] = useState(0)
+    const [isPaidModalShow, setPaidModalShow] = useState(false)
 
     const { closeProductInfoModal } = useProductCtx()
     const { token } = useAuthCtx()
@@ -56,18 +56,24 @@ function useCart() {
         const item = await findItem(newItem)
 
         if (item) {
-            const err = await putAuthData({
-                path,
-                body: newItem,
-                token: token.value,
-            })
+            let err = undefined
+            if (token.value) {
+                err = await putAuthData({
+                    path,
+                    body: newItem,
+                    token: token.value,
+                })
+            }
             IDB.cart.update(item.id!, { qty, isSync: !err })
         } else {
-            const err = await postAuthData({
-                path,
-                body: { ...newItem },
-                token: token.value,
-            })
+            let err = undefined
+            if (token.value) {
+                err = await postAuthData({
+                    path,
+                    body: { ...newItem },
+                    token: token.value,
+                })
+            }
             IDB.cart.add({
                 ...newItem,
                 isSync: !err,
@@ -80,11 +86,12 @@ function useCart() {
 
         if (item) {
             if (item.isSync) {
-                deleteAuthData({
-                    path,
-                    body: toBeRemoved,
-                    token: token.value,
-                })
+                if (token.value)
+                    deleteAuthData({
+                        path,
+                        body: toBeRemoved,
+                        token: token.value,
+                    })
             }
             IDB.cart.delete(item.id!)
         }
@@ -99,21 +106,27 @@ function useCart() {
                 ...item,
                 qty: item.qty + qty,
             }
-            const err = await putAuthData({
-                path,
-                body: updatedItem,
-                token: token.value,
-            })
+            let err = undefined
+            if (token.value) {
+                err = await putAuthData({
+                    path,
+                    body: updatedItem,
+                    token: token.value,
+                })
+            }
             IDB.cart.update(item.id!, {
                 ...updatedItem,
                 isSync: !err
             })
         } else {
-            const err = await postAuthData({
-                path,
-                body: { ...newItem },
-                token: token.value,
-            })
+            let err = undefined
+            if (token.value) {
+                err = await postAuthData({
+                    path,
+                    body: { ...newItem },
+                    token: token.value,
+                })
+            }
             IDB.cart.add({
                 ...newItem,
                 isSync: !err,
@@ -122,10 +135,21 @@ function useCart() {
         closeProductInfoModal()
     }
 
+    const clearCart = async () => {
+        const allItems = await IDB.cart
+            .toArray()
+
+        allItems.forEach(i => {
+            IDB.cart.delete(i.id!)
+        })
+    }
+
     const totalPrice = computed(() => Number(subtotalInCart) + shippingCost)
 
     const openCartDrawer = () => setCartDrawerOpen(true)
     const closeCartDrawer = () => setCartDrawerOpen(false)
+    const openPaidModal = () => setPaidModalShow(true)
+    const closePaidModal = () => setPaidModalShow(false)
 
     return {
         isCartDrawerOpen,
@@ -143,6 +167,10 @@ function useCart() {
         totalPrice,
         shippingCost,
         setShippingCost,
+        isPaidModalShow,
+        openPaidModal,
+        closePaidModal,
+        clearCart,
     }
 }
 

@@ -1,5 +1,4 @@
 import { Navbar, Button, Dropdown } from "flowbite-react"
-import { Menu, Transition } from '@headlessui/react'
 import { MdAccountCircle } from "react-icons/md"
 import { Match } from "preact-router/match"
 import { BsCart3 } from "react-icons/bs"

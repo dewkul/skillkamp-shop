@@ -1,12 +1,14 @@
 import { Breadcrumb } from "flowbite-react"
-import { useEffect, useState } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 import { MdHome } from "react-icons/md"
 import DetailProductGroup from "../components/product/detailProduct"
 import { useProductCtx } from "../hooks/useProduct"
+import { ImageProduct } from "../components/product/imgProduct"
+import { HorizontalProductList } from "../components/shared"
 
 export default function ProductDetailPage({ urlPath }: Props) {
-    const [imgIndex, setImgIndex] = useState<number | null>(null)
-    const { allProducts, productInfo, setSelectedSku } = useProductCtx()
+
+    const { allProducts, productInfo, setSelectedSku, setSelectedColor, setSelectedSize, setImgIndex } = useProductCtx()
 
     useEffect(() => {
         if (allProducts) {
@@ -15,46 +17,39 @@ export default function ProductDetailPage({ urlPath }: Props) {
                 setSelectedSku(p.sku)
             }
         }
+        setSelectedColor(null)
+        setSelectedSize("")
+        setImgIndex(0)
     }, [urlPath, allProducts])
 
     return (
-        <div class="mx-2">
-            <Breadcrumb aria-label="breadcrumb">
-                <Breadcrumb.Item href="/" icon={MdHome}>
-                    Home
-                </Breadcrumb.Item>
-                <Breadcrumb.Item href="/shop">
-                    Shop
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>
-                    {productInfo.value?.name}
-                </Breadcrumb.Item>
-            </Breadcrumb>
-            <div class="container grid grid-cols-2 gap-6">
-
-                {productInfo.value && <div>
-                    <img
-                        src={productInfo.value.media[0].fullUrl}
-                        class="w-full"
-                    />
-                    <div class="grid grid-cols-5 gap-4 mt-4">
-                        {
-                            productInfo.value.media.map(
-                                m => <img
-                                    src={m.fullUrl}
-                                    alt={m.title}
-                                    class="w-full cursor-pointer border border-primary"
-                                />
-                            )
-                        }
-
-                    </div>
-                </div>}
-                {productInfo.value && <DetailProductGroup setImgIndex={setImgIndex} detail={productInfo.value} />}
+        <div class="mx-3">
+            <div class="my-8">
+                <Breadcrumb aria-label="breadcrumb">
+                    <Breadcrumb.Item href="/" icon={MdHome}>
+                        Home
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item href="/shop">
+                        Shop
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>
+                        {productInfo.value?.name}
+                    </Breadcrumb.Item>
+                </Breadcrumb>
             </div>
+            <div class="container grid grid-cols-1 md:grid-cols-2 gap-6">
+                {productInfo.value && <ImageProduct isShowSelector={true} />}
+                {productInfo.value && <DetailProductGroup detail={productInfo.value} />}
+            </div>
+            <div class="pl-3 pt-9 flex justify-between items-center">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900">Related products</h2>
+            </div>
+            <HorizontalProductList products={allProducts} />
         </div>
     )
 }
+
+
 
 interface Props {
     urlPath: string

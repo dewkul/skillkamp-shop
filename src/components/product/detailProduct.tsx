@@ -1,23 +1,24 @@
-import { StateUpdater, useState } from "preact/hooks"
 import { ProductDetail, Selection } from "../../schema/productDetail"
 import ColorSingleChooser from "./colorSingleChooser"
 import { Button } from "flowbite-react"
-import { FilterValue } from "../../schema/filter"
-import { Signal, signal } from "@preact/signals"
 import { useCartCtx } from "../../hooks/useCart"
+import { toast } from "react-hot-toast"
+import { useProductCtx } from "../../hooks/useProduct"
 
-const selectedSize = signal("")
-// const selectedColor = signal<FilterValue | null>(null)
-
-export default function DetailProductGroup({ setImgIndex, detail }: Props) {
+export default function DetailProduct({ detail }: Props) {
     const { name, sku, price, discountedPrice, options, media } = detail
-    const [selectedColor, setSelectedColor] = useState<FilterValue | null>(null)
-    const [quantity, setQuantity] = useState(1)
+    const { selectedColor, quantity, setQuantity, selectedSize } = useProductCtx()
     const { addItemInCart } = useCartCtx()
 
     const addToCart = () => {
-        if (!selectedColor || !selectedSize) {
-            console.warn("Not select color or size")
+        if (!selectedColor) {
+            console.warn("Color is not selected")
+            toast.error("Color is not selected")
+            return
+        }
+        if (selectedSize == "") {
+            console.warn("Size is not selected")
+            toast.error("Size is not selected")
             return
         }
         const itemToBeAdded = {
@@ -26,11 +27,12 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
             price,
             discountedPrice,
             color: selectedColor.value,
-            size: selectedSize.value,
+            size: selectedSize,
             qty: quantity,
             fullUrl: media[0].fullUrl
         }
         addItemInCart(itemToBeAdded)
+        toast.success(`${name} is added to cart`)
     }
 
     const increaseQuantity = () => {
@@ -68,10 +70,8 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
                                 </h5>
 
                                 <ColorSingleChooser
-                                    setSelectedColor={setSelectedColor}
                                     colorKeys={op.selections.map(c => c.value)}
                                     colorValues={op.selections.map(c => c.key)}
-                                    colorCount={op.selections.length}
                                 />
                             </div>
                         }
@@ -79,7 +79,7 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
                             op.optionType == "DROP_DOWN" &&
                             <div>
                                 <h5 class="text-lg text-gray-800 mb-3 font-medium">{op.title}</h5>
-                                <SizeChooser selections={op.selections} sizeSignal={selectedSize} />
+                                <SizeChooser selections={op.selections} />
                             </div>
                         }
 
@@ -135,14 +135,15 @@ export default function DetailProductGroup({ setImgIndex, detail }: Props) {
     )
 }
 
-function SizeChooser({ selections, sizeSignal }: SizeChooserProps) {
+function SizeChooser({ selections }: SizeChooserProps) {
+    const { selectedSize, setSelectedSize } = useProductCtx()
     return (
         <select
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             value={selectedSize}
             onChange={e => {
                 if (e.target instanceof HTMLSelectElement)
-                    sizeSignal.value = e.target.value
+                    setSelectedSize(e.target.value)
             }}
         >
             <option selected disabled hidden value="">Choose a size</option>
@@ -160,13 +161,9 @@ function SizeChooser({ selections, sizeSignal }: SizeChooserProps) {
 
 
 interface Props {
-    setImgIndex: StateUpdater<number | null>
     detail: ProductDetail
 }
 
 interface SizeChooserProps {
     selections: Selection[]
-    sizeSignal: Signal<string>
-    // selectedSize: string
-    // setSelectedSize: StateUpdater<string>
 }

@@ -1,7 +1,8 @@
 import { Modal } from "flowbite-react"
-import DetailProductGroup from "../product/detailProduct"
+import DetailProduct from "../product/detailProduct"
 import { useState } from "preact/hooks"
 import { useProductCtx } from "../../hooks/useProduct"
+import { ImageProduct } from "../product/imgProduct"
 
 export default function ProductModal() {
     const { isProductInfoModalOpen, closeProductInfoModal, productInfo } = useProductCtx()
@@ -13,7 +14,13 @@ export default function ProductModal() {
             <Modal.Header />
             <Modal.Body>
                 {productInfo.value
-                    && <DetailProductGroup setImgIndex={setImgIndex} detail={productInfo.value} />}
+                    && <div class="flex">
+                        <ImageProduct isShowSelector={false} />
+                        <div class="mr-10">
+                            <DetailProduct detail={productInfo.value} />
+                        </div>
+                    </div>
+                }
             </Modal.Body>
         </Modal>
     )

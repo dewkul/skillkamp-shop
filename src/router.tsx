@@ -5,7 +5,8 @@ import { useAuthCtx } from "./hooks/useAuth"
 import { FilterProvider } from "./hooks/useFilter"
 import { useProductCtx } from "./hooks/useProduct"
 import { IDB } from "./lib/idb"
-import { HomePage, ContactPage, CollectionPage, ProductDetailPage, NotFoundError, CheckoutPage } from "./pages"
+import { HomePage, ContactPage, CollectionPage, ProductDetailPage, NotFoundError, CheckoutPage, StoryPage } from "./pages"
+import PaidModal from "./components/modal/paidModal"
 
 export default function Routes() {
     const { setAuthData } = useAuthCtx()
@@ -27,13 +28,14 @@ export default function Routes() {
 
     return (<FilterProvider>
         <div class="container mx-auto max-w-7xl">
+            <PaidModal />
             <Router>
                 <Route path="/" component={HomePage} />
                 <Route path="/contact" component={ContactPage} />
                 <Route path="/shop" component={CollectionPage} />
                 <Route path="/product/:urlPath" component={ProductDetailPage} />
                 <AuthRoute path="/checkout" component={CheckoutPage} />
-
+                <Route path="/story" component={StoryPage} />
                 <Route default component={NotFoundError} />
             </Router>
         </div>

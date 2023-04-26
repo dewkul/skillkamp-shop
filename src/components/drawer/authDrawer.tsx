@@ -4,8 +4,9 @@ import { Tab } from "@headlessui/react";
 import { Button, Card, Label, TextInput, Checkbox } from "flowbite-react";
 import { StateUpdater, useState } from "preact/hooks";
 import { IDB } from "../../lib/idb";
-import { postData } from "../../hooks/useApi";
+import { postData } from "../../lib/api";
 import { useCartCtx } from "../../hooks/useCart";
+import { toast } from "react-hot-toast";
 
 export default function AuthDrawer() {
     const { isAuthDrawerOpen, closeAuthDrawer } = useAuthCtx()
@@ -69,7 +70,7 @@ function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isRemember, setRemember] = useState(true)
-    const [error, setError] = useState<Error | undefined>()
+    const [error, setError] = useState("")
     const [isLoading, setLoading] = useState(false)
 
     const { closeAuthDrawer, setAuthData } = useAuthCtx()
@@ -87,7 +88,8 @@ function Login() {
         }
     }
 
-    const login = async () => {
+    const login = async (e: Event) => {
+        e.preventDefault()
         try {
             const data = await postData<LogInResponse>({
                 path: "/v1/api/auth/login",
@@ -95,8 +97,6 @@ function Login() {
                     email,
                     password,
                 },
-                setError,
-                setLoading,
             })
 
             if (!data) {
@@ -119,12 +119,15 @@ function Login() {
                     token,
                     name,
                 });
+            toast.success(`Welcome back, ${name}!`)
             closeAuthDrawer()
             if (isCartPending) {
                 setCartPending(false)
                 openCartDrawer()
             }
         } catch (err) {
+            toast.error((err as Error).message)
+            setError("Check your password and try agiain")
             console.error("Login: ", err)
         }
 
@@ -133,7 +136,7 @@ function Login() {
     return (
         <div>
             <Card>
-                <form className="flex flex-col gap-4">
+                <form className="flex flex-col gap-4" onSubmit={e => login(e)}>
                     <header className="font-bold text-md capitalize">Log in</header>
                     <div>
                         <div className="mb-2 block">
@@ -146,21 +149,21 @@ function Login() {
                             id="email"
                             type="email"
                             placeholder=""
-                            required={true}
+                            required
                             onChange={onEmailInput}
                         />
                     </div>
                     <div>
                         <div className="mb-2 block">
                             <Label
-                                htmlFor="password"
+                                htmlFor="current-password"
                                 value="Password"
                             />
                         </div>
                         <TextInput
-                            id="password"
+                            id="current-password"
                             type="password"
-                            required={true}
+                            required
                             onChange={onPasswordInput}
                         />
                     </div>
@@ -174,14 +177,14 @@ function Login() {
                             Remember me
                         </Label>
                     </div>
-                    <Button onClick={login}>
+                    <Button type="submit">
                         Log in
                     </Button>
                 </form>
             </Card>
             {
                 error
-                && <ErrorToast title="Error while logging in" />
+                && <ErrorToast title={error} />
             }
         </div>
     )
@@ -191,7 +194,7 @@ function Register({ setSelectedTab }: RegisterProps) {
     const [fullName, setFullName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [error, setError] = useState<Error | undefined>()
+    const [error, setError] = useState("")
     const [isLoading, setLoading] = useState(false)
 
     const onFullName = (e: Event) => {
@@ -209,29 +212,34 @@ function Register({ setSelectedTab }: RegisterProps) {
             setPassword(e.target.value)
     }
 
-    const signUp = async () => {
-        const resp = await postData<any>({
-            path: "/v1/api/auth/signup",
-            body: {
-                fullname: fullName,
-                email,
-                password,
-            },
-            setError,
-            setLoading,
-        })
-        if (resp === "Sign up complete") {
-            setSelectedTab(1)
+    const signUp = async (e: Event) => {
+        e.preventDefault()
+        setLoading(true)
+        try {
+            await postData({
+                path: "/v1/api/auth/signup",
+                body: {
+                    fullname: fullName,
+                    email,
+                    password,
+                },
+                expectedStatus: 201,
+            })
             setFullName("")
             setEmail("")
             setPassword("")
+            setSelectedTab(1)
+        } catch (err) {
+            toast.error((err as Error).message)
+            setError("Unable to create an account.")
+            console.error("Register: ", err)
         }
     }
 
     return (
         <div>
             <Card>
-                <form className="flex flex-col gap-4">
+                <form className="flex flex-col gap-4" onSubmit={e => signUp(e)}>
                     <header className="font-bold text-md">Create a new account</header>
                     <div>
                         <div className="mb-2 block">
@@ -244,7 +252,7 @@ function Register({ setSelectedTab }: RegisterProps) {
                             id="name"
                             type="name"
                             placeholder=""
-                            required={true}
+                            required
                             onChange={onFullName}
                         />
                     </div>
@@ -259,25 +267,25 @@ function Register({ setSelectedTab }: RegisterProps) {
                             id="email"
                             type="email"
                             placeholder=""
-                            required={true}
+                            required
                             onChange={onEmail}
                         />
                     </div>
                     <div>
                         <div className="mb-2 block">
                             <Label
-                                htmlFor="password"
+                                htmlFor="current-password"
                                 value="Password"
                             />
                         </div>
                         <TextInput
-                            id="password"
+                            id="current-password"
                             type="password"
-                            required={true}
+                            required
                             onChange={onPassword}
                         />
                     </div>
-                    <Button onClick={signUp}>
+                    <Button type="submit">
                         Sign Up
                     </Button>
                 </form>
