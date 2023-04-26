@@ -1,12 +1,8 @@
-import { useEffect } from "preact/hooks"
 import { useProductCtx } from "../../hooks/useProduct"
 
 export function ImageProduct({ isShowSelector }: Props) {
     const { productInfo, imgIndex, setImgIndex } = useProductCtx()
 
-    useEffect(() => {
-        setImgIndex(0)
-    }, [])
     return (
         <div>
             {
@@ -19,11 +15,14 @@ export function ImageProduct({ isShowSelector }: Props) {
                     {isShowSelector && <div class="grid grid-cols-5 gap-4 mt-4">
                         {
                             productInfo.value.media.map(
-                                m => <img
-                                    src={m.fullUrl}
-                                    alt={m.title}
-                                    class="w-full cursor-pointer border border-primary"
-                                />
+                                (m, idx) => <span>
+                                    <img
+                                        src={m.fullUrl}
+                                        alt={m.title}
+                                        class={imgIndex == idx ? "w-full cursor-pointer border border-primary" : "w-full cursor-pointer border"}
+                                        onClick={() => setImgIndex(idx)}
+                                    />
+                                </span>
                             )
                         }
 

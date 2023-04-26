@@ -8,7 +8,7 @@ import { HorizontalProductList } from "../components/shared"
 
 export default function ProductDetailPage({ urlPath }: Props) {
 
-    const { allProducts, productInfo, setSelectedSku } = useProductCtx()
+    const { allProducts, productInfo, setSelectedSku, setSelectedColor, setSelectedSize, setImgIndex } = useProductCtx()
 
     useEffect(() => {
         if (allProducts) {
@@ -17,6 +17,9 @@ export default function ProductDetailPage({ urlPath }: Props) {
                 setSelectedSku(p.sku)
             }
         }
+        setSelectedColor(null)
+        setSelectedSize("")
+        setImgIndex(0)
     }, [urlPath, allProducts])
 
     return (

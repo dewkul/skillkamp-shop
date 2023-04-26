@@ -14,7 +14,12 @@ function useGetApi<T>(path: string) {
   useEffect(() => {
     fetchData<T>({
       path,
-    }).then((response) => setResponse(response))
+    })
+      .then((response) => setResponse(response))
+      .catch((err) => {
+        if (err instanceof Error) setError(err)
+      })
+      .finally(() => setLoading(false))
   }, [])
 
   return {
@@ -33,7 +38,6 @@ function useGetAuthApi<T>(path: string) {
 
   useEffect(() => {
     if (token.value) {
-      setLoading(true)
       fetchAuthData<T>({
         path,
         token: token.value,
