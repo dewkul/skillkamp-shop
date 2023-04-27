@@ -64,7 +64,7 @@ function useCart() {
                     token: token.value,
                 })
             }
-            IDB.cart.update(item.id!, { qty, isSync: !err })
+            IDB.cart.update(item.id!, { qty, isDataSync: err ? 0 : 1 })
         } else {
             let err = undefined
             if (token.value) {
@@ -76,7 +76,7 @@ function useCart() {
             }
             IDB.cart.add({
                 ...newItem,
-                isSync: !err,
+                isDataSync: err ? 0 : 1,
             })
         }
     }
@@ -85,7 +85,7 @@ function useCart() {
         const item = await findItem(toBeRemoved)
 
         if (item) {
-            if (item.isSync) {
+            if (item.isDataSync) {
                 if (token.value)
                     deleteAuthData({
                         path,
@@ -116,7 +116,7 @@ function useCart() {
             }
             IDB.cart.update(item.id!, {
                 ...updatedItem,
-                isSync: !err
+                isDataSync: err ? 0 : 1,
             })
         } else {
             let err = undefined
@@ -129,7 +129,7 @@ function useCart() {
             }
             IDB.cart.add({
                 ...newItem,
-                isSync: !err,
+                isDataSync: err ? 0 : 1,
             })
         }
         closeProductInfoModal()
@@ -155,13 +155,13 @@ function useCart() {
             if (!itemInDb) {
                 IDB.cart.add({
                     ...item,
-                    isSync: true,
+                    isDataSync: 1,
                 })
                 return
             }
 
-            if (!itemInDb.isSync) {
-                IDB.cart.update(itemInDb.id!, { ...item, isSync: true })
+            if (!itemInDb.isDataSync) {
+                IDB.cart.update(itemInDb.id!, { ...item, isDataSync: 1 })
             }
         }
     }
