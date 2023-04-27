@@ -51,7 +51,7 @@ function useGetAuthApi<T>(path: string) {
         })
         .finally(() => setLoading(false))
     }
-  }, [token])
+  }, [token.value])
 
   return {
     response,

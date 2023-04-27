@@ -31,8 +31,10 @@ export default function Routes() {
     }, [products])
 
     useEffect(() => {
-        syncItems(itemsInCart)
-    }, [])
+        if (itemsInCart) {
+            syncItems(itemsInCart)
+        }
+    }, [itemsInCart])
 
     return (<FilterProvider>
         <div class="container mx-auto max-w-7xl">
