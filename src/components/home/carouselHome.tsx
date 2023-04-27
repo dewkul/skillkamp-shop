@@ -1,4 +1,5 @@
 import { Carousel } from "flowbite-react"
+import { Link } from "preact-router"
 
 export default function HomeCarousel({ urls }: CarouselProps) {
     return (
@@ -24,8 +25,10 @@ function LastItemCarousel({ url }: ItemCarouselProps) {
     return (
         <div>
             <div class="z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <p class="uppercase">new collection</p>
-                <button class="mt-3 outline w-full hover:bg-black hover:text-white">Add to cart</button>
+                <p class="uppercase lg:text-xl">new collection</p>
+                <Link href="/shop">
+                    <button class="mt-3 outline w-full hover:bg-black hover:text-white">Shop Now</button>
+                </Link>
             </div>
             <img src={url} />
         </div>

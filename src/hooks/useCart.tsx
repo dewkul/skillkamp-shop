@@ -55,37 +55,42 @@ function useCart() {
         const { qty } = newItem
         const item = await findItem(newItem)
 
+        let isDataSync = 0
         if (item) {
-            let err = undefined
             if (token.value) {
-                err = await putAuthData({
+                const err = await putAuthData({
                     path,
                     body: newItem,
                     token: token.value,
                 })
+                if (!err)
+                    isDataSync = 1
             }
-            IDB.cart.update(item.id!, { qty, isSync: !err })
-        } else {
-            let err = undefined
-            if (token.value) {
-                err = await postAuthData({
-                    path,
-                    body: { ...newItem },
-                    token: token.value,
-                })
-            }
-            IDB.cart.add({
-                ...newItem,
-                isSync: !err,
-            })
+            IDB.cart.update(item.id!, { qty, isDataSync })
+            return
         }
+        // add new item
+        if (token.value) {
+            const err = await postAuthData({
+                path,
+                body: { ...newItem },
+                token: token.value,
+            })
+            if (!err)
+                isDataSync = 1
+        }
+        IDB.cart.add({
+            ...newItem,
+            isDataSync,
+        })
+
     }
 
     const removeItemInCart = async (toBeRemoved: CartItem) => {
         const item = await findItem(toBeRemoved)
 
         if (item) {
-            if (item.isSync) {
+            if (item.isDataSync) {
                 if (token.value)
                     deleteAuthData({
                         path,
@@ -101,35 +106,39 @@ function useCart() {
         const { qty } = newItem
         const item = await findItem(newItem)
 
+        let isDataSync = 0
         if (item) {
             const updatedItem = {
                 ...item,
                 qty: item.qty + qty,
             }
-            let err = undefined
             if (token.value) {
-                err = await putAuthData({
+                const err = await putAuthData({
                     path,
                     body: updatedItem,
                     token: token.value,
                 })
+                if (!err)
+                    isDataSync = 1
             }
             IDB.cart.update(item.id!, {
                 ...updatedItem,
-                isSync: !err
+                isDataSync,
             })
         } else {
-            let err = undefined
+
             if (token.value) {
-                err = await postAuthData({
+                const err = await postAuthData({
                     path,
                     body: { ...newItem },
                     token: token.value,
                 })
+                if (!err)
+                    isDataSync = 1
             }
             IDB.cart.add({
                 ...newItem,
-                isSync: !err,
+                isDataSync,
             })
         }
         closeProductInfoModal()
@@ -140,8 +149,76 @@ function useCart() {
             .toArray()
 
         allItems.forEach(i => {
-            IDB.cart.delete(i.id!)
+            removeItemInCart(i)
         })
+    }
+
+    const syncItems = (itemsInCloud: CartItem[]) => {
+        if (itemsInCloud)
+            syncItemsFromCloud(itemsInCloud)
+                .then(() => syncItemsToCloud(itemsInCloud))
+    }
+
+    const syncItemsFromCloud = async (itemsInCloud: CartItem[]) => {
+        for (const item of itemsInCloud) {
+            const itemInDb = await findItem(item)
+            if (!itemInDb) {
+                IDB.cart.add({
+                    ...item,
+                    isDataSync: 1,
+                })
+                return
+            }
+
+            if (!itemInDb.isDataSync) {
+                IDB.cart.update(itemInDb.id!, { ...item, isDataSync: 1 })
+            }
+        }
+    }
+
+    const syncItemsToCloud = async (itemsInCloud: CartItem[]) => {
+        const itemsNotSync = await IDB.cart.where("isDataSync").equals(0).toArray()
+        for (const item of itemsNotSync) {
+            const isItemExistedInCloud = itemsInCloud.some(i => {
+                if (i.sku === item.sku && i.color === item.color && i.size === item.size)
+                    return true
+                return false
+            })
+
+            let isDataSync = 0
+
+            if (isItemExistedInCloud) {
+                if (token.value) {
+                    const err = await putAuthData({
+                        path,
+                        body: item,
+                        token: token.value,
+                    })
+                    if (!err)
+                        isDataSync = 1
+                }
+                IDB.cart.add({
+                    ...item,
+                    isDataSync,
+                })
+                return
+            }
+            // Item is not existed in cloud
+            if (token.value) {
+                const err = await postAuthData({
+                    path,
+                    body: item,
+                    token: token.value,
+                })
+                if (!err)
+                    isDataSync = 1
+            }
+            IDB.cart.update(item.id!, {
+                ...item,
+                isDataSync,
+            })
+        }
+
     }
 
     const totalPrice = computed(() => Number(subtotalInCart) + shippingCost)
@@ -171,6 +248,7 @@ function useCart() {
         openPaidModal,
         closePaidModal,
         clearCart,
+        syncItems,
     }
 }
 

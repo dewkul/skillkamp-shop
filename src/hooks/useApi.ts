@@ -30,7 +30,7 @@ function useGetApi<T>(path: string) {
 }
 
 function useGetAuthApi<T>(path: string) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [response, setResponse] = useState<T>()
   const [error, setError] = useState<Error>()
 
@@ -38,14 +38,20 @@ function useGetAuthApi<T>(path: string) {
 
   useEffect(() => {
     if (token.value) {
+      setLoading(true)
       fetchAuthData<T>({
         path,
         token: token.value,
       })
         .then((response) => setResponse(response))
+        .catch((err) => {
+          if (err instanceof Error) {
+            setError(err)
+          }
+        })
         .finally(() => setLoading(false))
     }
-  }, [])
+  }, [token.value])
 
   return {
     response,
