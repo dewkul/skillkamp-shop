@@ -12,7 +12,7 @@ export default function ColorRect({ hex, value, onColorChange, isChecked, id }: 
                     id={id + hex}
                     class="hidden"
                     checked={isChecked}
-                    onChange={onColorChange} />
+                    onInput={onColorChange} />
                 <label
                     for={id + hex}
                     class="border border-gray-200 rounded-sm h-6 w-6 cursor-pointer shadow-sm block"

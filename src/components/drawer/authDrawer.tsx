@@ -150,7 +150,7 @@ function Login() {
                             type="email"
                             placeholder=""
                             required
-                            onChange={onEmailInput}
+                            onInput={onEmailInput}
                         />
                     </div>
                     <div>
@@ -164,14 +164,14 @@ function Login() {
                             id="current-password"
                             type="password"
                             required
-                            onChange={onPasswordInput}
+                            onInput={onPasswordInput}
                         />
                     </div>
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="remember"
                             checked={isRemember}
-                            onChange={() => setRemember(!isRemember)}
+                            onInput={() => setRemember(!isRemember)}
                         />
                         <Label htmlFor="remember">
                             Remember me
@@ -253,7 +253,7 @@ function Register({ setSelectedTab }: RegisterProps) {
                             type="name"
                             placeholder=""
                             required
-                            onChange={onFullName}
+                            onInput={onFullName}
                         />
                     </div>
                     <div>
@@ -268,7 +268,7 @@ function Register({ setSelectedTab }: RegisterProps) {
                             type="email"
                             placeholder=""
                             required
-                            onChange={onEmail}
+                            onInput={onEmail}
                         />
                     </div>
                     <div>
@@ -282,7 +282,7 @@ function Register({ setSelectedTab }: RegisterProps) {
                             id="current-password"
                             type="password"
                             required
-                            onChange={onPassword}
+                            onInput={onPassword}
                         />
                     </div>
                     <Button type="submit">
