@@ -19,17 +19,15 @@ export interface ProductDetail {
   media: MediaDetail[]
   options: OptionsDetail[]
   productType: string
-  urlPart: string
+  urlPath: string
   additionalInfo: Info[]
 }
 
 interface MediaDetail {
   id: string
   url: string
-  fullUrl: string
-  altText: string | null
-  thumbnailFullUrl: string
-  mediaType: string
+  altText?: string
+  mediaType: number
   index: number
   title: string
 }
@@ -53,9 +51,8 @@ export interface Selection {
 interface LinkedMedia {
   altText: string | null
   url: string
-  fullUrl: string
   thumbnailFullUrl: string
-  mediaType: string
+  mediaType: number
   index: number
   title: string
 }

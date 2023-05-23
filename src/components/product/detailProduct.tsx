@@ -29,7 +29,7 @@ export default function DetailProduct({ detail }: Props) {
             color: selectedColor.value,
             size: selectedSize,
             qty: quantity,
-            fullUrl: media[0].fullUrl
+            fullUrl: media[0].url
         }
         addItemInCart(itemToBeAdded)
         toast.success(`${name} is added to cart`)
@@ -63,7 +63,7 @@ export default function DetailProduct({ detail }: Props) {
 
                                 <h5 class="text-lg text-gray-800 mb-3 font-medium">
                                     <span>
-                                        {op.title}
+                                        Color
                                         {selectedColor && " - " + selectedColor.value}
                                     </span>
 

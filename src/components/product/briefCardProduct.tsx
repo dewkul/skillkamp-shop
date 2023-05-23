@@ -5,7 +5,7 @@ import { Product } from "../../schema/product";
 
 
 export default function BriefProductCard({ product }: Props) {
-    const { name, discountedPrice, media, sku, urlPart, price } = product
+    const { name, discountedPrice, media, sku, urlPath, price } = product
     const { openProductInfoModal } = useProductCtx()
 
     const onClick = () => openProductInfoModal(sku)
@@ -13,7 +13,7 @@ export default function BriefProductCard({ product }: Props) {
         <Card
             imgSrc={media[0].url}
         >
-            <Link href={"/product/" + urlPart}>
+            <Link href={"/product/" + urlPath}>
                 <h4 class="text-lg font-medium uppercase">{name}</h4>
                 <div class="flex items-baseline mb-1 space-x-2 mt-4">
                     <h3 class="text-xl text-primary font-semibold">$ {discountedPrice}</h3>

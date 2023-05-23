@@ -12,7 +12,7 @@ export default function ProductDetailPage({ urlPath }: Props) {
 
     useEffect(() => {
         if (allProducts) {
-            const p = allProducts.find(product => product.urlPart == urlPath)
+            const p = allProducts.find(product => product.urlPath == urlPath)
             if (p) {
                 setSelectedSku(p.sku)
             }
