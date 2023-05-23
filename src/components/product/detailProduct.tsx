@@ -58,7 +58,7 @@ export default function DetailProduct({ detail }: Props) {
                 options.map(op =>
                     <div class="pt-4">
                         {
-                            op.optionType == "COLOR" &&
+                            op.key == "Color" &&
                             <div>
 
                                 <h5 class="text-lg text-gray-800 mb-3 font-medium">
@@ -76,7 +76,7 @@ export default function DetailProduct({ detail }: Props) {
                             </div>
                         }
                         {
-                            op.optionType == "DROP_DOWN" &&
+                            op.key == "Size" &&
                             <div>
                                 <h5 class="text-lg text-gray-800 mb-3 font-medium">{op.title}</h5>
                                 <SizeChooser selections={op.selections} />

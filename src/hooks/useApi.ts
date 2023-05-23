@@ -89,7 +89,7 @@ function useGetAuthApi<T>(path: string) {
 export function useGetFilterApi() {
   const [filters, setFilters] = useState<Filter[]>([])
   const { response, loading, error } =
-    useGetApi<GetResponseFilter>('/v1/api/filters')
+    useGetApi<GetResponseFilter>('/v2/filters')
 
   useEffect(() => {
     if (response) setFilters(response.data.catalog.filters)
@@ -107,7 +107,7 @@ export function useGetAllProducts() {
   const [totalProducts, setTotalProducts] = useState(0)
 
   const { response, loading, error } =
-    useGetApi<GetResponseProducts>('/v1/api/products')
+    useGetApi<GetResponseProducts>('/v2/products')
 
   useEffect(() => {
     if (response) {
@@ -131,7 +131,7 @@ export function useGetNewArrivals() {
   const [countNewArrival, setCountNewArrival] = useState(0)
 
   const { response, loading, error } = useGetApi<GetResponseProducts>(
-    '/v1/api/products/new_arrivals'
+    '/v2/products/new_arrivals'
   )
 
   useEffect(() => {
@@ -155,7 +155,7 @@ export function useGetNewArrivals() {
 
 export const getProductInfoBySku = async (sku: string) => {
   const data = await fetchData<GetProductInfoResponse>({
-    path: `/v1/api/products/details/${sku}`,
+    path: `/v2/products/details/${sku}`,
   })
   // const { data, status } = await API.get(`/v1/api/products/details/${sku}`)
   // if (status != 200)
@@ -188,7 +188,7 @@ export const queryProductByFilters = async ({
   // if (status != 200)
   //   throw new Error(`Fail to query products with status: ${status} - ${data}`)
   const data = await fetchData<GetResponseProducts>({
-    path: `/v1/api/products?${params.join('&')}`,
+    path: `/v2/products?${params.join('&')}`,
   })
   return data.detail.data.catalog.category.productsWithMetaData.list
 }
@@ -223,9 +223,8 @@ export function useGetItemsInCart() {
 
 export function useGetLandingImage() {
   const [imgUrls, setImgUrl] = useState<string[]>()
-  const { response, loading, error } = useGetApi<GetImageResponse>(
-    '/v1/api/images/landing'
-  )
+  const { response, loading, error } =
+    useGetApi<GetImageResponse>('/v2/images/landing')
 
   useEffect(() => {
     if (response) {
@@ -242,9 +241,8 @@ export function useGetLandingImage() {
 
 export function useGetStoryImage() {
   const [imgUrls, setImgUrl] = useState<string[]>()
-  const { response, loading, error } = useGetApi<GetImageResponse>(
-    '/v1/api/images/story'
-  )
+  const { response, loading, error } =
+    useGetApi<GetImageResponse>('/v2/images/story')
 
   useEffect(() => {
     if (response) {
