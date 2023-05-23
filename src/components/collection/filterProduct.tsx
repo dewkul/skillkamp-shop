@@ -101,7 +101,7 @@ function CategoryFilter({ id }: Props) {
                                 name={id + "category-radio"}
                                 type="radio"
                                 value={c.value}
-                                onChange={onCategoryChange}
+                                onInput={onCategoryChange}
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                                 checked={c.value === selectedCat}
                             />
@@ -164,7 +164,7 @@ function SizeFilter({ id }: Props) {
                     type="checkbox"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     checked={sizeCheckStates[idx]}
-                    onChange={() => onSizeChange(idx)}
+                    onInput={() => onSizeChange(idx)}
                 />
                 <label
                     for={id + s.key}
@@ -306,7 +306,7 @@ function PricesFilter({ id }: Props) {
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 value={selectedFromPrice}
                 id={`${id}from-price`}
-                onChange={onFromPriceChange}
+                onInput={onFromPriceChange}
             >
                 {
                     fromPriceList.map(price =>
@@ -319,7 +319,7 @@ function PricesFilter({ id }: Props) {
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 value={selectedToPrice}
                 id={`${id}to-price`}
-                onChange={onToPriceChange}
+                onInput={onToPriceChange}
             >
                 {
                     toPriceList.map(price =>
@@ -359,18 +359,4 @@ interface Props {
     id: string
 }
 
-// function CheckIcon(props: { class: string }) {
-//     return (
-//         <svg viewBox="0 0 24 24" fill="none" {...props}>
-//             <circle cx={12} cy={12} r={12} fill="#fff" opacity="0.2" />
-//             <path
-//                 d="M7 13l3 3 7-7"
-//                 stroke="#fff"
-//                 strokeWidth={1.5}
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//             />
-//         </svg>
-//     )
-// }
 

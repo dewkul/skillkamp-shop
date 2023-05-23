@@ -1,5 +1,3 @@
-import { StateUpdater } from "preact/hooks"
-import { FilterValue } from "../../schema/filter"
 import { ColorRect } from "../shared"
 import { useProductCtx } from "../../hooks/useProduct"
 

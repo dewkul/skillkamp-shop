@@ -110,67 +110,9 @@ export const deleteAuthData = async ({
   }
 }
 
-// export const putData = async <T>({
-//   path,
-//   body,
-//   token,
-//   setError,
-//   setLoading,
-// }: AuthDataParamsWithBody<T>) => {
-//   const headers = {
-//     Authorization: `Bearer ${token}`,
-//   }
-//   try {
-//     const { data } = await API.post(
-//       path,
-//       body,
-//       token
-//         ? {
-//             headers,
-//           }
-//         : undefined
-//     )
-//     return data as T
-//   } catch (err) {
-//     if (err instanceof Error) setError(err)
-//   } finally {
-//     setLoading(false)
-//   }
-// }
-
-// export const deleteData = async <T>({
-//   path,
-//   body,
-//   token,
-//   setError,
-//   setLoading,
-// }: AuthDataParamsWithBody<T>) => {
-//   const headers = {
-//     Authorization: `Bearer ${token}`,
-//   }
-//   try {
-//     const { data } = await API.post(
-//       path,
-//       body,
-//       token
-//         ? {
-//             headers,
-//           }
-//         : undefined
-//     )
-//     return data as T
-//   } catch (err) {
-//     if (err instanceof Error) setError(err)
-//   } finally {
-//     setLoading(false)
-//   }
-// }
-
 interface DataParams {
   path: string
   expectedStatus?: number
-  // setError: StateUpdater<Error | undefined>
-  // setLoading: StateUpdater<boolean>
 }
 
 interface AuthDataParams extends DataParams {

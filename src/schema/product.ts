@@ -6,7 +6,7 @@ export interface Product {
   discountedPrice: number
   sku: string
   isInStock: boolean
-  urlPart: string
+  urlPath: string
   formattedDiscountedPrice: string
   formattedPrice: string
   name: string

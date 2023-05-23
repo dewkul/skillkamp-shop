@@ -29,7 +29,7 @@ export default function DetailProduct({ detail }: Props) {
             color: selectedColor.value,
             size: selectedSize,
             qty: quantity,
-            fullUrl: media[0].fullUrl
+            fullUrl: media[0].url
         }
         addItemInCart(itemToBeAdded)
         toast.success(`${name} is added to cart`)
@@ -58,12 +58,12 @@ export default function DetailProduct({ detail }: Props) {
                 options.map(op =>
                     <div class="pt-4">
                         {
-                            op.optionType == "COLOR" &&
+                            op.key == "Color" &&
                             <div>
 
                                 <h5 class="text-lg text-gray-800 mb-3 font-medium">
                                     <span>
-                                        {op.title}
+                                        Color
                                         {selectedColor && " - " + selectedColor.value}
                                     </span>
 
@@ -76,9 +76,9 @@ export default function DetailProduct({ detail }: Props) {
                             </div>
                         }
                         {
-                            op.optionType == "DROP_DOWN" &&
+                            op.key == "Size" &&
                             <div>
-                                <h5 class="text-lg text-gray-800 mb-3 font-medium">{op.title}</h5>
+                                <h5 class="text-lg text-gray-800 mb-3 font-medium">Size</h5>
                                 <SizeChooser selections={op.selections} />
                             </div>
                         }
@@ -87,17 +87,6 @@ export default function DetailProduct({ detail }: Props) {
                 )
             }
 
-
-            {/* <div class="pt-4">
-                <label for="quantity" class="text-lg text-gray-800 mb-3 font-medium dark:text-white">Quantity</label>
-                <input
-                    type="number"
-                    id="quantity"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="1"
-                    onChange={updateQuantity}
-                />
-            </div> */}
             <div class="mt-4">
                 <h3 class="text-lg text-gray-800 mb-3 font-medium">Quantity</h3>
                 <div
@@ -112,13 +101,6 @@ export default function DetailProduct({ detail }: Props) {
                     </button>
                     <div class="h-8 w-10 text-base flex items-center justify-center">
                         {quantity}
-                        {/* <input
-                            type="number"
-                            id="quantity"
-                            // class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="1"
-                            onChange={updateQuantity}
-                        /> */}
                     </div>
                     <button
                         class="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none"
@@ -141,7 +123,7 @@ function SizeChooser({ selections }: SizeChooserProps) {
         <select
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             value={selectedSize}
-            onChange={e => {
+            onInput={e => {
                 if (e.target instanceof HTMLSelectElement)
                     setSelectedSize(e.target.value)
             }}
