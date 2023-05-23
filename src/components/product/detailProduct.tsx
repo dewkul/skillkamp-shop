@@ -78,7 +78,7 @@ export default function DetailProduct({ detail }: Props) {
                         {
                             op.key == "Size" &&
                             <div>
-                                <h5 class="text-lg text-gray-800 mb-3 font-medium">{op.title}</h5>
+                                <h5 class="text-lg text-gray-800 mb-3 font-medium">Size</h5>
                                 <SizeChooser selections={op.selections} />
                             </div>
                         }
