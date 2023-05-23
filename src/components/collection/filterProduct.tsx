@@ -74,7 +74,7 @@ function CategoryFilter({ id }: Props) {
             setSelectedCat(updatedCat)
             route(`/shop${getQueryString({
                 ...matches,
-                cat: updatedCat === "All Products" ? "" : updatedCat,
+                cat: updatedCat === "ALL" ? "" : updatedCat,
             })}`)
         }
     }
@@ -85,7 +85,7 @@ function CategoryFilter({ id }: Props) {
             if (cat) {
                 setSelectedCat(cat)
             } else {
-                setSelectedCat("All Products")
+                setSelectedCat("ALL")
             }
         }
     }, [])
@@ -220,8 +220,8 @@ function ColorsFilter({ id }: Props) {
             {
                 colorKeysData.value.map((key, i) =>
                     <ColorRect
-                        hex={key}
-                        value={colorValuesData.value[i]}
+                        hex={colorValuesData.value[i]}
+                        value={key}
                         isChecked={colorPickStates[i]}
                         onColorChange={() => onMultiColorChange(i)}
                         id={`multi-${id}`}
