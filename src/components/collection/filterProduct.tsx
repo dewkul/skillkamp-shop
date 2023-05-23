@@ -220,8 +220,8 @@ function ColorsFilter({ id }: Props) {
             {
                 colorKeysData.value.map((key, i) =>
                     <ColorRect
-                        hex={key}
-                        value={colorValuesData.value[i]}
+                        hex={colorValuesData.value[i]}
+                        value={key}
                         isChecked={colorPickStates[i]}
                         onColorChange={() => onMultiColorChange(i)}
                         id={`multi-${id}`}
