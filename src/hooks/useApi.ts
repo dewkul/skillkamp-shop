@@ -60,32 +60,6 @@ function useGetAuthApi<T>(path: string) {
   }
 }
 
-// export function usePostApi<T>(path: string, reqBody?: any) {
-//   const [response, setResponse] = useState<T>()
-//   const [loading, setLoading] = useState(true)
-//   const [error, setError] = useState<Error>()
-
-//   useEffect(() => {
-//     const postData = async () => {
-//       try {
-//         const { data } = await API.post(path, reqBody)
-//         setResponse(data)
-//       } catch (err) {
-//         if (err instanceof Error) setError(err)
-//       } finally {
-//         setLoading(false)
-//       }
-//     }
-//     postData()
-//   }, [])
-
-//   return {
-//     response,
-//     loading,
-//     error,
-//   }
-// }
-
 export function useGetFilterApi() {
   const [filters, setFilters] = useState<Filter[]>([])
   const { response, loading, error } =
@@ -157,9 +131,7 @@ export const getProductInfoBySku = async (sku: string) => {
   const data = await fetchData<GetProductInfoResponse>({
     path: `/v2/products/details/${sku}`,
   })
-  // const { data, status } = await API.get(`/v1/api/products/details/${sku}`)
-  // if (status != 200)
-  //   throw new Error(`Fail to get product info with status: ${status} - ${data}`)
+
   return data.detail.data.catalog.product
 }
 
@@ -183,10 +155,7 @@ export const queryProductByFilters = async ({
   if (f && t) {
     params.push(`PRICE=${f}-${t}`)
   }
-  // const { data, status } = await API.get(`/v1/api/products?${params.join('&')}`)
 
-  // if (status != 200)
-  //   throw new Error(`Fail to query products with status: ${status} - ${data}`)
   const data = await fetchData<GetResponseProducts>({
     path: `/v2/products?${params.join('&')}`,
   })
