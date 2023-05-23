@@ -11,7 +11,7 @@ const colorValuesData = signal<string[]>([])
 
 function useFilter() {
     const [isFilterDrawerOpen, setFilterDrawerOpen] = useState(false)
-    const [selectedCat, setSelectedCat] = useState("All Products")
+    const [selectedCat, setSelectedCat] = useState("ALL")
     const [sizeCheckStates, setSizeCheckStates] = useState<boolean[]>([])
     const [colorPickStates, setColorPickState] = useState<boolean[]>([])
     const [selectedFromPrice, setSelectedFromPrice] = useState("")
