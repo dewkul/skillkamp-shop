@@ -24,7 +24,7 @@ function useCart() {
             .toArray()
     })
 
-    const path = "/v1/api/cart"
+    const path = "/v2/cart"
 
     useEffect(() => {
         if (!cartFromIdb)
