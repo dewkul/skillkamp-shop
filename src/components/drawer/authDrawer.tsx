@@ -49,7 +49,7 @@ export default function AuthDrawer() {
                             'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400'
                         }
                     >
-                        <Register setSelectedTab={setSelectedTab} />
+                        <Register />
                     </Tab.Panel>
                     <Tab.Panel
                         key="login"
@@ -88,11 +88,38 @@ function Login() {
         }
     }
 
+    const afterLogin = (data: LogInResponse) => {
+        const { token, name } = data
+
+        setAuthData({
+            token,
+            email,
+            name
+        })
+
+        if (isRemember)
+            IDB.auth.add({
+                email,
+                token,
+                name,
+            });
+
+        toast.success("Welcome back" + (name ? `, ${name}!` : "!"))
+        setEmail("")
+        setPassword("")
+        closeAuthDrawer()
+        if (isCartPending) {
+            setCartPending(false)
+            openCartDrawer()
+        }
+    }
+
     const login = async (e: Event) => {
         e.preventDefault()
+        setLoading(true)
         try {
             const data = await postData<LogInResponse>({
-                path: "/v1/api/auth/login",
+                path: "/v2/auth/login",
                 body: {
                     email,
                     password,
@@ -100,35 +127,17 @@ function Login() {
             })
 
             if (!data) {
-                console.error('Log in: No response data')
+                console.warn('Log in: No response data')
                 return
             }
+            afterLogin(data)
 
-            const token = data.detail.Token
-            const name = data.detail.Name
-
-            setAuthData({
-                token,
-                email,
-                name
-            })
-
-            if (isRemember)
-                await IDB.auth.add({
-                    email,
-                    token,
-                    name,
-                });
-            toast.success(`Welcome back, ${name}!`)
-            closeAuthDrawer()
-            if (isCartPending) {
-                setCartPending(false)
-                openCartDrawer()
-            }
         } catch (err) {
             toast.error((err as Error).message)
             setError("Check your password and try agiain")
             console.error("Login: ", err)
+        } finally {
+            setLoading(false)
         }
 
     }
@@ -150,6 +159,7 @@ function Login() {
                             type="email"
                             placeholder=""
                             required
+                            value={email}
                             onInput={onEmailInput}
                         />
                     </div>
@@ -164,6 +174,7 @@ function Login() {
                             id="current-password"
                             type="password"
                             required
+                            value={password}
                             onInput={onPasswordInput}
                         />
                     </div>
@@ -177,7 +188,7 @@ function Login() {
                             Remember me
                         </Label>
                     </div>
-                    <Button type="submit">
+                    <Button type="submit" disabled={isLoading}>
                         Log in
                     </Button>
                 </form>
@@ -190,12 +201,15 @@ function Login() {
     )
 }
 
-function Register({ setSelectedTab }: RegisterProps) {
+function Register() {
     const [fullName, setFullName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const [isLoading, setLoading] = useState(false)
+
+    const { closeAuthDrawer, setAuthData } = useAuthCtx()
+    const { openCartDrawer, isCartPending, setCartPending } = useCartCtx()
 
     const onFullName = (e: Event) => {
         if (e.target instanceof HTMLInputElement)
@@ -212,27 +226,51 @@ function Register({ setSelectedTab }: RegisterProps) {
             setPassword(e.target.value)
     }
 
+    const afterSignUp = (data: LogInResponse) => {
+        const { token, name } = data
+
+        setAuthData({
+            token,
+            email,
+            name
+        })
+
+        IDB.auth.add({
+            email,
+            token,
+            name,
+        });
+        toast.success("Hello there" + (name ? `, ${name}!` : "!"))
+        setFullName("")
+        setEmail("")
+        setPassword("")
+        closeAuthDrawer()
+        if (isCartPending) {
+            setCartPending(false)
+            openCartDrawer()
+        }
+    }
+
     const signUp = async (e: Event) => {
         e.preventDefault()
         setLoading(true)
         try {
-            await postData({
-                path: "/v1/api/auth/signup",
+            const data = await postData<LogInResponse>({
+                path: "/v2/auth/signup",
                 body: {
-                    fullname: fullName,
                     email,
                     password,
                 },
                 expectedStatus: 201,
             })
-            setFullName("")
-            setEmail("")
-            setPassword("")
-            setSelectedTab(1)
+
+            afterSignUp(data)
         } catch (err) {
             toast.error((err as Error).message)
             setError("Unable to create an account.")
             console.error("Register: ", err)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -253,6 +291,7 @@ function Register({ setSelectedTab }: RegisterProps) {
                             type="name"
                             placeholder=""
                             required
+                            value={fullName}
                             onInput={onFullName}
                         />
                     </div>
@@ -268,6 +307,7 @@ function Register({ setSelectedTab }: RegisterProps) {
                             type="email"
                             placeholder=""
                             required
+                            value={email}
                             onInput={onEmail}
                         />
                     </div>
@@ -282,10 +322,11 @@ function Register({ setSelectedTab }: RegisterProps) {
                             id="current-password"
                             type="password"
                             required
+                            value={password}
                             onInput={onPassword}
                         />
                     </div>
-                    <Button type="submit">
+                    <Button type="submit" disabled={isLoading}>
                         Sign Up
                     </Button>
                 </form>
@@ -324,8 +365,7 @@ interface ToastProps {
 }
 
 interface LogInResponse {
-    detail: {
-        Token: string
-        Name: string
-    }
+    token: string
+    ref: string
+    name: string
 }
