@@ -25,6 +25,19 @@ class HappyKidsDb extends Dexie {
             delete cart.isSync
           })
       })
+    this.version(3)
+      .stores({
+        cart: '++id, sku, name, price, discountedPrice, color, size, qty, imgUrl, isDataSync',
+      })
+      .upgrade((trans) => {
+        return trans
+          .table('cart')
+          .toCollection()
+          .modify((cart) => {
+            cart.imgUrl = cart.fullUrl
+            delete cart.fullUrl
+          })
+      })
   }
 }
 
@@ -39,5 +52,13 @@ interface AuthTable {
 
 interface CartTable extends CartItem {
   id?: number
+  sku: string
+  name: string
+  price: number
+  discountedPrice: number
+  color: string
+  size: string
+  qty: number
+  imgUrl: string
   isDataSync: number
 }

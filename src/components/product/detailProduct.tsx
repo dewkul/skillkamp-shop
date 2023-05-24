@@ -29,14 +29,14 @@ export default function DetailProduct({ detail }: Props) {
             color: selectedColor.value,
             size: selectedSize,
             qty: quantity,
-            fullUrl: media[0].url
+            imgUrl: media[0].url
         }
         addItemInCart(itemToBeAdded)
         toast.success(`${name} is added to cart`)
     }
 
     const increaseQuantity = () => {
-        if (quantity < detail.inventory.quantity)
+        if (quantity < detail.inventory[0].quantity)
             setQuantity(quantity + 1)
 
     }

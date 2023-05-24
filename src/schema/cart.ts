@@ -6,5 +6,5 @@ export interface CartItem {
   color: string
   size: string
   qty: number
-  fullUrl?: string
+  imgUrl: string
 }

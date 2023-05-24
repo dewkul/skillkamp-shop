@@ -14,7 +14,7 @@ export interface ProductDetail {
   formattedDiscountedPrice: string
   createVersion: number
   name: string
-  inventory: Inventory
+  inventory: Inventory[]
   isInStock: boolean
   media: MediaDetail[]
   options: OptionsDetail[]

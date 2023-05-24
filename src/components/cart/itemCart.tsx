@@ -3,7 +3,7 @@ import { CartItem } from "../../schema/cart";
 import { useCartCtx } from "../../hooks/useCart";
 
 export default function ItemCart({ item }: Props) {
-    const { name, qty, discountedPrice, price, color, size, fullUrl, sku } = item
+    const { name, qty, discountedPrice, price, color, size, imgUrl, sku } = item
     const [quantity, setQuantity] = useState(qty)
     const { updateItemInCart, removeItemInCart } = useCartCtx()
 
@@ -40,7 +40,7 @@ export default function ItemCart({ item }: Props) {
         <li class="flex py-6">
             <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                 <img
-                    src={fullUrl}
+                    src={imgUrl}
                     alt={name}
                     class="h-full w-full object-cover object-center"
                 />

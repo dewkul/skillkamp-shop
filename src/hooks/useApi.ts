@@ -174,9 +174,9 @@ export function useGetItemsInCart() {
 
   useEffect(() => {
     if (response) {
-      setItemsInCart(response.detail.cart_list)
+      setItemsInCart(response.detail.cartList)
       setTotalCost(response.detail.total)
-      setSubtotal(response.detail.sub_total)
+      setSubtotal(response.detail.subTotal)
       setShippingCost(response.detail.shipping)
     }
   }, [response])
@@ -265,8 +265,8 @@ interface GetItemsInCartResponse {
   detail: {
     total: number
     shipping: number
-    sub_total: number
-    cart_list: CartItem[]
+    subTotal: number
+    cartList: CartItem[]
   }
 }
 
