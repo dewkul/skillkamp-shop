@@ -62,8 +62,9 @@ function useGetAuthApi<T>(path: string) {
 
 export function useGetFilterApi() {
   const [filters, setFilters] = useState<Filter[]>([])
-  const { response, loading, error } =
-    useGetApi<GetResponseFilter>('/v2/filters')
+  const { response, loading, error } = useGetApi<GetResponseFilter>(
+    '/v2/products/filters'
+  )
 
   useEffect(() => {
     if (response) setFilters(response.data.catalog.filters)
@@ -169,7 +170,7 @@ export function useGetItemsInCart() {
   const [shippingCost, setShippingCost] = useState(0)
 
   const { response, loading, error } =
-    useGetAuthApi<GetItemsInCartResponse>('/v1/api/cart')
+    useGetAuthApi<GetItemsInCartResponse>('/v2/cart')
 
   useEffect(() => {
     if (response) {
