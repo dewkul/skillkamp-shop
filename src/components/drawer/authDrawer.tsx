@@ -2,7 +2,7 @@ import { useAuthCtx } from "../../hooks/useAuth";
 import Drawer from "../shared/drawer";
 import { Tab } from "@headlessui/react";
 import { Button, Card, Label, TextInput, Checkbox } from "flowbite-react";
-import { StateUpdater, useState } from "preact/hooks";
+import { StateUpdater, useEffect, useState } from "preact/hooks";
 import { IDB } from "../../lib/idb";
 import { postData } from "../../lib/api";
 import { useCartCtx } from "../../hooks/useCart";
@@ -72,9 +72,12 @@ function Login() {
     const [isRemember, setRemember] = useState(true)
     const [error, setError] = useState("")
     const [isLoading, setLoading] = useState(false)
+    const [isBlockLogin, setBlockLogin] = useState(false)
 
     const { closeAuthDrawer, setAuthData } = useAuthCtx()
     const { openCartDrawer, isCartPending, setCartPending } = useCartCtx()
+
+
 
     const onEmailInput = (e: Event) => {
         if (e.target instanceof HTMLInputElement) {
@@ -142,6 +145,10 @@ function Login() {
 
     }
 
+    useEffect(() => {
+        setBlockLogin(email.length < 3 || password.length < 1)
+    }, [email, password])
+
     return (
         <div>
             <Card>
@@ -188,7 +195,7 @@ function Login() {
                             Remember me
                         </Label>
                     </div>
-                    <Button type="submit" disabled={isLoading}>
+                    <Button type="submit" disabled={isLoading || isBlockLogin}>
                         Log in
                     </Button>
                 </form>
@@ -207,9 +214,14 @@ function Register() {
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const [isLoading, setLoading] = useState(false)
+    const [isBlockRegister, setBlockRegister] = useState(false)
 
     const { closeAuthDrawer, setAuthData } = useAuthCtx()
     const { openCartDrawer, isCartPending, setCartPending } = useCartCtx()
+
+    useEffect(() => {
+        setBlockRegister(password.length < 8 || email.length < 5)
+    }, [password, email])
 
     const onFullName = (e: Event) => {
         if (e.target instanceof HTMLInputElement)
@@ -274,11 +286,13 @@ function Register() {
         }
     }
 
+
+
     return (
         <div>
             <Card>
                 <form className="flex flex-col gap-4" onSubmit={e => signUp(e)}>
-                    <header className="font-bold text-md">Create a new account</header>
+                    <header className="font-bold text-md">Create a New Account</header>
                     <div>
                         <div className="mb-2 block">
                             <Label
@@ -324,9 +338,10 @@ function Register() {
                             required
                             value={password}
                             onInput={onPassword}
+                            helperText={<>Required 8 or more characters.</>}
                         />
                     </div>
-                    <Button type="submit" disabled={isLoading}>
+                    <Button type="submit" disabled={isLoading || isBlockRegister}>
                         Sign Up
                     </Button>
                 </form>
